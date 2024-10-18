@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(fileName = "NewPlayerCard", menuName = "Card/Player")]
+[CreateAssetMenu(fileName = "NewPlayerCard", menuName = "Card/Player", order = 0)]
 public class VolleyPlayersSO : ScriptableObject
 {
 

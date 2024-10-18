@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenuAttribute(menuName = "Card", fileName = "Action", order = 1)]
+[CreateAssetMenuAttribute(menuName = "Card/ActionCard", fileName = "Action", order = 1)]
 public class ActionCardSO : ScriptableObject
 {
 
