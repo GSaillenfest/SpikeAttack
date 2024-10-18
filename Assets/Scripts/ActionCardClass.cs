@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class ActionCardClass : MonoBehaviour
 {
     public string cardName;
-    public Image cardIllustration;
+    public Sprite cardIllustration;
     public CardEffect cardEffect;
 
 
