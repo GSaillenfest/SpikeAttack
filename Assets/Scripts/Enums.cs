@@ -15,3 +15,8 @@ public enum ActionCardEffect
 {
     //to populate
 }
+
+public enum PlayerCard
+{
+
+}

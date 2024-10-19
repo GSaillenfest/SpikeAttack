@@ -18,6 +18,8 @@ public class VolleyPlayer : MonoBehaviour
     public bool isReceptionAvailable;
     public bool isPassAvailable;
     public bool isAttackAvailable;
+    public bool isAvailable;
+    public bool isLibero;
 
     internal void Initialize(VolleyPlayersSO sO)
     {
