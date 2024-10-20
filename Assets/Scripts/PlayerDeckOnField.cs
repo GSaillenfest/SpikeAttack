@@ -24,7 +24,7 @@ public class PlayerDeckOnField : MonoBehaviour
 
         for (int i = deckSlots.Length - 1; i > 1; i--)
         {
-            if (i == 5)
+            if (i == deckSlots.Length - 1)
             {
                 //a la place du slot 1
                 deckSlots[i].transform.GetChild(0).SetParent(deckSlots[1].transform);

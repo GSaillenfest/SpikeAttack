@@ -11,15 +11,15 @@ public class VolleyPlayer : MonoBehaviour
     public string effectDescription;
     public CardEffect cardEffect;
     public int block;
-    public int serv;
-    public int reception;
+    public int serve;
+    public int dig;
     public int pass;
     public int attack;
+    public bool isLibero;
     public bool isReceptionAvailable;
     public bool isPassAvailable;
     public bool isAttackAvailable;
     public bool isAvailable;
-    public bool isLibero;
 
     internal void Initialize(VolleyPlayersSO sO)
     {
@@ -28,9 +28,10 @@ public class VolleyPlayer : MonoBehaviour
         effectDescription = sO.effectDescription;
         cardEffect = sO.cardEffect;
         block = sO.block;
-        serv = sO.serv;
-        reception = sO.reception;
+        serve = sO.serve;
+        dig = sO.dig;
         pass = sO.pass;
         attack = sO.attack;
+        isLibero = sO.isLibero;
     }
 }

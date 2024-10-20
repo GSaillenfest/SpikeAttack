@@ -59,6 +59,11 @@ public class GameManager : MonoBehaviour
         turn++;
     }
 
+    public void EndTurn()
+    {
+
+    }
+
     public void EndPoint()
     {
         Debug.Log("End point");

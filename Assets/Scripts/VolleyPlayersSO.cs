@@ -12,8 +12,8 @@ public class VolleyPlayersSO : ScriptableObject
     public string effectDescription;
     public CardEffect cardEffect;
     public int block;
-    public int serv;
-    public int reception;
+    public int serve;
+    public int dig;
     public int pass;
     public int attack;
     public bool isLibero;

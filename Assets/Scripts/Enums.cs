@@ -20,3 +20,18 @@ public enum PlayerCard
 {
 
 }
+
+public enum PlayerDeck
+{
+    Field,
+    Sidelines
+}
+
+public enum Phase
+{
+    TeamSelection,
+    Block,
+    Action,
+    Replacement,
+    Serve
+}
