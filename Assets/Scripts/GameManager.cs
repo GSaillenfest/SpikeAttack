@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -8,6 +7,16 @@ public class GameManager : MonoBehaviour
 
     public TeamClass team1;
     public TeamClass team2;
+    private List<VolleyPlayersSO> playerCardSOs;
+    private List<ActionCardSO> actionCardSOs;
+
+    [SerializeField]
+    Transform playerCardSet;
+    [SerializeField]
+    Transform actionCardSet;
+    [SerializeField]
+    GameObject playerCardPrefab;
+
 
     private int turn;
 
@@ -22,12 +31,17 @@ public class GameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        playerCardSOs = GetComponentInChildren<CardSet>().playerCardSOs;
+        actionCardSOs = GetComponentInChildren<CardSet>().actionCardSOs;
     }
 
     // Start is called before the first frame update
     void Start()
     {
         InitGame();
+        //test loop
+        CreateVolleyPlayerCardsOnAwake();
     }
 
     void InitGame()
@@ -40,13 +54,28 @@ public class GameManager : MonoBehaviour
 
     public void ChoseTeamPlayer()
     {
-        
+
+    }
+
+    void CreateVolleyPlayerCardsOnAwake()
+    {
+        int i = 0;
+        foreach (var player in playerCardSOs)
+        {
+            VolleyPlayer volleyPlayer = CreateNewPlayer(player);
+            volleyPlayer.transform.SetParent(playerCardSet);
+            volleyPlayer.transform.position = new Vector3(0, i * volleyPlayer.transform.localScale.y, 0);
+            i++;
+        }
     }
 
     VolleyPlayer CreateNewPlayer(VolleyPlayersSO sO)
     {
+
         // create a new game object
-        GameObject newPlayer = new GameObject(sO.playerName);
+        GameObject newPlayer = Instantiate(playerCardPrefab);
+
+        newPlayer.name = sO.playerName;
         // add the new scritp to that new object
         VolleyPlayer player = newPlayer.AddComponent<VolleyPlayer>();
         player.Initialize(sO);
@@ -77,6 +106,6 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

@@ -203,15 +203,15 @@ MonoBehaviour:
   illustation: {fileID: 0}
   effectDescription: 
   block: 0
-  serv: 0
-  reception: 0
+  serve: 0
+  dig: 0
   pass: 0
   attack: 0
+  isLibero: 0
   isReceptionAvailable: 0
   isPassAvailable: 0
   isAttackAvailable: 0
   isAvailable: 0
-  isLibero: 0
 --- !u!1 &193705340
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,15 +458,15 @@ MonoBehaviour:
   illustation: {fileID: 0}
   effectDescription: 
   block: 0
-  serv: 0
-  reception: 0
+  serve: 0
+  dig: 0
   pass: 0
   attack: 0
+  isLibero: 0
   isReceptionAvailable: 0
   isPassAvailable: 0
   isAttackAvailable: 0
   isAvailable: 0
-  isLibero: 0
 --- !u!1 &446374602
 GameObject:
   m_ObjectHideFlags: 0
@@ -515,15 +515,15 @@ MonoBehaviour:
   illustation: {fileID: 0}
   effectDescription: 
   block: 0
-  serv: 0
-  reception: 0
+  serve: 0
+  dig: 0
   pass: 0
   attack: 0
+  isLibero: 0
   isReceptionAvailable: 0
   isPassAvailable: 0
   isAttackAvailable: 0
   isAvailable: 0
-  isLibero: 0
 --- !u!1 &579636136
 GameObject:
   m_ObjectHideFlags: 0
@@ -572,15 +572,15 @@ MonoBehaviour:
   illustation: {fileID: 0}
   effectDescription: 
   block: 0
-  serv: 0
-  reception: 0
+  serve: 0
+  dig: 0
   pass: 0
   attack: 0
+  isLibero: 0
   isReceptionAvailable: 0
   isPassAvailable: 0
   isAttackAvailable: 0
   isAvailable: 0
-  isLibero: 0
 --- !u!1 &613923377
 GameObject:
   m_ObjectHideFlags: 0
@@ -796,6 +796,37 @@ MonoBehaviour:
   - {fileID: 1185311677}
   - {fileID: 1498344803}
   - {fileID: 54806177}
+--- !u!1 &887334809
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 887334810}
+  m_Layer: 0
+  m_Name: PlayerCards
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &887334810
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 887334809}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1443032502}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -1160,15 +1191,15 @@ MonoBehaviour:
   illustation: {fileID: 0}
   effectDescription: 
   block: 0
-  serv: 0
-  reception: 0
+  serve: 0
+  dig: 0
   pass: 0
   attack: 0
+  isLibero: 0
   isReceptionAvailable: 0
   isPassAvailable: 0
   isAttackAvailable: 0
   isAvailable: 0
-  isLibero: 0
 --- !u!1 &1298308462
 GameObject:
   m_ObjectHideFlags: 0
@@ -1217,15 +1248,103 @@ MonoBehaviour:
   illustation: {fileID: 0}
   effectDescription: 
   block: 0
-  serv: 0
-  reception: 0
+  serve: 0
+  dig: 0
   pass: 0
   attack: 0
+  isLibero: 0
   isReceptionAvailable: 0
   isPassAvailable: 0
   isAttackAvailable: 0
   isAvailable: 0
-  isLibero: 0
+--- !u!1 &1405028056
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1405028057}
+  m_Layer: 0
+  m_Name: ActionCards
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1405028057
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1405028056}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1443032502}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1443032501
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1443032502}
+  - component: {fileID: 1443032503}
+  m_Layer: 0
+  m_Name: CardSet
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1443032502
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443032501}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 887334810}
+  - {fileID: 1405028057}
+  m_Father: {fileID: 1721852641}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1443032503
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1443032501}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b3cbf26a339efe43b8a158ed6f53ed8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerCardSOs:
+  - {fileID: 11400000, guid: eca5d798cdfe0e04babab11ad7db0c80, type: 2}
+  - {fileID: 11400000, guid: ca0fb2c216bf32f44abe15dd11bb4eff, type: 2}
+  - {fileID: 11400000, guid: 627818b32f0359540adfa743ef44d156, type: 2}
+  - {fileID: 11400000, guid: 41ab8321df58b3c4899e630a6adc0c9e, type: 2}
+  - {fileID: 11400000, guid: 1841d11cfcc5b124dbe4f198f3b3ad2f, type: 2}
+  - {fileID: 11400000, guid: 2dce74fcba6b7cc45a4db07d3c14fb57, type: 2}
+  - {fileID: 11400000, guid: ceec468487dc6db449356e69554af1c5, type: 2}
+  - {fileID: 11400000, guid: ab7141dc82a4a0749bb066f5c2360c6f, type: 2}
+  - {fileID: 11400000, guid: f7f0ef603b0e5164595b3a7a1340b0bf, type: 2}
+  actionCardSOs: []
 --- !u!1 &1498344803
 GameObject:
   m_ObjectHideFlags: 0
@@ -1455,7 +1574,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 1443032502}
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1473,6 +1593,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team1: {fileID: 0}
   team2: {fileID: 0}
+  playerCardSet: {fileID: 887334810}
+  actionCardSet: {fileID: 1405028057}
+  playerCardPrefab: {fileID: 5206368073129469955, guid: 2e0bbdb75531c4c42b0161d457111aec, type: 3}
 --- !u!1 &1735805116
 GameObject:
   m_ObjectHideFlags: 0
@@ -1521,15 +1644,15 @@ MonoBehaviour:
   illustation: {fileID: 0}
   effectDescription: 
   block: 0
-  serv: 0
-  reception: 0
+  serve: 0
+  dig: 0
   pass: 0
   attack: 0
+  isLibero: 0
   isReceptionAvailable: 0
   isPassAvailable: 0
   isAttackAvailable: 0
   isAvailable: 0
-  isLibero: 0
 --- !u!1 &2079440886
 GameObject:
   m_ObjectHideFlags: 0
@@ -1661,15 +1784,15 @@ MonoBehaviour:
   illustation: {fileID: 0}
   effectDescription: 
   block: 0
-  serv: 0
-  reception: 0
+  serve: 0
+  dig: 0
   pass: 0
   attack: 0
+  isLibero: 0
   isReceptionAvailable: 0
   isPassAvailable: 0
   isAttackAvailable: 0
   isAvailable: 0
-  isLibero: 0
 --- !u!1 &2137825009
 GameObject:
   m_ObjectHideFlags: 0
@@ -1718,12 +1841,12 @@ MonoBehaviour:
   illustation: {fileID: 0}
   effectDescription: 
   block: 0
-  serv: 0
-  reception: 0
+  serve: 0
+  dig: 0
   pass: 0
   attack: 0
+  isLibero: 0
   isReceptionAvailable: 0
   isPassAvailable: 0
   isAttackAvailable: 0
   isAvailable: 0
-  isLibero: 0

@@ -9,17 +9,15 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: NewPlayerCard
-  m_EditorClassIdentifier: Assembly-CSharp::VolleyPlayersSO
+  m_Script: {fileID: 11500000, guid: c5b224b196e0df0498d7210ef48453a4, type: 3}
+  m_Name: Ace
+  m_EditorClassIdentifier: 
   playerName: Ace
   illustation: {fileID: 0}
-  effectDescription: none
+  effectDescription: 
   block: 8
-  serv: 1
-  reception: 1
+  serve: 1
+  dig: 1
   pass: 2
   attack: 8
-  isReceptionAvailable: 1
-  isPassAvailable: 1
-  isAttackAvailable: 1
+  isLibero: 0
