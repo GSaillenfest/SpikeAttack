@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class GameManager : MonoBehaviour
     public TeamClass team2;
     private List<VolleyPlayersSO> playerCardSOs;
     private List<ActionCardSO> actionCardSOs;
+
+    public RectTransform playerRectTransform;
 
     [SerializeField]
     Transform playerCardSet;
@@ -62,24 +65,23 @@ public class GameManager : MonoBehaviour
         int i = 0;
         foreach (var player in playerCardSOs)
         {
-            VolleyPlayer volleyPlayer = CreateNewPlayer(player);
+            GameObject volleyPlayer = CreateNewPlayer(player);
             volleyPlayer.transform.SetParent(playerCardSet);
-            volleyPlayer.transform.position = new Vector3(0, i * volleyPlayer.transform.localScale.y, 0);
-            i++;
+            Debug.Log(volleyPlayer.name + volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition);
+            volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition = new Vector2(i * 68, 0);
+            i++;    
         }
     }
 
-    VolleyPlayer CreateNewPlayer(VolleyPlayersSO sO)
+    GameObject CreateNewPlayer(VolleyPlayersSO sO)
     {
 
         // create a new game object
         GameObject newPlayer = Instantiate(playerCardPrefab);
 
         newPlayer.name = sO.playerName;
-        // add the new scritp to that new object
-        VolleyPlayer player = newPlayer.AddComponent<VolleyPlayer>();
-        player.Initialize(sO);
-        return player;
+        newPlayer.GetComponentInChildren<VolleyPlayer>().Initialize(sO);
+        return newPlayer;
     }
 
     public void PlayTurn()

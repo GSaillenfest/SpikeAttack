@@ -8,7 +8,7 @@ public class VolleyPlayersSO : ScriptableObject
 {
 
     public string playerName;
-    public Sprite illustation;
+    public Texture illustation;
     public string effectDescription;
     public CardEffect cardEffect;
     public int block;
