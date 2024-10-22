@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ace
   m_EditorClassIdentifier: 
   playerName: Ace
-  illustation: {fileID: 0}
+  illustation: {fileID: 2800000, guid: 302cb4e562505af4dbb7a5b429cefb98, type: 3}
   effectDescription: 
   block: 8
   serve: 1

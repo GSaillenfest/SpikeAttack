@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Libero2
   m_EditorClassIdentifier: 
   playerName: Libero2
-  illustation: {fileID: 0}
+  illustation: {fileID: 2800000, guid: 811471527e49f6f43afdf2f1c3d428bc, type: 3}
   effectDescription: 
   block: 0
   serve: 0

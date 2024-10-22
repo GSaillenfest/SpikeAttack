@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefSpe2
   m_EditorClassIdentifier: 
   playerName: DefSpe2
-  illustation: {fileID: 0}
+  illustation: {fileID: 2800000, guid: 93c38998384a76146878b3d83f75a2d8, type: 3}
   effectDescription: 
   block: 4
   serve: 1

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Unity.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +9,7 @@ public class GameManager : MonoBehaviour
     public TeamClass team2;
     private List<VolleyPlayersSO> playerCardSOs;
     private List<ActionCardSO> actionCardSOs;
+    private List<GameObject> volleyPlayers = new List<GameObject>();
 
     public RectTransform playerRectTransform;
 
@@ -43,8 +43,31 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InitGame();
-        //test loop
+        //test loop to instantiate volley player cards
         CreateVolleyPlayerCardsOnAwake();
+        //test function to populate a player team. To be refactored.
+        PopulateTeam();
+    }
+
+    private void PopulateTeam()
+    {
+        GameObject[] slots = FindObjectOfType<PlayerDeckOnField>().deckSlots;
+        int slotIndex = 1;
+        foreach (GameObject volleyPlayer in volleyPlayers)
+        {
+            if (slotIndex == 6) return;
+            if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == true && slots[0].transform.childCount == 0)
+            {
+                volleyPlayer.transform.SetParent(slots[0].transform, false);
+                volleyPlayer.gameObject.SetActive(true);
+            }
+            else if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == false)
+            {
+                volleyPlayer.transform.SetParent(slots[slotIndex].transform, false);
+                slotIndex++;
+                volleyPlayer.gameObject.SetActive(true);
+            }
+        }
     }
 
     void InitGame()
@@ -68,8 +91,10 @@ public class GameManager : MonoBehaviour
             GameObject volleyPlayer = CreateNewPlayer(player);
             volleyPlayer.transform.SetParent(playerCardSet);
             Debug.Log(volleyPlayer.name + volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition);
-            volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition = new Vector2(i * 68, 0);
-            i++;    
+            //volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition = new Vector2(i * 68, 0);
+            volleyPlayers.Add(volleyPlayer);
+            volleyPlayer.gameObject.SetActive(false);
+            i++;
         }
     }
 
