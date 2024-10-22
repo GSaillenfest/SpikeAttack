@@ -1,8 +1,5 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class VolleyPlayer : MonoBehaviour
@@ -48,9 +45,18 @@ public class VolleyPlayer : MonoBehaviour
         attack = sO.attack;
         isLibero = sO.isLibero;
 
+        if (isLibero)
+        {
+            blockText.transform.parent.gameObject.SetActive(false);
+            serveText.transform.parent.gameObject.SetActive(false);
+        }
+        else
+        {
+            blockText.SetText(block.ToString());
+            serveText.SetText(serve.ToString());
+        }
+
         image.texture = illustation;
-        blockText.SetText(block.ToString());
-        serveText.SetText(serve.ToString());
         digText.SetText(dig.ToString());
         passText.SetText(pass.ToString());
         attackText.SetText(attack.ToString());
