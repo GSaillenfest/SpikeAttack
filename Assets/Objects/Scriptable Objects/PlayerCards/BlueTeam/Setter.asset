@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5b224b196e0df0498d7210ef48453a4, type: 3}
+  m_Name: Setter
+  m_EditorClassIdentifier: 
+  playerName: Setter
+  illustation: {fileID: 2800000, guid: 1095f7285e29e6c45881a512ef9f0b99, type: 3}
+  effectDescription: 
+  block: 3
+  serve: 3
+  dig: 3
+  pass: 6
+  attack: 2
+  isLibero: 0

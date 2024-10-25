@@ -89,6 +89,9 @@ public class GameManager : MonoBehaviour
         foreach (var player in playerCardSOs)
         {
             GameObject volleyPlayer = CreateNewPlayer(player);
+            volleyPlayer.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f);
+            volleyPlayer.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
+            volleyPlayer.GetComponent<RectTransform>().localPosition = Vector2.zero;
             volleyPlayer.transform.SetParent(playerCardSet);
             Debug.Log(volleyPlayer.name + volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition);
             //volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition = new Vector2(i * 68, 0);
