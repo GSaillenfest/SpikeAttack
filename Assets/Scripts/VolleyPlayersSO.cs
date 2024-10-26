@@ -17,5 +17,6 @@ public class VolleyPlayersSO : ScriptableObject
     public int pass;
     public int attack;
     public bool isLibero;
+    public bool isOrangeTeam;
 
 }

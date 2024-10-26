@@ -21,3 +21,4 @@ MonoBehaviour:
   pass: 6
   attack: 2
   isLibero: 0
+  isOrangeTeam: 1

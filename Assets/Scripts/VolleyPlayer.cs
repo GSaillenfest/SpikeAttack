@@ -31,6 +31,7 @@ public class VolleyPlayer : MonoBehaviour
     public bool isPassAvailable;
     public bool isAttackAvailable;
     public bool isAvailable;
+    public bool isOrangeTeam;
 
     internal void Initialize(VolleyPlayersSO sO)
     {
@@ -44,6 +45,7 @@ public class VolleyPlayer : MonoBehaviour
         pass = sO.pass;
         attack = sO.attack;
         isLibero = sO.isLibero;
+        isOrangeTeam = sO.isOrangeTeam;
 
         if (isLibero)
         {

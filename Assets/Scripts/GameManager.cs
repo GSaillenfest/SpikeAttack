@@ -9,7 +9,8 @@ public class GameManager : MonoBehaviour
     public TeamClass team2;
     private List<VolleyPlayersSO> playerCardSOs;
     private List<ActionCardSO> actionCardSOs;
-    private List<GameObject> volleyPlayers = new List<GameObject>();
+    private List<GameObject> volleyPlayersOrange = new List<GameObject>();
+    private List<GameObject> volleyPlayersBlue = new List<GameObject>();
 
     public RectTransform playerRectTransform;
 
@@ -19,6 +20,10 @@ public class GameManager : MonoBehaviour
     Transform actionCardSet;
     [SerializeField]
     GameObject playerCardPrefab;
+    [SerializeField]
+    GameObject playerOne;
+    [SerializeField]
+    GameObject playerTwo;
 
 
     private int turn;
@@ -46,12 +51,14 @@ public class GameManager : MonoBehaviour
         //test loop to instantiate volley player cards
         CreateVolleyPlayerCardsOnAwake();
         //test function to populate a player team. To be refactored.
-        PopulateTeam();
+
+        PopulateTeam(playerOne, volleyPlayersOrange);
+        PopulateTeam(playerTwo, volleyPlayersBlue);
     }
 
-    private void PopulateTeam()
+    private void PopulateTeam(GameObject player, List<GameObject> volleyPlayers)
     {
-        GameObject[] slots = FindObjectOfType<PlayerDeckOnField>().deckSlots;
+        GameObject[] slots = player.GetComponentInChildren<PlayerDeckOnField>().deckSlots;
         int slotIndex = 1;
         foreach (GameObject volleyPlayer in volleyPlayers)
         {
@@ -59,13 +66,13 @@ public class GameManager : MonoBehaviour
             if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == true && slots[0].transform.childCount == 0)
             {
                 volleyPlayer.transform.SetParent(slots[0].transform, false);
-                volleyPlayer.gameObject.SetActive(true);
+                volleyPlayer.SetActive(true);
             }
             else if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == false)
             {
                 volleyPlayer.transform.SetParent(slots[slotIndex].transform, false);
+                volleyPlayer.SetActive(true);
                 slotIndex++;
-                volleyPlayer.gameObject.SetActive(true);
             }
         }
     }
@@ -89,13 +96,13 @@ public class GameManager : MonoBehaviour
         foreach (var player in playerCardSOs)
         {
             GameObject volleyPlayer = CreateNewPlayer(player);
-            volleyPlayer.GetComponent<RectTransform>().anchorMin = new Vector2(0.5f, 0.5f);
-            volleyPlayer.GetComponent<RectTransform>().anchorMax = new Vector2(0.5f, 0.5f);
-            volleyPlayer.GetComponent<RectTransform>().localPosition = Vector2.zero;
             volleyPlayer.transform.SetParent(playerCardSet);
             Debug.Log(volleyPlayer.name + volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition);
             //volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition = new Vector2(i * 68, 0);
-            volleyPlayers.Add(volleyPlayer);
+            if (volleyPlayer.GetComponentInChildren<VolleyPlayer>().isOrangeTeam)
+                volleyPlayersOrange.Add(volleyPlayer);
+            else
+                volleyPlayersBlue.Add(volleyPlayer);
             volleyPlayer.gameObject.SetActive(false);
             i++;
         }
