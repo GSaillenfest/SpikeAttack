@@ -32,7 +32,6 @@ public class PlayerDeckOnField : MonoBehaviour
             else
             {
                 //à la place du slot i + 1
-                Debug.Log(i);
                 deckSlots[i].transform.GetChild(0).SetParent(deckSlots[i + 1].transform, false);
             }
         }

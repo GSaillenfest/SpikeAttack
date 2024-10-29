@@ -621,14 +621,12 @@ MonoBehaviour:
   effectDescription: 
   block: 0
   serve: 0
+  actionArr: {x: 0, y: 0, z: 0}
   dig: 0
   pass: 0
   attack: 0
   isLibero: 0
-  isReceptionAvailable: 0
-  isPassAvailable: 0
-  isAttackAvailable: 0
-  isAvailable: 0
+  isActionAvailable: 
   isOrangeTeam: 0
 --- !u!1 &613923377
 GameObject:
@@ -1172,14 +1170,12 @@ MonoBehaviour:
   effectDescription: 
   block: 0
   serve: 0
+  actionArr: {x: 0, y: 0, z: 0}
   dig: 0
   pass: 0
   attack: 0
   isLibero: 0
-  isReceptionAvailable: 0
-  isPassAvailable: 0
-  isAttackAvailable: 0
-  isAvailable: 0
+  isActionAvailable: 
   isOrangeTeam: 0
 --- !u!1 &1056522901
 GameObject:
@@ -1481,14 +1477,12 @@ MonoBehaviour:
   effectDescription: 
   block: 0
   serve: 0
+  actionArr: {x: 0, y: 0, z: 0}
   dig: 0
   pass: 0
   attack: 0
   isLibero: 0
-  isReceptionAvailable: 0
-  isPassAvailable: 0
-  isAttackAvailable: 0
-  isAvailable: 0
+  isActionAvailable: 
   isOrangeTeam: 0
 --- !u!1 &1317446600
 GameObject:
@@ -1545,14 +1539,12 @@ MonoBehaviour:
   effectDescription: 
   block: 0
   serve: 0
+  actionArr: {x: 0, y: 0, z: 0}
   dig: 0
   pass: 0
   attack: 0
   isLibero: 0
-  isReceptionAvailable: 0
-  isPassAvailable: 0
-  isAttackAvailable: 0
-  isAvailable: 0
+  isActionAvailable: 
   isOrangeTeam: 0
 --- !u!1 &1369799833
 GameObject:
@@ -1810,14 +1802,12 @@ MonoBehaviour:
   effectDescription: 
   block: 0
   serve: 0
+  actionArr: {x: 0, y: 0, z: 0}
   dig: 0
   pass: 0
   attack: 0
   isLibero: 0
-  isReceptionAvailable: 0
-  isPassAvailable: 0
-  isAttackAvailable: 0
-  isAvailable: 0
+  isActionAvailable: 
   isOrangeTeam: 0
 --- !u!1 &1672869980
 GameObject:
@@ -1999,6 +1989,7 @@ GameObject:
   - component: {fileID: 1721852641}
   - component: {fileID: 1721852642}
   - component: {fileID: 1721852643}
+  - component: {fileID: 1721852644}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -2085,6 +2076,19 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1721852644
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1721852640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b3ca2dcbc8dd5046ad5759de5ccc1a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  actionIndex: 0
 --- !u!1 &1919055381
 GameObject:
   m_ObjectHideFlags: 0
@@ -2295,12 +2299,10 @@ MonoBehaviour:
   effectDescription: 
   block: 0
   serve: 0
+  actionArr: {x: 0, y: 0, z: 0}
   dig: 0
   pass: 0
   attack: 0
   isLibero: 0
-  isReceptionAvailable: 0
-  isPassAvailable: 0
-  isAttackAvailable: 0
-  isAvailable: 0
+  isActionAvailable: 
   isOrangeTeam: 0

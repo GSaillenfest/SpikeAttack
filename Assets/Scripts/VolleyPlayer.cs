@@ -23,15 +23,14 @@ public class VolleyPlayer : MonoBehaviour
     public CardEffect cardEffect;
     public int block;
     public int serve;
+    public Vector3Int actionArr;
     public int dig;
     public int pass;
     public int attack;
     public bool isLibero;
-    public bool isReceptionAvailable;
-    public bool isPassAvailable;
-    public bool isAttackAvailable;
-    public bool isAvailable;
+    public bool[] isActionAvailable;
     public bool isOrangeTeam;
+    Game gameScript;
 
     internal void Initialize(VolleyPlayersSO sO)
     {
@@ -46,6 +45,17 @@ public class VolleyPlayer : MonoBehaviour
         attack = sO.attack;
         isLibero = sO.isLibero;
         isOrangeTeam = sO.isOrangeTeam;
+
+        isActionAvailable = new bool[3];
+        isActionAvailable[0] = true;
+        isActionAvailable[1] = true;
+        isActionAvailable[2] = true;
+
+        actionArr[0] = dig;
+        actionArr[1] = pass;
+        actionArr[2] = attack;
+
+        gameScript = FindObjectOfType<Game>();
 
         if (isLibero)
         {
@@ -62,5 +72,10 @@ public class VolleyPlayer : MonoBehaviour
         digText.SetText(dig.ToString());
         passText.SetText(pass.ToString());
         attackText.SetText(attack.ToString());
+    }
+
+    public void SelectAction()
+    {
+        gameScript.SelectAction(this);
     }
 }
