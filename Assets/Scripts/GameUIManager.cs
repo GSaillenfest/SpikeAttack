@@ -1,11 +1,16 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class GameUIManager : MonoBehaviour
 {
     //Calculator calculator;
-    [SerializeField] private UIEffects uIEffects;
+    [SerializeField] 
+    private UIEffects uIEffects;
+    [SerializeField]
+    TextMeshProUGUI powerText;
 
     public void Awake()
     {
@@ -14,14 +19,11 @@ public class GameUIManager : MonoBehaviour
 
     public void SelectAction(VolleyPlayer selectedPlayer, int actionIndex)
     {
-        //Action selectedAction = selectedPlayer.GetComponents<Action>()[actionIndex];
-
-        //select action value and add it to game calcultator
-        //calculator.AddActionValue(selectedAction.value);
+        Debug.Log(selectedPlayer + "'s " + actionIndex + "is animated");
         //uIEffects.ShowSelectedAction(selectedAction);
     }
 
-    public void UnselectAction(VolleyPlayer selectedPlayer, int actionIndex)
+    public void DeselectAction(VolleyPlayer selectedPlayer, int actionIndex)
     {
         //Action selectedAction = selectedPlayer.GetComponents<Action>()[actionIndex];
 
@@ -40,6 +42,11 @@ public class GameUIManager : MonoBehaviour
     {
         //select player from sidelines to put on game field
         uIEffects.ShowSelected(selectedPlayer);
+    }
+
+    internal void UpdatePowerText(object powerValue)
+    {
+        powerText.text = powerValue.ToString();
     }
 
     public void SelectBlock(VolleyPlayer selectedPlayer)

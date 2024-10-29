@@ -6,6 +6,7 @@ public class TeamClass : MonoBehaviour
 {
 
     public List<GameObject> playerList;
+    public PlayerDeckOnField deckOnField;
 
     public TeamClass()
     {

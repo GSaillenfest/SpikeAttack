@@ -99,6 +99,8 @@ public class GameManager : MonoBehaviour
             volleyPlayer.transform.SetParent(playerCardSet);
             //Debug.Log(volleyPlayer.name + volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition);
             volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchoredPosition = Vector2.zero;
+            volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchorMin = 0.5f * Vector2.one;
+            volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchorMax = 0.5f * Vector2.one;
             if (volleyPlayer.GetComponentInChildren<VolleyPlayer>().isOrangeTeam)
                 volleyPlayersOrange.Add(volleyPlayer);
             else

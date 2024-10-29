@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,8 @@ public class VolleyPlayer : MonoBehaviour
     TMP_Text passText;
     [SerializeField]
     TMP_Text attackText;
+    [SerializeField]
+    Button clickableButton;
 
     public string playerName;
     public Texture illustation;
@@ -30,7 +33,9 @@ public class VolleyPlayer : MonoBehaviour
     public bool isLibero;
     public bool[] isActionAvailable;
     public bool isOrangeTeam;
+
     Game gameScript;
+    GameUIManager gameUI;
 
     internal void Initialize(VolleyPlayersSO sO)
     {
@@ -56,6 +61,9 @@ public class VolleyPlayer : MonoBehaviour
         actionArr[2] = attack;
 
         gameScript = FindObjectOfType<Game>();
+        gameUI = FindObjectOfType<GameUIManager>();
+
+        SetSelectable(false);
 
         if (isLibero)
         {
@@ -74,8 +82,23 @@ public class VolleyPlayer : MonoBehaviour
         attackText.SetText(attack.ToString());
     }
 
+    internal void DeselectActionAnimation(int actionIndex)
+    {
+        gameUI.DeselectAction(this, actionIndex);
+    }
+
+    internal void SelectActionAnimation(int actionIndex)
+    {
+        gameUI.SelectAction(this, actionIndex);
+    }
+
     public void SelectAction()
     {
         gameScript.SelectAction(this);
+    }
+
+    internal void SetSelectable(bool selectable)
+    {
+        clickableButton.interactable = selectable;
     }
 }

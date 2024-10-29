@@ -1054,6 +1054,7 @@ MonoBehaviour:
   digText: {fileID: 1200558468772755328}
   passText: {fileID: 1200558470496602344}
   attackText: {fileID: 1200558470742998528}
+  clickableButton: {fileID: 2092337018759799079}
   playerName: 
   illustation: {fileID: 0}
   effectDescription: 
