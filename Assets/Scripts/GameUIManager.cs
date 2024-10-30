@@ -17,19 +17,26 @@ public class GameUIManager : MonoBehaviour
         //calculator FindObjectOfType<GameManager>().gameObject.GetComponent<Calculator>(); 
     }
 
+    public void SetActionUnavailable(VolleyPlayer player, int actionIndex)
+    {
+        uIEffects.ShowUnselectableAction(player, actionIndex);
+    }
+
     public void SelectAction(VolleyPlayer selectedPlayer, int actionIndex)
     {
         Debug.Log(selectedPlayer + "'s " + actionIndex + "is animated");
-        //uIEffects.ShowSelectedAction(selectedAction);
+        uIEffects.ShowSelected(selectedPlayer);
+        uIEffects.ShowSelectedAction(selectedPlayer, actionIndex);
     }
 
     public void DeselectAction(VolleyPlayer selectedPlayer, int actionIndex)
     {
+        uIEffects.ShowUnselected(selectedPlayer);
         //Action selectedAction = selectedPlayer.GetComponents<Action>()[actionIndex];
 
         //unselect action value and remove it from game calculator
         //calculator.AddActionValue(selectedAction.value);
-        //uIEffects.ShowUnselectedAction(selectedAction);
+        uIEffects.ShowUnselectedAction(selectedPlayer, actionIndex);
     }
 
     public void SelectPlayerToReplace(VolleyPlayer selectedPlayer)
@@ -44,6 +51,11 @@ public class GameUIManager : MonoBehaviour
         uIEffects.ShowSelected(selectedPlayer);
     }
 
+    internal void ChangeCurrentTeam(TeamClass currentTeam)
+    {
+        uIEffects.ChangeTeamColorGradient(currentTeam);
+    }
+
     internal void UpdatePowerText(object powerValue)
     {
         powerText.text = powerValue.ToString();
@@ -55,5 +67,8 @@ public class GameUIManager : MonoBehaviour
         uIEffects.ShowSelected(selectedPlayer);
     }
 
-
+    internal void DeactivateValidateButton()
+    {
+        ;
+    }
 }

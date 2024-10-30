@@ -33,6 +33,7 @@ public class VolleyPlayer : MonoBehaviour
     public bool isLibero;
     public bool[] isActionAvailable;
     public bool isOrangeTeam;
+    public TMP_Text[] actionTexts;
 
     Game gameScript;
     GameUIManager gameUI;
@@ -80,6 +81,11 @@ public class VolleyPlayer : MonoBehaviour
         digText.SetText(dig.ToString());
         passText.SetText(pass.ToString());
         attackText.SetText(attack.ToString());
+
+        actionTexts = new TMP_Text[3];
+        actionTexts[0] = digText;
+        actionTexts[1] = passText;
+        actionTexts[2] = attackText;
     }
 
     internal void DeselectActionAnimation(int actionIndex)
@@ -100,5 +106,11 @@ public class VolleyPlayer : MonoBehaviour
     internal void SetSelectable(bool selectable)
     {
         clickableButton.interactable = selectable;
+    }
+
+    internal void SetActionUnavailable(int i)
+    {
+        isActionAvailable[i] = false;
+        gameUI.SetActionUnavailable(this, i);
     }
 }

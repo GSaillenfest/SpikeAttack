@@ -1,5 +1,5 @@
-using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Game : MonoBehaviour
 {
@@ -9,9 +9,11 @@ public class Game : MonoBehaviour
     private TeamClass team2;
     [SerializeField]
     GameUIManager gameUI;
+    [SerializeField]
+    Button validateBtn;
 
     private int turn;
-    private VolleyPlayer[] lastSelected;
+    private VolleyPlayer[] selectedPlayerArr;
     private int[] actionArr;
     private TeamClass currentTeam;
     private TeamClass nonPlayingTeam;
@@ -43,10 +45,10 @@ public class Game : MonoBehaviour
     {
         // avoid two start game clicks
         if (isGameStarted) return;
-        lastSelected = new VolleyPlayer[3];
-        lastSelected[0] = null;
-        lastSelected[1] = null;
-        lastSelected[2] = null;
+        selectedPlayerArr = new VolleyPlayer[3];
+        selectedPlayerArr[0] = null;
+        selectedPlayerArr[1] = null;
+        selectedPlayerArr[2] = null;
         actionArr = new int[3];
         actionArr[0] = actionArr[1] = actionArr[2] = 0;
         currentTeam = team1;
@@ -54,6 +56,8 @@ public class Game : MonoBehaviour
         SetSelectableCardAction(actionIndex, currentTeam);
         SetAllSelectableCardAction(false, nonPlayingTeam);
         gameUI.UpdatePowerText(powerValue);
+        gameUI.ChangeCurrentTeam(currentTeam);
+        validateBtn.interactable = false;
     }
 
     // Update is called once per frame
@@ -67,25 +71,25 @@ public class Game : MonoBehaviour
         if (actionIndex == 0)
         {
             actionArr[actionIndex] = selected.actionArr[actionIndex];
-            lastSelected[actionIndex] = selected;
+            selectedPlayerArr[actionIndex] = selected;
             selected.SelectActionAnimation(actionIndex);
             actionIndex++;
             SetSelectableCardAction(actionIndex, currentTeam);
         }
         else if (actionIndex < 3)
         {
-            if (lastSelected[actionIndex - 1] == selected)
+            if (selectedPlayerArr[actionIndex - 1] == selected)
             {
-                lastSelected[actionIndex - 1] = null;
+                selectedPlayerArr[actionIndex - 1] = null;
                 actionArr[actionIndex - 1] = 0;
-                selected.DeselectActionAnimation(actionIndex);
+                selected.DeselectActionAnimation(actionIndex - 1);
                 actionIndex--;
                 SetSelectableCardAction(actionIndex, currentTeam);
             }
             else
             {
                 actionArr[actionIndex] = selected.actionArr[actionIndex];
-                lastSelected[actionIndex] = selected;
+                selectedPlayerArr[actionIndex] = selected;
                 selected.SelectActionAnimation(actionIndex);
                 actionIndex++;
                 SetSelectableCardAction(actionIndex, currentTeam);
@@ -93,22 +97,22 @@ public class Game : MonoBehaviour
         }
         else if (actionIndex == 3)
         {
-            if (lastSelected[actionIndex - 1] == selected)
+            if (selectedPlayerArr[actionIndex - 1] == selected)
             {
-                lastSelected[actionIndex - 1] = null;
+                selectedPlayerArr[actionIndex - 1] = null;
                 actionArr[actionIndex - 1] = 0;
-                selected.DeselectActionAnimation(actionIndex);
-                Debug.Log("Deactivate Validation button");
+                selected.DeselectActionAnimation(actionIndex - 1);
+                validateBtn.interactable = false;
+                gameUI.DeactivateValidateButton();
                 actionIndex--;
                 SetSelectableCardAction(actionIndex, currentTeam);
             }
         }
 
-        Debug.Log(actionIndex);
 
         if (actionIndex == 3)
         {
-            Debug.Log("Activate Validate button");
+            validateBtn.interactable = true;
         }
 
         UpdatePowerValue();
@@ -136,7 +140,7 @@ public class Game : MonoBehaviour
         {
             foreach (GameObject slot in team.deckOnField.deckSlots)
             {
-                if (slot.GetComponentInChildren<VolleyPlayer>() == lastSelected[actionIndex - 1])
+                if (slot.GetComponentInChildren<VolleyPlayer>() == selectedPlayerArr[actionIndex - 1])
                 {
                     slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(true);
                 }
@@ -150,7 +154,7 @@ public class Game : MonoBehaviour
         {
             foreach (GameObject slot in team.deckOnField.deckSlots)
             {
-                if (slot.GetComponentInChildren<VolleyPlayer>().isActionAvailable[actionIndex] || (actionIndex > 0 && slot.GetComponentInChildren<VolleyPlayer>() == lastSelected[actionIndex - 1]))
+                if (slot.GetComponentInChildren<VolleyPlayer>().isActionAvailable[actionIndex] || (actionIndex > 0 && slot.GetComponentInChildren<VolleyPlayer>() == selectedPlayerArr[actionIndex - 1]))
                 {
                     slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(true);
                 }
@@ -170,9 +174,13 @@ public class Game : MonoBehaviour
         }
     }
 
-    void ValidateActions()
+    public void ValidateActions()
     {
         SetAllSelectableCardAction(false, currentTeam);
+        for (int i = 0; i < selectedPlayerArr.Length; i++)
+        {
+            selectedPlayerArr[i].SetActionUnavailable(i);
+        }
     }
 
 }
