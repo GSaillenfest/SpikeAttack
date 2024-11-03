@@ -969,9 +969,8 @@ GameObject:
   - component: {fileID: 1200558470701670968}
   - component: {fileID: 1200558470701670970}
   - component: {fileID: 633001301440301986}
-  - component: {fileID: 1194642339241655186}
   m_Layer: 5
-  m_Name: VolleyPlayerPrefab
+  m_Name: Value Container
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1036,38 +1035,6 @@ MonoBehaviour:
     y: 0
     width: 1
     height: 1
---- !u!114 &1194642339241655186
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1200558470701670969}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ccfa1c0491b9a0e4bbdc13cbd6860fb5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  image: {fileID: 633001301440301986}
-  blockText: {fileID: 2703309661834016125}
-  serveText: {fileID: 8605957711920398337}
-  digText: {fileID: 1200558468772755328}
-  passText: {fileID: 1200558470496602344}
-  attackText: {fileID: 1200558470742998528}
-  clickableButton: {fileID: 2092337018759799079}
-  playerName: 
-  illustation: {fileID: 0}
-  effectDescription: 
-  block: 0
-  serve: 0
-  actionArr: {x: 0, y: 0, z: 0}
-  dig: 0
-  pass: 0
-  attack: 0
-  isLibero: 0
-  isActionAvailable: 
-  isOrangeTeam: 0
-  actionTexts: []
 --- !u!1 &1200558470742998590
 GameObject:
   m_ObjectHideFlags: 0
@@ -1620,7 +1587,7 @@ GameObject:
   - component: {fileID: 2200466152882732990}
   - component: {fileID: 7877596212011401749}
   m_Layer: 5
-  m_Name: Panel
+  m_Name: Background Panel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2483,6 +2450,7 @@ GameObject:
   - component: {fileID: 7638676775701976067}
   - component: {fileID: 2092337018759799079}
   - component: {fileID: 40604838434068742}
+  - component: {fileID: 9077573018334992659}
   m_Layer: 0
   m_Name: VolleyPlayerPrefab
   m_TagString: Untagged
@@ -2576,7 +2544,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1194642339241655186}
+      - m_Target: {fileID: 9077573018334992659}
         m_TargetAssemblyTypeName: VolleyPlayer, Assembly-CSharp
         m_MethodName: SelectAction
         m_Mode: 1
@@ -2605,6 +2573,38 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &9077573018334992659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8916281788958163287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ccfa1c0491b9a0e4bbdc13cbd6860fb5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  image: {fileID: 633001301440301986}
+  blockText: {fileID: 2703309661834016125}
+  serveText: {fileID: 8605957711920398337}
+  digText: {fileID: 1200558468772755328}
+  passText: {fileID: 1200558470496602344}
+  attackText: {fileID: 1200558470742998528}
+  clickableButton: {fileID: 2092337018759799079}
+  playerName: 
+  illustation: {fileID: 0}
+  effectDescription: 
+  block: 0
+  serve: 0
+  actionArr: {x: 0, y: 0, z: 0}
+  dig: 0
+  pass: 0
+  attack: 0
+  isLibero: 0
+  isActionAvailable: 
+  isOrangeTeam: 0
+  actionTexts: []
 --- !u!1 &9043289230173021075
 GameObject:
   m_ObjectHideFlags: 0

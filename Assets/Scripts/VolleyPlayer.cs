@@ -33,6 +33,8 @@ public class VolleyPlayer : MonoBehaviour
     public bool isLibero;
     public bool[] isActionAvailable;
     public bool isOrangeTeam;
+    public bool isSelected;
+    public bool isSelectedTwice;
     public TMP_Text[] actionTexts;
 
     Game gameScript;
@@ -51,6 +53,8 @@ public class VolleyPlayer : MonoBehaviour
         attack = sO.attack;
         isLibero = sO.isLibero;
         isOrangeTeam = sO.isOrangeTeam;
+        isSelected = false;
+        isSelectedTwice = false;
 
         isActionAvailable = new bool[3];
         isActionAvailable[0] = true;
@@ -112,5 +116,20 @@ public class VolleyPlayer : MonoBehaviour
     {
         isActionAvailable[i] = false;
         gameUI.SetActionUnavailable(this, i);
+    }
+
+    internal void SetIsSelected(bool selected)
+    {
+        isSelected = selected;
+    }    
+    
+    internal void SetIsSelectedTwice(bool selected)
+    {
+        isSelectedTwice = selected;
+    }
+
+    internal void DeselectCard()
+    {
+        gameUI.DeselectCard(this);
     }
 }

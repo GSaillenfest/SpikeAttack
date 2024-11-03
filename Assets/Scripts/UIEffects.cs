@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -8,6 +9,18 @@ public class UIEffects : MonoBehaviour
     private TeamClass team1;
     [SerializeField]
     private TeamClass team2;
+    [SerializeField]
+    private float finalScaleTextFactor;    
+    [SerializeField]
+    private float finalScaleCardFactor;
+    [SerializeField]
+    private float scaleTextFactor;
+    [SerializeField]
+    private float scaleCardFactor;
+    [SerializeField]
+    private float scaleTextTime;
+    [SerializeField]
+    private float scaleCardTime;
 
     VertexGradient orangeGradient = new VertexGradient(
         new Color32(255, 165, 0, 255),  // Orange clair en haut à gauche
@@ -30,6 +43,7 @@ public class UIEffects : MonoBehaviour
     VertexGradient whitenonGradient = new VertexGradient(Color.white);
 
     VertexGradient currentTeamGradient;
+
 
     public void ChangeTeamColorGradient(TeamClass team)
     {
@@ -57,12 +71,16 @@ public class UIEffects : MonoBehaviour
 
     public void ShowSelected(VolleyPlayer player)
     {
-        player.transform.parent.localScale = 1.2f * player.transform.parent.localScale;
+        BounceCardOnSelection(player.gameObject);
     }
 
     public void ShowUnselected(VolleyPlayer player)
     {
-        player.transform.parent.localScale = player.transform.parent.localScale / 1.2f;
+        if (!player.isSelectedTwice)
+        {
+            Debug.Log("Reset Scale");
+            ResetScale(player.gameObject);
+        }
     }
 
     public void ShowSelectedAction(VolleyPlayer player, int actionIndex)
@@ -70,12 +88,14 @@ public class UIEffects : MonoBehaviour
 
         player.actionTexts[actionIndex].enableVertexGradient = true;
         player.actionTexts[actionIndex].colorGradient = currentTeamGradient;
+        BounceOnSelection(player.actionTexts[actionIndex].gameObject, actionIndex);
         //add effect around action
     }
 
     public void ShowUnselectedAction(VolleyPlayer player, int actionIndex)
     {
         player.actionTexts[actionIndex].colorGradient = whitenonGradient;
+        ResetScale(player.actionTexts[actionIndex].gameObject);
         //add effect around action
     }
 
@@ -84,4 +104,28 @@ public class UIEffects : MonoBehaviour
         player.actionTexts[actionIndex].colorGradient = greyGradient;
     }
 
+    void BounceOnSelection(GameObject go, int actionIndex)
+    {
+        LeanTween.scale(go, scaleTextFactor * Vector3.one, scaleTextTime).setEaseOutBounce().setOnComplete(() => SetTextEndOfAnimScale(go));
+    }
+    
+    void BounceCardOnSelection(GameObject go)
+    {
+        LeanTween.scale(go, scaleCardFactor * Vector3.one, scaleCardTime).setEaseOutBounce().setOnComplete(() => SetCardEndOfAnimScale(go));
+    }
+
+    void SetTextEndOfAnimScale(GameObject go)
+    {
+        LeanTween.scale(go, finalScaleTextFactor * Vector3.one, 0.05f).setEaseInOutQuad();
+    }
+    
+    void SetCardEndOfAnimScale(GameObject go)
+    {
+        LeanTween.scale(go, finalScaleCardFactor * Vector3.one, 0.05f).setEaseInOutQuad();
+    }
+
+    void ResetScale(GameObject go)
+    {
+        go.LeanScale(Vector3.one, 0.1f);
+    }
 }

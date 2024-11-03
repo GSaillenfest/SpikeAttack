@@ -57,7 +57,7 @@ public class Game : MonoBehaviour
         SetAllSelectableCardAction(false, nonPlayingTeam);
         gameUI.UpdatePowerText(powerValue);
         gameUI.ChangeCurrentTeam(currentTeam);
-        validateBtn.interactable = false;
+        SetValidateButtonInteractable(false);
     }
 
     // Update is called once per frame
@@ -73,6 +73,7 @@ public class Game : MonoBehaviour
             actionArr[actionIndex] = selected.actionArr[actionIndex];
             selectedPlayerArr[actionIndex] = selected;
             selected.SelectActionAnimation(actionIndex);
+            selected.SetIsSelected(true);
             actionIndex++;
             SetSelectableCardAction(actionIndex, currentTeam);
         }
@@ -83,6 +84,7 @@ public class Game : MonoBehaviour
                 selectedPlayerArr[actionIndex - 1] = null;
                 actionArr[actionIndex - 1] = 0;
                 selected.DeselectActionAnimation(actionIndex - 1);
+                selected.SetIsSelected(false);
                 actionIndex--;
                 SetSelectableCardAction(actionIndex, currentTeam);
             }
@@ -91,6 +93,9 @@ public class Game : MonoBehaviour
                 actionArr[actionIndex] = selected.actionArr[actionIndex];
                 selectedPlayerArr[actionIndex] = selected;
                 selected.SelectActionAnimation(actionIndex);
+                if (!selected.isSelected)
+                    selected.SetIsSelected(true);
+                else selected.SetIsSelectedTwice(true);
                 actionIndex++;
                 SetSelectableCardAction(actionIndex, currentTeam);
             }
@@ -102,7 +107,10 @@ public class Game : MonoBehaviour
                 selectedPlayerArr[actionIndex - 1] = null;
                 actionArr[actionIndex - 1] = 0;
                 selected.DeselectActionAnimation(actionIndex - 1);
-                validateBtn.interactable = false;
+                if (selected.isSelectedTwice)
+                    selected.SetIsSelectedTwice(false);
+                else selected.SetIsSelected(false);
+                SetValidateButtonInteractable(false);
                 gameUI.DeactivateValidateButton();
                 actionIndex--;
                 SetSelectableCardAction(actionIndex, currentTeam);
@@ -112,10 +120,15 @@ public class Game : MonoBehaviour
 
         if (actionIndex == 3)
         {
-            validateBtn.interactable = true;
+            SetValidateButtonInteractable(true);
         }
 
         UpdatePowerValue();
+    }
+
+    private void SetValidateButtonInteractable(bool isInteractable)
+    {
+        validateBtn.interactable = isInteractable;
     }
 
     private void UpdatePowerValue()
@@ -180,7 +193,9 @@ public class Game : MonoBehaviour
         for (int i = 0; i < selectedPlayerArr.Length; i++)
         {
             selectedPlayerArr[i].SetActionUnavailable(i);
+            selectedPlayerArr[i].DeselectCard();
         }
+        SetValidateButtonInteractable(false);
     }
 
 }

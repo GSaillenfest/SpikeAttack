@@ -726,7 +726,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -145, y: 10.999987}
+  m_AnchoredPosition: {x: -145, y: 0}
   m_SizeDelta: {x: 62, y: 88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &377072438
@@ -856,6 +856,8 @@ MonoBehaviour:
   isLibero: 0
   isActionAvailable: 
   isOrangeTeam: 0
+  isSelected: 0
+  isSelectedTwice: 0
   actionTexts: []
 --- !u!1 &611188969
 GameObject:
@@ -1249,6 +1251,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   team1: {fileID: 1056522903}
   team2: {fileID: 176728477}
+  finalScaleTextFactor: 2
+  finalScaleCardFactor: 1.2
+  scaleTextFactor: 3
+  scaleTextTime: 0.5
+  scaleCardFactor: 1.2
 --- !u!1 &727932154
 GameObject:
   m_ObjectHideFlags: 0
@@ -1648,6 +1655,8 @@ MonoBehaviour:
   isLibero: 0
   isActionAvailable: 
   isOrangeTeam: 0
+  isSelected: 0
+  isSelectedTwice: 0
   actionTexts: []
 --- !u!1 &1056522901
 GameObject:
@@ -1736,7 +1745,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 145, y: 10.999987}
+  m_AnchoredPosition: {x: 145, y: 0}
   m_SizeDelta: {x: 62, y: 88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1215669388
@@ -2108,6 +2117,8 @@ MonoBehaviour:
   isLibero: 0
   isActionAvailable: 
   isOrangeTeam: 0
+  isSelected: 0
+  isSelectedTwice: 0
   actionTexts: []
 --- !u!1 &1317446600
 GameObject:
@@ -2172,6 +2183,8 @@ MonoBehaviour:
   isLibero: 0
   isActionAvailable: 
   isOrangeTeam: 0
+  isSelected: 0
+  isSelectedTwice: 0
   actionTexts: []
 --- !u!1 &1369799833
 GameObject:
@@ -2206,7 +2219,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 110, y: 10.999987}
+  m_AnchoredPosition: {x: 80, y: 0}
   m_SizeDelta: {x: 62, y: 88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1405028056
@@ -2572,6 +2585,8 @@ MonoBehaviour:
   isLibero: 0
   isActionAvailable: 
   isOrangeTeam: 0
+  isSelected: 0
+  isSelectedTwice: 0
   actionTexts: []
 --- !u!1 &1672869980
 GameObject:
@@ -2960,7 +2975,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -110, y: 10.999987}
+  m_AnchoredPosition: {x: -80, y: 0}
   m_SizeDelta: {x: 62, y: 88}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &2080401686
@@ -3211,4 +3226,6 @@ MonoBehaviour:
   isLibero: 0
   isActionAvailable: 
   isOrangeTeam: 0
+  isSelected: 0
+  isSelectedTwice: 0
   actionTexts: []

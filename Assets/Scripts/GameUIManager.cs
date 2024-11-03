@@ -24,7 +24,6 @@ public class GameUIManager : MonoBehaviour
 
     public void SelectAction(VolleyPlayer selectedPlayer, int actionIndex)
     {
-        Debug.Log(selectedPlayer + "'s " + actionIndex + "is animated");
         uIEffects.ShowSelected(selectedPlayer);
         uIEffects.ShowSelectedAction(selectedPlayer, actionIndex);
     }
@@ -70,5 +69,10 @@ public class GameUIManager : MonoBehaviour
     internal void DeactivateValidateButton()
     {
         ;
+    }
+
+    internal void DeselectCard(VolleyPlayer volleyPlayer)
+    {
+        uIEffects.ShowUnselected(volleyPlayer);
     }
 }
