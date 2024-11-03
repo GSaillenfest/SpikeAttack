@@ -845,7 +845,7 @@ MonoBehaviour:
   attackText: {fileID: 0}
   clickableButton: {fileID: 0}
   playerName: 
-  illustation: {fileID: 0}
+  illustration: {fileID: 0}
   effectDescription: 
   block: 0
   serve: 0
@@ -1249,13 +1249,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b2b7dc2135be6ec47bc1f6bc4a72b482, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team1: {fileID: 1056522903}
-  team2: {fileID: 176728477}
   finalScaleTextFactor: 2
-  finalScaleCardFactor: 1.2
+  finalScaleCardFactor: 1.3
   scaleTextFactor: 3
-  scaleTextTime: 0.5
-  scaleCardFactor: 1.2
+  scaleCardFactor: 1.4
+  scaleTextTime: 0.2
+  scaleCardTime: 0.5
 --- !u!1 &727932154
 GameObject:
   m_ObjectHideFlags: 0
@@ -1644,7 +1643,7 @@ MonoBehaviour:
   attackText: {fileID: 0}
   clickableButton: {fileID: 0}
   playerName: 
-  illustation: {fileID: 0}
+  illustration: {fileID: 0}
   effectDescription: 
   block: 0
   serve: 0
@@ -2106,7 +2105,7 @@ MonoBehaviour:
   attackText: {fileID: 0}
   clickableButton: {fileID: 0}
   playerName: 
-  illustation: {fileID: 0}
+  illustration: {fileID: 0}
   effectDescription: 
   block: 0
   serve: 0
@@ -2172,7 +2171,7 @@ MonoBehaviour:
   attackText: {fileID: 0}
   clickableButton: {fileID: 0}
   playerName: 
-  illustation: {fileID: 0}
+  illustration: {fileID: 0}
   effectDescription: 
   block: 0
   serve: 0
@@ -2574,7 +2573,7 @@ MonoBehaviour:
   attackText: {fileID: 0}
   clickableButton: {fileID: 0}
   playerName: 
-  illustation: {fileID: 0}
+  illustration: {fileID: 0}
   effectDescription: 
   block: 0
   serve: 0
@@ -2806,8 +2805,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c450634adf6303428e63f81e746122b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  team1: {fileID: 0}
-  team2: {fileID: 0}
+  team1: {fileID: 1056522903}
+  team2: {fileID: 176728477}
+  currentTeam: {fileID: 0}
+  teams: []
   playerRectTransform: {fileID: 0}
   playerCardSet: {fileID: 887334810}
   actionCardSet: {fileID: 1405028057}
@@ -2872,6 +2873,7 @@ MonoBehaviour:
   team1: {fileID: 1056522903}
   team2: {fileID: 176728477}
   gameUI: {fileID: 710421730}
+  startBtn: {fileID: 611188971}
   validateBtn: {fileID: 2080401688}
   actionIndex: 0
 --- !u!1 &1919055381
@@ -3215,7 +3217,7 @@ MonoBehaviour:
   attackText: {fileID: 0}
   clickableButton: {fileID: 0}
   playerName: 
-  illustation: {fileID: 0}
+  illustration: {fileID: 0}
   effectDescription: 
   block: 0
   serve: 0

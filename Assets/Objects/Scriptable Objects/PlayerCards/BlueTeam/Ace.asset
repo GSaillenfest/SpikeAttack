@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Ace
   m_EditorClassIdentifier: 
   playerName: Ace
-  illustation: {fileID: 2800000, guid: 4450e8a0dae15a845ab9f5341dfc6ea2, type: 3}
+  illustration: {fileID: 2800000, guid: 4450e8a0dae15a845ab9f5341dfc6ea2, type: 3}
   effectDescription: 
   block: 8
   serve: 1
@@ -21,3 +21,4 @@ MonoBehaviour:
   pass: 2
   attack: 8
   isLibero: 0
+  isOrangeTeam: 0

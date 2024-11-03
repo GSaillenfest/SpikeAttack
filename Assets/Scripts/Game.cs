@@ -10,8 +10,11 @@ public class Game : MonoBehaviour
     [SerializeField]
     GameUIManager gameUI;
     [SerializeField]
+    Button startBtn;
+    [SerializeField]
     Button validateBtn;
 
+    GameManager gameManager;
     private int turn;
     private VolleyPlayer[] selectedPlayerArr;
     private int[] actionArr;
@@ -19,6 +22,7 @@ public class Game : MonoBehaviour
     private TeamClass nonPlayingTeam;
     private bool isGameStarted;
     private int powerValue = 0;
+    private int previousPowerValue = 0;
 
     public int actionIndex = 0;
 
@@ -30,7 +34,14 @@ public class Game : MonoBehaviour
         turn = 0;
     }
 
-    public void PlayerTurn()
+    private void Awake()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+        team1 = gameManager.teams[0];
+        team2 = gameManager.teams[1];
+    }
+
+    /*public void PlayerTurn()
     {
         turn++;
 
@@ -38,19 +49,20 @@ public class Game : MonoBehaviour
         nonPlayingTeam = currentTeam;
         currentTeam = temp;
 
-    }
+    }*/
 
     // Called by UI Button for now
     public void StartGame()
     {
         // avoid two start game clicks
-        if (isGameStarted) return;
+        startBtn.interactable = false;
         selectedPlayerArr = new VolleyPlayer[3];
         selectedPlayerArr[0] = null;
         selectedPlayerArr[1] = null;
         selectedPlayerArr[2] = null;
         actionArr = new int[3];
         actionArr[0] = actionArr[1] = actionArr[2] = 0;
+        actionIndex = 0;
         currentTeam = team1;
         nonPlayingTeam = team2;
         SetSelectableCardAction(actionIndex, currentTeam);
@@ -58,6 +70,28 @@ public class Game : MonoBehaviour
         gameUI.UpdatePowerText(powerValue);
         gameUI.ChangeCurrentTeam(currentTeam);
         SetValidateButtonInteractable(false);
+    }
+
+    public void StartTurn(TeamClass team)
+    {
+        selectedPlayerArr = new VolleyPlayer[3];
+        selectedPlayerArr[0] = null;
+        selectedPlayerArr[1] = null;
+        selectedPlayerArr[2] = null;
+        actionArr = new int[3];
+        actionArr[0] = actionArr[1] = actionArr[2] = 0;
+        actionIndex = 0;
+        currentTeam = team;
+        nonPlayingTeam = GetOppositeTeam(team);
+        SetSelectableCardAction(actionIndex, currentTeam);
+        SetAllSelectableCardAction(false, nonPlayingTeam);
+        gameUI.UpdatePowerText(powerValue);
+        gameUI.ChangeCurrentTeam(currentTeam);
+    }
+
+    TeamClass GetOppositeTeam(TeamClass team)
+    {
+        return team == team1 ? team2 : team1;
     }
 
     // Update is called once per frame
@@ -193,9 +227,26 @@ public class Game : MonoBehaviour
         for (int i = 0; i < selectedPlayerArr.Length; i++)
         {
             selectedPlayerArr[i].SetActionUnavailable(i);
+            selectedPlayerArr[i].ResetScaleAction(i);
             selectedPlayerArr[i].DeselectCard();
+            selectedPlayerArr[i].SetIsSelected(false);
+            selectedPlayerArr[i].SetIsSelectedTwice(false);
         }
         SetValidateButtonInteractable(false);
+        // to be called in a future function (ValidateBlockSelection())
+        EndTurn();
+    }
+
+    void ValidateBlockSelection()
+    {
+
+    }
+
+    void EndTurn()
+    {
+        previousPowerValue = powerValue;
+        powerValue = 0;
+        gameManager.EndTurn();
     }
 
 }

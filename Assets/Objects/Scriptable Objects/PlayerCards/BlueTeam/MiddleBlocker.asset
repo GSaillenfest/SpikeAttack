@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MiddleBlocker
   m_EditorClassIdentifier: 
   playerName: MiddleBlocker
-  illustation: {fileID: 2800000, guid: 1095f7285e29e6c45881a512ef9f0b99, type: 3}
+  illustration: {fileID: 2800000, guid: 1095f7285e29e6c45881a512ef9f0b99, type: 3}
   effectDescription: 
   block: 1
   serve: 5
@@ -21,3 +21,4 @@ MonoBehaviour:
   pass: 2
   attack: 5
   isLibero: 0
+  isOrangeTeam: 0

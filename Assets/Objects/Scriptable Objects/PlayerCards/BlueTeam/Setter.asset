@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Setter
   m_EditorClassIdentifier: 
   playerName: Setter
-  illustation: {fileID: 2800000, guid: 1095f7285e29e6c45881a512ef9f0b99, type: 3}
+  illustration: {fileID: 2800000, guid: 1095f7285e29e6c45881a512ef9f0b99, type: 3}
   effectDescription: 
   block: 3
   serve: 3
@@ -21,3 +21,4 @@ MonoBehaviour:
   pass: 6
   attack: 2
   isLibero: 0
+  isOrangeTeam: 0

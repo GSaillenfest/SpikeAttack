@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: OutsideHitter
   m_EditorClassIdentifier: 
   playerName: OutsideHitter
-  illustation: {fileID: 2800000, guid: 302cb4e562505af4dbb7a5b429cefb98, type: 3}
+  illustration: {fileID: 2800000, guid: 302cb4e562505af4dbb7a5b429cefb98, type: 3}
   effectDescription: 
   block: 1
   serve: 6

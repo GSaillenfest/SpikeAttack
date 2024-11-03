@@ -75,4 +75,14 @@ public class GameUIManager : MonoBehaviour
     {
         uIEffects.ShowUnselected(volleyPlayer);
     }
+
+    internal void SetCardSelectable(VolleyPlayer volleyPlayer, bool isSelectable)
+    {
+        uIEffects.ShowSelectable(volleyPlayer, isSelectable);
+    }
+
+    internal void ResetScaleAction(VolleyPlayer volleyPlayer, int actionIndex)
+    {
+        uIEffects.ResetActionScaleOnly(volleyPlayer, actionIndex);
+    }
 }

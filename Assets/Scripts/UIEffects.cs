@@ -6,10 +6,6 @@ using UnityEngine;
 public class UIEffects : MonoBehaviour
 {
     [SerializeField]
-    private TeamClass team1;
-    [SerializeField]
-    private TeamClass team2;
-    [SerializeField]
     private float finalScaleTextFactor;    
     [SerializeField]
     private float finalScaleCardFactor;
@@ -21,6 +17,9 @@ public class UIEffects : MonoBehaviour
     private float scaleTextTime;
     [SerializeField]
     private float scaleCardTime;
+    private GameManager gameManager;
+    private TeamClass team1;
+    private TeamClass team2;
 
     VertexGradient orangeGradient = new VertexGradient(
         new Color32(255, 165, 0, 255),  // Orange clair en haut à gauche
@@ -40,13 +39,22 @@ public class UIEffects : MonoBehaviour
             new Color32(128, 128, 128, 255), // Gris foncé en bas à gauche
             new Color32(105, 105, 105, 255)  // Gris très foncé en bas à droite
         );
-    VertexGradient whitenonGradient = new VertexGradient(Color.white);
+    VertexGradient whiteNonGradient = new VertexGradient(Color.white);
 
     VertexGradient currentTeamGradient;
 
+    Color32 desaturationColor = new Color32(128, 128, 128, 255);
+
+    private void Start()
+    {
+        gameManager = FindObjectOfType<GameManager>();
+        team1 = gameManager.teams[0];
+        team2 = gameManager.teams[1];
+    }
 
     public void ChangeTeamColorGradient(TeamClass team)
     {
+        Debug.Log(team + " " + team2);
         if (team == team1)
         {
             currentTeamGradient = orangeGradient;
@@ -57,29 +65,23 @@ public class UIEffects : MonoBehaviour
         }
         else Debug.Log("No gradient applied");
     }
-    public void ShowSelectable(ArrayList playerArray)
+
+    public void ShowSelectable(VolleyPlayer playerCard, bool isSelectable)
     {
-        //if isSelectable
-        //add gloom effect around objects
+        playerCard.image.color = isSelectable? Color.white : desaturationColor;
     }
 
-    public void ShowUnselectable(ArrayList playerArray)
+    public void ShowSelected(VolleyPlayer playerCard)
     {
-        //if !isSelectable
-        //remove all effect arount object
+        BounceCardOnSelection(playerCard.gameObject);
     }
 
-    public void ShowSelected(VolleyPlayer player)
+    public void ShowUnselected(VolleyPlayer playerCard)
     {
-        BounceCardOnSelection(player.gameObject);
-    }
-
-    public void ShowUnselected(VolleyPlayer player)
-    {
-        if (!player.isSelectedTwice)
+        if (!playerCard.isSelectedTwice)
         {
             Debug.Log("Reset Scale");
-            ResetScale(player.gameObject);
+            ResetScale(playerCard.gameObject);
         }
     }
 
@@ -94,9 +96,14 @@ public class UIEffects : MonoBehaviour
 
     public void ShowUnselectedAction(VolleyPlayer player, int actionIndex)
     {
-        player.actionTexts[actionIndex].colorGradient = whitenonGradient;
-        ResetScale(player.actionTexts[actionIndex].gameObject);
+        player.actionTexts[actionIndex].colorGradient = whiteNonGradient;
+        ResetActionScaleOnly(player, actionIndex);
         //add effect around action
+    }
+
+    public void ResetActionScaleOnly(VolleyPlayer player, int actionIndex)
+    {
+        ResetScale(player.actionTexts[actionIndex].gameObject);
     }
 
     public void ShowUnselectableAction(VolleyPlayer player, int actionIndex)

@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MiddleBlocker
   m_EditorClassIdentifier: 
   playerName: MiddleBlocker
-  illustation: {fileID: 2800000, guid: 93c38998384a76146878b3d83f75a2d8, type: 3}
+  illustration: {fileID: 2800000, guid: 93c38998384a76146878b3d83f75a2d8, type: 3}
   effectDescription: 
   block: 1
   serve: 5

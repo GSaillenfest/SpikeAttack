@@ -6,7 +6,7 @@ using UnityEngine.UI;
 public class VolleyPlayer : MonoBehaviour
 {
     [SerializeField]
-    RawImage image;
+    public RawImage image;
     [SerializeField]
     TMP_Text blockText;
     [SerializeField]
@@ -21,7 +21,7 @@ public class VolleyPlayer : MonoBehaviour
     Button clickableButton;
 
     public string playerName;
-    public Texture illustation;
+    public Texture illustration;
     public string effectDescription;
     public CardEffect cardEffect;
     public int block;
@@ -43,7 +43,7 @@ public class VolleyPlayer : MonoBehaviour
     internal void Initialize(VolleyPlayersSO sO)
     {
         playerName = sO.playerName;
-        illustation = sO.illustation;
+        illustration = sO.illustration;
         effectDescription = sO.effectDescription;
         cardEffect = sO.cardEffect;
         block = sO.block;
@@ -67,6 +67,7 @@ public class VolleyPlayer : MonoBehaviour
 
         gameScript = FindObjectOfType<Game>();
         gameUI = FindObjectOfType<GameUIManager>();
+        image.texture = illustration;
 
         SetSelectable(false);
 
@@ -81,7 +82,6 @@ public class VolleyPlayer : MonoBehaviour
             serveText.SetText(serve.ToString());
         }
 
-        image.texture = illustation;
         digText.SetText(dig.ToString());
         passText.SetText(pass.ToString());
         attackText.SetText(attack.ToString());
@@ -97,6 +97,11 @@ public class VolleyPlayer : MonoBehaviour
         gameUI.DeselectAction(this, actionIndex);
     }
 
+    internal void ResetScaleAction(int actionIndex)
+    {
+        gameUI.ResetScaleAction(this, actionIndex);
+    }
+
     internal void SelectActionAnimation(int actionIndex)
     {
         gameUI.SelectAction(this, actionIndex);
@@ -110,6 +115,7 @@ public class VolleyPlayer : MonoBehaviour
     internal void SetSelectable(bool selectable)
     {
         clickableButton.interactable = selectable;
+        gameUI.SetCardSelectable(this, selectable);
     }
 
     internal void SetActionUnavailable(int i)
@@ -132,4 +138,5 @@ public class VolleyPlayer : MonoBehaviour
     {
         gameUI.DeselectCard(this);
     }
+
 }

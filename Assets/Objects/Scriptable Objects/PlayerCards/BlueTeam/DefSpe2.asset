@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: DefSpe2
   m_EditorClassIdentifier: 
   playerName: DefSpe2
-  illustation: {fileID: 2800000, guid: 1095f7285e29e6c45881a512ef9f0b99, type: 3}
+  illustration: {fileID: 2800000, guid: 974c76f6cdeeaab41be26b10208555aa, type: 3}
   effectDescription: 
   block: 4
   serve: 1
@@ -21,3 +21,4 @@ MonoBehaviour:
   pass: 5
   attack: 3
   isLibero: 0
+  isOrangeTeam: 0

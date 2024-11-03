@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
 
     public TeamClass team1;
     public TeamClass team2;
+    public TeamClass currentTeam;
+    public List<TeamClass> teams = new();
     private List<VolleyPlayersSO> playerCardSOs;
     private List<ActionCardSO> actionCardSOs;
     private List<GameObject> volleyPlayersOrange = new List<GameObject>();
@@ -25,7 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     GameObject playerTwo;
 
-
+    Game game;
     private int turn;
 
     private void Awake()
@@ -42,6 +44,9 @@ public class GameManager : MonoBehaviour
 
         playerCardSOs = GetComponentInChildren<CardSet>().playerCardSOs;
         actionCardSOs = GetComponentInChildren<CardSet>().actionCardSOs;
+        game = GetComponent<Game>();
+        teams.Add(team1);
+        teams.Add(team2);
     }
 
     // Start is called before the first frame update
@@ -83,6 +88,8 @@ public class GameManager : MonoBehaviour
         //team1 = new TeamClass();
         //team2 = new TeamClass();
         turn = 0;
+        Debug.Log(team1);
+        currentTeam = team1;
     }
 
     public void ChoseTeamPlayer()
@@ -127,9 +134,16 @@ public class GameManager : MonoBehaviour
         turn++;
     }
 
+    void StartTurn(TeamClass team)
+    {
+        SetCurrentTeam(team);
+        game.StartTurn(currentTeam);
+    }
+
     public void EndTurn()
     {
-
+        Debug.Log("End Turn");
+        StartTurn(SwitchTeam());
     }
 
     public void EndPoint()
@@ -147,4 +161,16 @@ public class GameManager : MonoBehaviour
     {
 
     }
+
+    TeamClass SwitchTeam()
+    {
+        Debug.Log(currentTeam);
+        return currentTeam == team1 ? team2 : team1;
+    }
+
+    void SetCurrentTeam(TeamClass team)
+    {
+        currentTeam = team;
+    }
+
 }

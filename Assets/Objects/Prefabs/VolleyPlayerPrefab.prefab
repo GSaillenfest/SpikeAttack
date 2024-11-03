@@ -287,7 +287,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.009433985, g: 0.008677486, b: 0.008677486, a: 0.50980395}
+  m_Color: {r: 0.009433985, g: 0.008677486, b: 0.008677486, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -502,7 +502,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.009433985, g: 0.008677486, b: 0.008677486, a: 0.50980395}
+  m_Color: {r: 0.009433985, g: 0.008677486, b: 0.008677486, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -806,7 +806,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.009433985, g: 0.008677486, b: 0.008677486, a: 0.50980395}
+  m_Color: {r: 0.009433985, g: 0.008677486, b: 0.008677486, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1893,7 +1893,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.009433985, g: 0.008677486, b: 0.008677486, a: 0.50980395}
+  m_Color: {r: 0.009433985, g: 0.008677486, b: 0.008677486, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2151,7 +2151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.009433985, g: 0.008677486, b: 0.008677486, a: 0.50980395}
+  m_Color: {r: 0.009433985, g: 0.008677486, b: 0.008677486, a: 0}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2593,7 +2593,7 @@ MonoBehaviour:
   attackText: {fileID: 1200558470742998528}
   clickableButton: {fileID: 2092337018759799079}
   playerName: 
-  illustation: {fileID: 0}
+  illustration: {fileID: 0}
   effectDescription: 
   block: 0
   serve: 0
@@ -2604,6 +2604,8 @@ MonoBehaviour:
   isLibero: 0
   isActionAvailable: 
   isOrangeTeam: 0
+  isSelected: 0
+  isSelectedTwice: 0
   actionTexts: []
 --- !u!1 &9043289230173021075
 GameObject:
