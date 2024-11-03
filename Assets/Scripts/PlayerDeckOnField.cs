@@ -1,9 +1,13 @@
+using System.Collections.Generic;
 using UnityEngine;
+
 
 public class PlayerDeckOnField : MonoBehaviour
 {
     [SerializeField]
     public GameObject[] deckSlots;
+
+    List<VolleyPlayer> playersOnField = new();
 
     // Start is called before the first frame update
     void Start()
@@ -14,7 +18,13 @@ public class PlayerDeckOnField : MonoBehaviour
 
     void RefreshDeck()
     {
+        playersOnField.Clear();
         VolleyPlayer[] childList = gameObject.GetComponentsInChildren<VolleyPlayer>();
+        foreach (VolleyPlayer child in childList)
+        {
+            playersOnField.Add(child);
+        }
+        SetSlotIndex();
     }
 
 
@@ -39,5 +49,13 @@ public class PlayerDeckOnField : MonoBehaviour
         tempPlayerSlot.transform.GetChild(0).SetParent(deckSlots[2].transform, false);
 
         RefreshDeck();
+    }
+
+    public void SetSlotIndex()
+    {
+        for (int i = 0; i < playersOnField.Count; i++)
+        {
+            playersOnField[i].slotIndex = i;
+        }
     }
 }

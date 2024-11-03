@@ -52,18 +52,9 @@ public class UIEffects : MonoBehaviour
         team2 = gameManager.teams[1];
     }
 
-    public void ChangeTeamColorGradient(TeamClass team)
+    VertexGradient SelectTeamColorGradient(VolleyPlayer player)
     {
-        Debug.Log(team + " " + team2);
-        if (team == team1)
-        {
-            currentTeamGradient = orangeGradient;
-        }
-        else if (team == team2)
-        {
-            currentTeamGradient = blueGradient;
-        }
-        else Debug.Log("No gradient applied");
+        return player.isOrangeTeam? orangeGradient : blueGradient;
     }
 
     public void ShowSelectable(VolleyPlayer playerCard, bool isSelectable)
@@ -80,17 +71,31 @@ public class UIEffects : MonoBehaviour
     {
         if (!playerCard.isSelectedTwice)
         {
-            Debug.Log("Reset Scale");
             ResetScale(playerCard.gameObject);
         }
+    }
+
+    public void ShowSelectedForBlock(VolleyPlayer playerCard)
+    {
+        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20 , 20, 0);
+        playerCard.blockText.colorGradient = SelectTeamColorGradient(playerCard);
+        BounceOnSelection(playerCard.blockText.gameObject);
+        playerCard.gameObject.transform.position += offset ;
+    }    
+    
+    public void ShowUnselectedForBlock(VolleyPlayer playerCard)
+    {
+        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20, 20, 0);
+        ResetScale(playerCard.blockText.gameObject);
+        playerCard.blockText.colorGradient = whiteNonGradient;
+        playerCard.gameObject.transform.position -= offset;
     }
 
     public void ShowSelectedAction(VolleyPlayer player, int actionIndex)
     {
 
-        player.actionTexts[actionIndex].enableVertexGradient = true;
-        player.actionTexts[actionIndex].colorGradient = currentTeamGradient;
-        BounceOnSelection(player.actionTexts[actionIndex].gameObject, actionIndex);
+        player.actionTexts[actionIndex].colorGradient = SelectTeamColorGradient(player);
+        BounceOnSelection(player.actionTexts[actionIndex].gameObject);
         //add effect around action
     }
 
@@ -111,7 +116,7 @@ public class UIEffects : MonoBehaviour
         player.actionTexts[actionIndex].colorGradient = greyGradient;
     }
 
-    void BounceOnSelection(GameObject go, int actionIndex)
+    void BounceOnSelection(GameObject go)
     {
         LeanTween.scale(go, scaleTextFactor * Vector3.one, scaleTextTime).setEaseOutBounce().setOnComplete(() => SetTextEndOfAnimScale(go));
     }

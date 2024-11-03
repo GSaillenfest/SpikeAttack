@@ -71,11 +71,13 @@ public class GameManager : MonoBehaviour
             if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == true && slots[0].transform.childCount == 0)
             {
                 volleyPlayer.transform.SetParent(slots[0].transform, false);
+                volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).slotIndex = 0;
                 volleyPlayer.SetActive(true);
             }
             else if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == false)
             {
                 volleyPlayer.transform.SetParent(slots[slotIndex].transform, false);
+                volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).slotIndex = slotIndex;
                 volleyPlayer.SetActive(true);
                 slotIndex++;
             }
@@ -88,7 +90,6 @@ public class GameManager : MonoBehaviour
         //team1 = new TeamClass();
         //team2 = new TeamClass();
         turn = 0;
-        Debug.Log(team1);
         currentTeam = team1;
     }
 
@@ -104,7 +105,6 @@ public class GameManager : MonoBehaviour
         {
             GameObject volleyPlayer = CreateNewPlayer(player);
             volleyPlayer.transform.SetParent(playerCardSet);
-            //Debug.Log(volleyPlayer.name + volleyPlayer.GetComponentsInChildren<RectTransform>()[1].anchoredPosition);
             volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchoredPosition = Vector2.zero;
             volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchorMin = 0.5f * Vector2.one;
             volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchorMax = 0.5f * Vector2.one;
@@ -119,7 +119,6 @@ public class GameManager : MonoBehaviour
 
     GameObject CreateNewPlayer(VolleyPlayersSO sO)
     {
-
         // create a new game object
         GameObject newPlayer = Instantiate(playerCardPrefab);
 

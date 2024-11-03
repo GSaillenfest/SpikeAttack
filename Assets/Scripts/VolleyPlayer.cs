@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,7 +7,7 @@ public class VolleyPlayer : MonoBehaviour
     [SerializeField]
     public RawImage image;
     [SerializeField]
-    TMP_Text blockText;
+    public TMP_Text blockText;
     [SerializeField]
     TMP_Text serveText;
     [SerializeField]
@@ -39,6 +38,8 @@ public class VolleyPlayer : MonoBehaviour
 
     Game gameScript;
     GameUIManager gameUI;
+
+    public int slotIndex = 0;
 
     internal void Initialize(VolleyPlayersSO sO)
     {
@@ -107,9 +108,10 @@ public class VolleyPlayer : MonoBehaviour
         gameUI.SelectAction(this, actionIndex);
     }
 
-    public void SelectAction()
+    // onclick function
+    public void CallClickedFunction()
     {
-        gameScript.SelectAction(this);
+        gameScript.SelectCardButtonFunction(this, slotIndex);
     }
 
     internal void SetSelectable(bool selectable)
@@ -127,8 +129,8 @@ public class VolleyPlayer : MonoBehaviour
     internal void SetIsSelected(bool selected)
     {
         isSelected = selected;
-    }    
-    
+    }
+
     internal void SetIsSelectedTwice(bool selected)
     {
         isSelectedTwice = selected;
@@ -139,4 +141,15 @@ public class VolleyPlayer : MonoBehaviour
         gameUI.DeselectCard(this);
     }
 
+    internal void SelectBlock()
+    {
+        gameUI.SelectPlayerBlock(this);
+    }    
+    
+    internal void DeselectBlock()
+    {
+        gameUI.DeselectPlayerBlock(this);
+    }
+
 }
+

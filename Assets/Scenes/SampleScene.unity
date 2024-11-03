@@ -859,6 +859,7 @@ MonoBehaviour:
   isSelected: 0
   isSelectedTwice: 0
   actionTexts: []
+  slotIndex: 0
 --- !u!1 &611188969
 GameObject:
   m_ObjectHideFlags: 0
@@ -946,11 +947,11 @@ MonoBehaviour:
       - m_Target: {fileID: 1721852644}
         m_TargetAssemblyTypeName: Game, Assembly-CSharp
         m_MethodName: StartGame
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 1
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1657,6 +1658,7 @@ MonoBehaviour:
   isSelected: 0
   isSelectedTwice: 0
   actionTexts: []
+  slotIndex: 0
 --- !u!1 &1056522901
 GameObject:
   m_ObjectHideFlags: 0
@@ -2119,6 +2121,7 @@ MonoBehaviour:
   isSelected: 0
   isSelectedTwice: 0
   actionTexts: []
+  slotIndex: 0
 --- !u!1 &1317446600
 GameObject:
   m_ObjectHideFlags: 0
@@ -2185,6 +2188,7 @@ MonoBehaviour:
   isSelected: 0
   isSelectedTwice: 0
   actionTexts: []
+  slotIndex: 0
 --- !u!1 &1369799833
 GameObject:
   m_ObjectHideFlags: 0
@@ -2587,6 +2591,7 @@ MonoBehaviour:
   isSelected: 0
   isSelectedTwice: 0
   actionTexts: []
+  slotIndex: 0
 --- !u!1 &1672869980
 GameObject:
   m_ObjectHideFlags: 0
@@ -3066,7 +3071,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1721852644}
         m_TargetAssemblyTypeName: Game, Assembly-CSharp
-        m_MethodName: ValidateActions
+        m_MethodName: SelectValidateButtonFunction
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3231,3 +3236,4 @@ MonoBehaviour:
   isSelected: 0
   isSelectedTwice: 0
   actionTexts: []
+  slotIndex: 0

@@ -38,6 +38,16 @@ public class GameUIManager : MonoBehaviour
         uIEffects.ShowUnselectedAction(selectedPlayer, actionIndex);
     }
 
+    public void SelectPlayerBlock(VolleyPlayer playerCard)
+    {
+        uIEffects.ShowSelectedForBlock(playerCard);
+    }
+
+    public void DeselectPlayerBlock(VolleyPlayer playerCard)
+    {
+        uIEffects.ShowUnselectedForBlock(playerCard);
+    }
+
     public void SelectPlayerToReplace(VolleyPlayer selectedPlayer)
     {
         //select player from gamefield to be replaced
@@ -49,21 +59,15 @@ public class GameUIManager : MonoBehaviour
         //select player from sidelines to put on game field
         uIEffects.ShowSelected(selectedPlayer);
     }
-
-    internal void ChangeCurrentTeam(TeamClass currentTeam)
+    // deprecated
+/*    internal void ChangeCurrentTeam(TeamClass currentTeam)
     {
         uIEffects.ChangeTeamColorGradient(currentTeam);
-    }
+    }*/
 
     internal void UpdatePowerText(object powerValue)
     {
         powerText.text = powerValue.ToString();
-    }
-
-    public void SelectBlock(VolleyPlayer selectedPlayer)
-    {
-        //select a player form block
-        uIEffects.ShowSelected(selectedPlayer);
     }
 
     internal void DeactivateValidateButton()

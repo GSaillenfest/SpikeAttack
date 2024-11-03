@@ -23,9 +23,11 @@ public class Game : MonoBehaviour
     private bool isGameStarted;
     private int powerValue = 0;
     private int previousPowerValue = 0;
+    private int blockIndex;
+    private int attackIndex;
 
     public int actionIndex = 0;
-
+    private Phase currentPhase;
 
     public Game(TeamClass t1, TeamClass t2)
     {
@@ -39,54 +41,64 @@ public class Game : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         team1 = gameManager.teams[0];
         team2 = gameManager.teams[1];
+        selectedPlayerArr = new VolleyPlayer[3];
+        actionArr = new int[3];
     }
 
-    /*public void PlayerTurn()
-    {
-        turn++;
 
-        TeamClass temp = nonPlayingTeam;
-        nonPlayingTeam = currentTeam;
-        currentTeam = temp;
-
-    }*/
-
-    // Called by UI Button for now
-    public void StartGame()
+    // Start a regular game (Called by UI Button for now)
+    public void StartGame(int team = 1)
     {
         // avoid two start game clicks
         startBtn.interactable = false;
-        selectedPlayerArr = new VolleyPlayer[3];
+        currentTeam = team == 1 ? team1 : team2;
+        currentPhase = Phase.Action;
+        StartTurn(currentTeam);
+/*        // empty selectedPlayerArr
         selectedPlayerArr[0] = null;
         selectedPlayerArr[1] = null;
         selectedPlayerArr[2] = null;
-        actionArr = new int[3];
+        // empty actionArr
         actionArr[0] = actionArr[1] = actionArr[2] = 0;
+        // reset actionIndex to 0
         actionIndex = 0;
-        currentTeam = team1;
-        nonPlayingTeam = team2;
+        // set currentTeam to team set by GameManager and nonPlayingTeam
+        nonPlayingTeam = GetOppositeTeam(currentTeam);
+        // set selectable cards based on available action "Dig"
         SetSelectableCardAction(actionIndex, currentTeam);
+        // set all cards unselectable on non playing side
         SetAllSelectableCardAction(false, nonPlayingTeam);
+        // reset power text on UI
         gameUI.UpdatePowerText(powerValue);
-        gameUI.ChangeCurrentTeam(currentTeam);
-        SetValidateButtonInteractable(false);
+        // change current team on UI
+        SetValidateButtonInteractable(false);*/
     }
 
     public void StartTurn(TeamClass team)
     {
-        selectedPlayerArr = new VolleyPlayer[3];
-        selectedPlayerArr[0] = null;
-        selectedPlayerArr[1] = null;
-        selectedPlayerArr[2] = null;
-        actionArr = new int[3];
+        SetActionPhase(team);
+    }
+
+    private void SetActionPhase(TeamClass team)
+    {
+        Debug.Log("Action phase");
+        currentPhase = Phase.Action;
+        EmptySelectedPlayerArr();
         actionArr[0] = actionArr[1] = actionArr[2] = 0;
         actionIndex = 0;
         currentTeam = team;
-        nonPlayingTeam = GetOppositeTeam(team);
+        nonPlayingTeam = GetOppositeTeam(currentTeam);
         SetSelectableCardAction(actionIndex, currentTeam);
         SetAllSelectableCardAction(false, nonPlayingTeam);
         gameUI.UpdatePowerText(powerValue);
-        gameUI.ChangeCurrentTeam(currentTeam);
+        SetValidateButtonInteractable(false);
+    }
+
+    private void EmptySelectedPlayerArr()
+    {
+        selectedPlayerArr[0] = null;
+        selectedPlayerArr[1] = null;
+        selectedPlayerArr[2] = null;
     }
 
     TeamClass GetOppositeTeam(TeamClass team)
@@ -94,10 +106,15 @@ public class Game : MonoBehaviour
         return team == team1 ? team2 : team1;
     }
 
-    // Update is called once per frame
-    void Update()
+    void SetBlockPhase()
     {
-
+        Debug.Log("Block phase");
+        foreach (GameObject slot in currentTeam.deckOnField.deckSlots)
+        {
+            bool isSelectable = (slot.GetComponentInChildren<VolleyPlayer>().slotIndex >= 2 && slot.GetComponentInChildren<VolleyPlayer>().slotIndex <= 4);
+            slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(isSelectable);
+        }
+        SetValidateButtonInteractable(false);
     }
 
     public void SelectAction(VolleyPlayer selected)
@@ -151,13 +168,33 @@ public class Game : MonoBehaviour
             }
         }
 
-
         if (actionIndex == 3)
         {
             SetValidateButtonInteractable(true);
         }
 
         UpdatePowerValue();
+    }
+
+    public void SelectBlockCard(VolleyPlayer player, int slotIndex)
+    {
+        Debug.Log(selectedPlayerArr[0]);
+        if (selectedPlayerArr[0] == null)
+        {
+            selectedPlayerArr[0] = player;
+            blockIndex = slotIndex;
+            SetAllSelectableCardAction(false, currentTeam);
+            selectedPlayerArr[0].SetSelectable(true);
+            selectedPlayerArr[0].SelectBlock();
+            SetValidateButtonInteractable(true);
+        }
+        else
+        {
+            selectedPlayerArr[0].DeselectBlock();
+            selectedPlayerArr[0] = null;
+            blockIndex = 0;
+            SetBlockPhase();
+        }
     }
 
     private void SetValidateButtonInteractable(bool isInteractable)
@@ -221,7 +258,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    public void ValidateActions()
+    void ValidateActions()
     {
         SetAllSelectableCardAction(false, currentTeam);
         for (int i = 0; i < selectedPlayerArr.Length; i++)
@@ -232,14 +269,17 @@ public class Game : MonoBehaviour
             selectedPlayerArr[i].SetIsSelected(false);
             selectedPlayerArr[i].SetIsSelectedTwice(false);
         }
+        EmptySelectedPlayerArr();
         SetValidateButtonInteractable(false);
-        // to be called in a future function (ValidateBlockSelection())
-        EndTurn();
+        ChangePhase(Phase.Block);
     }
 
     void ValidateBlockSelection()
     {
-
+        SetAllSelectableCardAction(false, currentTeam);
+        selectedPlayerArr[0].DeselectCard();
+        selectedPlayerArr[0].DeselectBlock();
+        EndTurn();
     }
 
     void EndTurn()
@@ -247,6 +287,71 @@ public class Game : MonoBehaviour
         previousPowerValue = powerValue;
         powerValue = 0;
         gameManager.EndTurn();
+    }
+
+    public void SelectCardButtonFunction(VolleyPlayer player, int slotIndex)
+    {
+        Debug.Log("Card clicked on " + currentPhase);
+        switch (currentPhase)
+        {
+            case Phase.TeamSelection:
+                break;
+            case Phase.Block:
+                SelectBlockCard(player, slotIndex);
+                break;
+            case Phase.Action:
+                SelectAction(player);
+                break;
+            case Phase.Replacement:
+                break;
+            case Phase.Serve:
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void SelectValidateButtonFunction()
+    {
+        switch (currentPhase)
+        {
+            case Phase.TeamSelection:
+                break;
+            case Phase.Block:
+                ValidateBlockSelection();
+                break;
+            case Phase.Action:
+                ValidateActions();
+                break;
+            case Phase.Replacement:
+                break;
+            case Phase.Serve:
+                break;
+            default:
+                break;
+        }
+    }
+
+    void ChangePhase(Phase phase)
+    {
+        currentPhase = phase;
+        switch (currentPhase)
+        {
+            case Phase.TeamSelection:
+                break;
+            case Phase.Block:
+                SetBlockPhase();
+                break;
+            case Phase.Action:
+                SetActionPhase(nonPlayingTeam);
+                break;
+            case Phase.Replacement:
+                break;
+            case Phase.Serve:
+                break;
+            default:
+                break;
+        }
     }
 
 }
