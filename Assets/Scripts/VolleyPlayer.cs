@@ -150,11 +150,15 @@ public class VolleyPlayer : MonoBehaviour
     internal void DeselectBlock()
     {
         gameUI.DeselectPlayerBlock(this);
-    }
+    }    
 
     internal void SelectServe()
     {
         gameUI.SelectPlayerServe(this);
+    }
+    internal void DeselectServe()
+    {
+        gameUI.DeselectPlayerServe(this);
     }
 }
 

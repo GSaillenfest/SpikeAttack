@@ -37,6 +37,11 @@ public class PlayerDeckOnField : MonoBehaviour
     public int GetBlockValue(int slotIndex)
     {
         return playersOnField[slotIndex].block;
+    }    
+    
+    public int GetServeValue()
+    {
+        return playersOnField[5].serve;
     }
 
     public int GetBlockIndex()
@@ -144,5 +149,11 @@ public class PlayerDeckOnField : MonoBehaviour
             bool isSelectable = (slot.GetComponentInChildren<VolleyPlayer>().slotIndex >= 2 && slot.GetComponentInChildren<VolleyPlayer>().slotIndex <= 4);
             slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(isSelectable);
         }
+    }
+
+    internal void ValidateServe()
+    {
+        playersOnField[5].DeselectCard();
+        playersOnField[5].DeselectServe();
     }
 }

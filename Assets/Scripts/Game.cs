@@ -62,7 +62,7 @@ public class Game : MonoBehaviour
                 SetBlockResolutionPhase();
                 break;
             case Phase.Action:
-                SetActionPhase(currentTeam);
+                SetActionPhase();
                 break;
             case Phase.Replacement:
                 break;
@@ -84,7 +84,17 @@ public class Game : MonoBehaviour
     private void SelectServeCard(VolleyPlayer selected)
     {
         selected.SelectServe();
+        actionArr[0] = currentTeam.GetServeValue();
+        UpdatePowerValue();
         SetValidateButtonInteractable(true);
+
+    }
+
+    private void ValidateServe()
+    {
+        SetAllSelectableCardAction(currentTeam, false);
+        currentTeam.ValidateServe();
+        EndTurn();
     }
 
     private void SetBlockResolutionPhase()
@@ -128,13 +138,11 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void SetActionPhase(TeamClass team)
+    private void SetActionPhase()
     {
         EmptySelectedCardSlots();
         actionArr[0] = actionArr[1] = actionArr[2] = 0;
         actionIndex = 0;
-        currentTeam = team;
-        nonPlayingTeam = GetOppositeTeam(currentTeam);
         SetSelectableCardAction();
         SetAllSelectableCardAction(nonPlayingTeam, false);
         SetValidateButtonInteractable(false);
@@ -261,7 +269,6 @@ public class Game : MonoBehaviour
     {
         // avoid two startgame clicks
         startBtn.interactable = false;
-        currentTeam = team == 1 ? team1 : team2;
         gameUI.UpdatePowerText(powerValue);
         gameUI.UpdatePreviousPowerText(previousPowerValue);
         turn = 0;
@@ -271,7 +278,6 @@ public class Game : MonoBehaviour
     public void StartTurn()
     {
         turn++;
-        // to be redifined ////////////
         ChangePhase(Phase.BlockResolution);
     }
 
@@ -341,6 +347,7 @@ public class Game : MonoBehaviour
             case Phase.Replacement:
                 break;
             case Phase.Serve:
+                SelectServeCard(player);
                 break;
             default:
                 break;
@@ -364,6 +371,7 @@ public class Game : MonoBehaviour
             case Phase.Replacement:
                 break;
             case Phase.Serve:
+                ValidateServe();
                 break;
             default:
                 break;

@@ -49,6 +49,11 @@ public class TeamClass : MonoBehaviour
     internal void ValidateBlock(int slotIndex)
     {
         deckOnField.ValidateBlock(slotIndex);
+    }    
+    
+    internal void ValidateServe()
+    {
+        deckOnField.ValidateServe();
     }
 
     internal void SetAllSelectableCardField(bool isSelectable)
@@ -59,5 +64,10 @@ public class TeamClass : MonoBehaviour
     internal void SetServePhase()
     {
         deckOnField.SetServePhase();
+    }
+
+    internal int GetServeValue()
+    {
+        return deckOnField.GetServeValue();
     }
 }

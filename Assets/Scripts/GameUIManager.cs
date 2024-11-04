@@ -106,4 +106,9 @@ public class GameUIManager : MonoBehaviour
     {
         uIEffects.ShowSelectedForServe(playerCard);
     }
+
+    internal void DeselectPlayerServe(VolleyPlayer playerCard)
+    {
+        uIEffects.ShowUnselectedForServe(playerCard);
+    }
 }
