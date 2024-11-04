@@ -30,8 +30,9 @@ public enum PlayerDeck
 public enum Phase
 {
     TeamSelection,
-    Block,
+    BlockSelection,
+    BlockResolution,
     Action,
     Replacement,
-    Serve
+    Serve,
 }

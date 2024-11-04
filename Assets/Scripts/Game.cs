@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -49,26 +50,75 @@ public class Game : MonoBehaviour
         attackIndex = nonAttributed;
     }
 
-
-    // Start a regular game (Called by UI Button for now)
-    public void StartGame(int team = 1)
+    void ChangePhase(Phase phase)
     {
-        // avoid two start game clicks
-        startBtn.interactable = false;
-        currentTeam = team == 1 ? team1 : team2;
-        currentPhase = Phase.Action;
-        StartTurn();
+        currentPhase = phase;
+        switch (currentPhase)
+        {
+            case Phase.TeamSelection:
+                break;
+            case Phase.BlockSelection:
+                SetBlockSelectionPhase();
+                break;
+            case Phase.BlockResolution:
+                SetBlockResolutionPhase();
+                break;
+            case Phase.Action:
+                SetActionPhase(currentTeam);
+                break;
+            case Phase.Replacement:
+                break;
+            case Phase.Serve:
+                break;
+            default:
+                break;
+        }
     }
 
-    public void StartTurn()
+    private void SetBlockResolutionPhase()
     {
-        SetActionPhase(currentTeam);
+        currentPhase = Phase.BlockResolution;
+        ResolveBlock();
+    }
+
+    private void ResolveBlock()
+    {
+        int previousBlockIndex = currentTeam.deckOnField.GetBlockIndex();
+        Debug.Log(previousBlockIndex + " " + attackIndex);
+        if (previousBlockIndex == nonAttributed)
+        {
+            ChangePhase(Phase.Action);
+            Debug.Log("No block");
+            return;
+        }
+        if (previousBlockIndex == 2 && (attackIndex == 4 || attackIndex == 5) ||
+            previousBlockIndex == 3 && (attackIndex == 0 || attackIndex == 3) ||
+            previousBlockIndex == 4 && (attackIndex == 1 || attackIndex == 2))
+        {
+            if (currentTeam.deckOnField.GetBlockValue(previousBlockIndex) >= previousPowerValue)
+            {
+                Debug.Log("Block succeed : Point");
+                gameManager.EndPoint();
+            }
+            else
+            {
+                Debug.Log("Block succeed : Previous power value is reduced");
+                previousPowerValue -= currentTeam.deckOnField.GetBlockValue(previousBlockIndex);
+                gameUI.UpdatePreviousPowerText(previousPowerValue);
+                gameUI.UpdatePreviousPowerMalusText(currentTeam.deckOnField.GetBlockValue(previousBlockIndex));
+                // Add UI FX
+                ChangePhase(Phase.Action);
+            }
+        }
+        else
+        {
+            Debug.Log("Block failed");
+            ChangePhase(Phase.Action);
+        }
     }
 
     private void SetActionPhase(TeamClass team)
     {
-        Debug.Log("Action phase");
-        currentPhase = Phase.Action;
         EmptySelectedCardSlots();
         actionArr[0] = actionArr[1] = actionArr[2] = 0;
         actionIndex = 0;
@@ -76,25 +126,6 @@ public class Game : MonoBehaviour
         nonPlayingTeam = GetOppositeTeam(currentTeam);
         SetSelectableCardAction();
         SetAllSelectableCardAction(nonPlayingTeam, false);
-        gameUI.UpdatePowerText(powerValue);
-        SetValidateButtonInteractable(false);
-    }
-
-    private void EmptySelectedCardSlots()
-    {
-        selectedCardSlots[0] = nonAttributed;
-        selectedCardSlots[1] = nonAttributed;
-        selectedCardSlots[2] = nonAttributed;
-    }
-
-    TeamClass GetOppositeTeam(TeamClass team)
-    {
-        return team == team1 ? team2 : team1;
-    }
-
-    void SetBlockPhase()
-    {
-        currentTeam.SetBlockPhase();
         SetValidateButtonInteractable(false);
     }
 
@@ -159,6 +190,35 @@ public class Game : MonoBehaviour
         UpdatePowerValue();
     }
 
+    void SetSelectableCardAction()
+    {
+        currentTeam.SetSelectableCardAction(actionIndex, selectedCardSlots);
+    }
+
+    void SetAllSelectableCardAction(TeamClass team, bool isSelectable)
+    {
+        team.SetAllSelectableCardField(isSelectable);
+    }
+
+    void ValidateActions()
+    {
+        SetAllSelectableCardAction(currentTeam, false);
+        for (int i = 0; i < selectedCardSlots.Length; i++)
+        {
+            currentTeam.ValidateActionCombo(selectedCardSlots[i], i);
+        }
+        attackIndex = selectedCardSlots[2];
+        EmptySelectedCardSlots();
+        SetValidateButtonInteractable(false);
+        ChangePhase(Phase.BlockSelection);
+    }
+
+    void SetBlockSelectionPhase()
+    {
+        currentTeam.SetBlockPhase();
+        SetValidateButtonInteractable(false);
+    }
+
     public void SelectBlockCard(VolleyPlayer player)
     {
         if (selectedCardSlots[0] == nonAttributed)
@@ -175,8 +235,63 @@ public class Game : MonoBehaviour
             player.DeselectBlock();
             selectedCardSlots[0] = nonAttributed;
             blockIndex = nonAttributed;
-            SetBlockPhase();
+            SetBlockSelectionPhase();
         }
+    }
+
+    void ValidateBlockSelection()
+    {
+        SetAllSelectableCardAction(currentTeam, false);
+        currentTeam.ValidateBlock(selectedCardSlots[0]);
+        EndTurn();
+    }
+
+
+    // Start a regular game (Called by UI Button for now)
+    public void StartGame(int team = 1)
+    {
+        // avoid two startgame clicks
+        startBtn.interactable = false;
+        currentTeam = team == 1 ? team1 : team2;
+        gameUI.UpdatePowerText(powerValue);
+        gameUI.UpdatePreviousPowerText(previousPowerValue);
+        turn = 0;
+        StartTurn();
+    }
+
+    public void StartTurn()
+    {
+        turn++;
+        // to be redifined ////////////
+        ChangePhase(Phase.BlockResolution);
+    }
+
+    void EndTurn()
+    {
+        previousPowerValue = powerValue;
+        powerValue = 0;
+        gameUI.UpdatePowerText(powerValue);
+        gameUI.UpdatePreviousPowerText(previousPowerValue);
+        gameUI.UpdatePreviousPowerMalusText(0);
+        gameManager.EndTurn();
+    }
+
+    private void EmptySelectedCardSlots()
+    {
+        selectedCardSlots[0] = nonAttributed;
+        selectedCardSlots[1] = nonAttributed;
+        selectedCardSlots[2] = nonAttributed;
+    }
+
+    internal void SetCurrentTeam(TeamClass currentTeam)
+    {
+        this.currentTeam = currentTeam;
+        nonPlayingTeam = GetOppositeTeam(currentTeam);
+    }
+
+    TeamClass GetOppositeTeam(TeamClass team)
+    {
+        return team == team1 ? team2 : team1;
     }
 
     private void SetValidateButtonInteractable(bool isInteractable)
@@ -200,51 +315,16 @@ public class Game : MonoBehaviour
         card.getComponent<Effect>().Activate();*/
     }
 
-    void SetSelectableCardAction()
-    {
-        currentTeam.SetSelectableCardAction(actionIndex, actionArr, selectedCardSlots);
-    }
-
-    void SetAllSelectableCardAction(TeamClass team, bool isSelectable)
-    {
-        team.SetAllSelectableCardField(isSelectable);
-    }
-
-    void ValidateActions()
-    {
-        SetAllSelectableCardAction(currentTeam, false);
-        for (int i = 0; i < selectedCardSlots.Length; i++)
-        {
-            currentTeam.ValidateActionCombo(selectedCardSlots[i], i);
-        }
-        EmptySelectedCardSlots();
-        SetValidateButtonInteractable(false);
-        attackIndex = selectedCardSlots[2];
-        ChangePhase(Phase.Block);
-    }
-
-    void ValidateBlockSelection()
-    {
-        SetAllSelectableCardAction(currentTeam, false);
-        currentTeam.ValidateBlock(selectedCardSlots[0]);
-        EndTurn();
-    }
-
-    void EndTurn()
-    {
-        previousPowerValue = powerValue;
-        powerValue = 0;
-        gameManager.EndTurn();
-    }
-
     public void SelectCardButtonFunction(VolleyPlayer player)
     {
         switch (currentPhase)
         {
             case Phase.TeamSelection:
                 break;
-            case Phase.Block:
+            case Phase.BlockSelection:
                 SelectBlockCard(player);
+                break;
+            case Phase.BlockResolution:
                 break;
             case Phase.Action:
                 SelectAction(player);
@@ -264,33 +344,13 @@ public class Game : MonoBehaviour
         {
             case Phase.TeamSelection:
                 break;
-            case Phase.Block:
+            case Phase.BlockSelection:
                 ValidateBlockSelection();
+                break;
+            case Phase.BlockResolution:
                 break;
             case Phase.Action:
                 ValidateActions();
-                break;
-            case Phase.Replacement:
-                break;
-            case Phase.Serve:
-                break;
-            default:
-                break;
-        }
-    }
-
-    void ChangePhase(Phase phase)
-    {
-        currentPhase = phase;
-        switch (currentPhase)
-        {
-            case Phase.TeamSelection:
-                break;
-            case Phase.Block:
-                SetBlockPhase();
-                break;
-            case Phase.Action:
-                SetActionPhase(nonPlayingTeam);
                 break;
             case Phase.Replacement:
                 break;

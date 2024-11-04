@@ -9,6 +9,7 @@ public class PlayerDeckOnField : MonoBehaviour
     public GameObject[] deckSlots;
 
     List<VolleyPlayer> playersOnField = new();
+    private int blockIndex = -1;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,20 @@ public class PlayerDeckOnField : MonoBehaviour
         SetSlotIndex();
     }
 
+    public int GetActionValue(int slotIndex, int actionIndex)
+    {
+        return playersOnField[slotIndex].actionArr[actionIndex];
+    }    
+    
+    public int GetBlockValue(int slotIndex)
+    {
+        return playersOnField[slotIndex].block;
+    }
+
+    public int GetBlockIndex()
+    {
+        return blockIndex;
+    }
 
     public void RotatePlayerCards()
     {
@@ -64,6 +79,7 @@ public class PlayerDeckOnField : MonoBehaviour
     {
         playersOnField[slotIndex].DeselectCard();
         playersOnField[slotIndex].DeselectBlock();
+        blockIndex = slotIndex;
     }
 
     internal void ValidateActionCombo(int slotIndex, int actionIndex)
@@ -75,12 +91,13 @@ public class PlayerDeckOnField : MonoBehaviour
         playersOnField[slotIndex].SetIsSelectedTwice(false);
     }
 
-    internal void SetSelectableCardAction(int actionIndex, int[] actionArr, int[] selectedCardSlots)
+    internal void SetSelectableCardAction(int actionIndex, int[] selectedCardSlots)
     {
         if (actionIndex == 3)
         {
             foreach (VolleyPlayer player in playersOnField)
             {
+                if (player.slotIndex == blockIndex) break;
                 if (player.slotIndex == selectedCardSlots[actionIndex - 1])
                 {
                     player.SetSelectable(true);

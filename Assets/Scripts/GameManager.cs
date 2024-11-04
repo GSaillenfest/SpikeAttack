@@ -16,6 +16,9 @@ public class GameManager : MonoBehaviour
 
     public RectTransform playerRectTransform;
 
+/*    public int currentPowerValue;
+    public int previousPowerValue;*/
+
     [SerializeField]
     Transform playerCardSet;
     [SerializeField]
@@ -169,6 +172,7 @@ public class GameManager : MonoBehaviour
     void SetCurrentTeam(TeamClass team)
     {
         currentTeam = team;
+        game.SetCurrentTeam(currentTeam);
     }
 
 }

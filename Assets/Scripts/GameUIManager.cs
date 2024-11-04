@@ -9,7 +9,9 @@ public class GameUIManager : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI powerTextVal;
     [SerializeField]
-    TextMeshProUGUI previousPowerTextVal;
+    TextMeshProUGUI previousPowerTextVal;    
+    [SerializeField]
+    TextMeshProUGUI powerMalusText;
 
     public void Awake()
     {
@@ -31,9 +33,6 @@ public class GameUIManager : MonoBehaviour
     {
         uIEffects.ShowUnselected(selectedPlayer);
         //Action selectedAction = selectedPlayer.GetComponents<Action>()[actionIndex];
-
-        //unselect action value and remove it from game calculator
-        //calculator.AddActionValue(selectedAction.value);
         uIEffects.ShowUnselectedAction(selectedPlayer, actionIndex);
     }
 
@@ -72,6 +71,14 @@ public class GameUIManager : MonoBehaviour
     internal void UpdatePreviousPowerText(int powerValue)
     {
         previousPowerTextVal.text = powerValue.ToString();
+    }
+
+    internal void UpdatePreviousPowerMalusText(int malusValue)
+    {
+        if (malusValue == 0)
+            powerMalusText.text = "";
+        else
+            powerMalusText.text = "(-" + malusValue + ")";
     }
 
     internal void DeactivateValidateButton()

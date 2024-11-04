@@ -36,9 +36,9 @@ public class TeamClass : MonoBehaviour
         deckOnField.SetBlockPhase();
     }
 
-    internal void SetSelectableCardAction(int actionIndex, int[] actionArr, int[] selectedCardSlots)
+    internal void SetSelectableCardAction(int actionIndex, int[] selectedCardSlots)
     {
-        deckOnField.SetSelectableCardAction(actionIndex, actionArr, selectedCardSlots);
+        deckOnField.SetSelectableCardAction(actionIndex, selectedCardSlots);
     }
 
     internal void ValidateActionCombo(int slotIndex, int actionIndex)
