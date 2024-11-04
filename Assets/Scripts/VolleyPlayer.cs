@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,7 +10,7 @@ public class VolleyPlayer : MonoBehaviour
     [SerializeField]
     public TMP_Text blockText;
     [SerializeField]
-    TMP_Text serveText;
+    public TMP_Text serveText;
     [SerializeField]
     TMP_Text digText;
     [SerializeField]
@@ -151,5 +152,9 @@ public class VolleyPlayer : MonoBehaviour
         gameUI.DeselectPlayerBlock(this);
     }
 
+    internal void SelectServe()
+    {
+        gameUI.SelectPlayerServe(this);
+    }
 }
 

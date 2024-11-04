@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -99,5 +100,10 @@ public class GameUIManager : MonoBehaviour
     internal void ResetScaleAction(VolleyPlayer volleyPlayer, int actionIndex)
     {
         uIEffects.ResetActionScaleOnly(volleyPlayer, actionIndex);
+    }
+
+    internal void SelectPlayerServe(VolleyPlayer playerCard)
+    {
+        uIEffects.ShowSelectedForServe(playerCard);
     }
 }

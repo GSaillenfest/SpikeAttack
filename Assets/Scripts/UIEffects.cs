@@ -91,6 +91,22 @@ public class UIEffects : MonoBehaviour
         playerCard.gameObject.transform.position -= offset;
     }
 
+    public void ShowSelectedForServe(VolleyPlayer playerCard)
+    {
+        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20 , 20, 0);
+        playerCard.serveText.colorGradient = SelectTeamColorGradient(playerCard);
+        BounceOnSelection(playerCard.blockText.gameObject);
+        playerCard.gameObject.transform.position += offset ;
+    }    
+    
+    public void ShowUnselectedForServe(VolleyPlayer playerCard)
+    {
+        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20, 20, 0);
+        ResetScale(playerCard.blockText.gameObject);
+        playerCard.serveText.colorGradient = whiteNonGradient;
+        playerCard.gameObject.transform.position -= offset;
+    }
+
     public void ShowSelectedAction(VolleyPlayer player, int actionIndex)
     {
 

@@ -55,4 +55,9 @@ public class TeamClass : MonoBehaviour
     {
         deckOnField.SetAllSelectableCardAction(isSelectable);
     }
+
+    internal void SetServePhase()
+    {
+        deckOnField.SetServePhase();
+    }
 }

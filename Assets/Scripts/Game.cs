@@ -24,7 +24,6 @@ public class Game : MonoBehaviour
     private bool isGameStarted;
     private int powerValue = 0;
     private int previousPowerValue = 0;
-    private int blockIndex;
     private int attackIndex;
     private const int nonAttributed = -1;
 
@@ -46,7 +45,6 @@ public class Game : MonoBehaviour
         selectedCardSlots = new int[3];
         EmptySelectedCardSlots();
         actionArr = new int[3];
-        blockIndex = nonAttributed;
         attackIndex = nonAttributed;
     }
 
@@ -69,10 +67,24 @@ public class Game : MonoBehaviour
             case Phase.Replacement:
                 break;
             case Phase.Serve:
+                SetServePhase();
                 break;
             default:
                 break;
         }
+    }
+
+    private void SetServePhase()
+    {
+        SetAllSelectableCardAction(currentTeam, false);
+        SetAllSelectableCardAction(nonPlayingTeam, false);
+        currentTeam.SetServePhase();
+    }
+
+    private void SelectServeCard(VolleyPlayer selected)
+    {
+        selected.SelectServe();
+        SetValidateButtonInteractable(true);
     }
 
     private void SetBlockResolutionPhase()
@@ -84,7 +96,6 @@ public class Game : MonoBehaviour
     private void ResolveBlock()
     {
         int previousBlockIndex = currentTeam.deckOnField.GetBlockIndex();
-        Debug.Log(previousBlockIndex + " " + attackIndex);
         if (previousBlockIndex == nonAttributed)
         {
             ChangePhase(Phase.Action);
@@ -224,7 +235,6 @@ public class Game : MonoBehaviour
         if (selectedCardSlots[0] == nonAttributed)
         {
             selectedCardSlots[0] = player.slotIndex;
-            blockIndex = player.slotIndex;
             SetAllSelectableCardAction(currentTeam, false);
             player.SetSelectable(true);
             player.SelectBlock();
@@ -234,7 +244,6 @@ public class Game : MonoBehaviour
         {
             player.DeselectBlock();
             selectedCardSlots[0] = nonAttributed;
-            blockIndex = nonAttributed;
             SetBlockSelectionPhase();
         }
     }
@@ -256,7 +265,7 @@ public class Game : MonoBehaviour
         gameUI.UpdatePowerText(powerValue);
         gameUI.UpdatePreviousPowerText(previousPowerValue);
         turn = 0;
-        StartTurn();
+        ChangePhase(Phase.Serve);
     }
 
     public void StartTurn()
