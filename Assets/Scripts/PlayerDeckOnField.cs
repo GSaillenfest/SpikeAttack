@@ -124,6 +124,11 @@ public class PlayerDeckOnField : MonoBehaviour
         };
     }
 
+    internal void SetServePhase()
+    {
+        playersOnField[5].SetSelectable(true);
+    }
+
     public void SetSlotIndex()
     {
         for (int i = 0; i < playersOnField.Count; i++)
