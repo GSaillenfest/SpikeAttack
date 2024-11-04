@@ -111,7 +111,7 @@ public class VolleyPlayer : MonoBehaviour
     // onclick function
     public void CallClickedFunction()
     {
-        gameScript.SelectCardButtonFunction(this, slotIndex);
+        gameScript.SelectCardButtonFunction(this);
     }
 
     internal void SetSelectable(bool selectable)

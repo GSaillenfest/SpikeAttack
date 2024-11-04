@@ -16,7 +16,7 @@ public class Game : MonoBehaviour
 
     GameManager gameManager;
     private int turn;
-    private VolleyPlayer[] selectedPlayerArr;
+    private int[] selectedCardSlots;
     private int[] actionArr;
     private TeamClass currentTeam;
     private TeamClass nonPlayingTeam;
@@ -25,6 +25,7 @@ public class Game : MonoBehaviour
     private int previousPowerValue = 0;
     private int blockIndex;
     private int attackIndex;
+    private const int nonAttributed = -1;
 
     public int actionIndex = 0;
     private Phase currentPhase;
@@ -41,8 +42,11 @@ public class Game : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         team1 = gameManager.teams[0];
         team2 = gameManager.teams[1];
-        selectedPlayerArr = new VolleyPlayer[3];
+        selectedCardSlots = new int[3];
+        EmptySelectedCardSlots();
         actionArr = new int[3];
+        blockIndex = nonAttributed;
+        attackIndex = nonAttributed;
     }
 
 
@@ -53,52 +57,34 @@ public class Game : MonoBehaviour
         startBtn.interactable = false;
         currentTeam = team == 1 ? team1 : team2;
         currentPhase = Phase.Action;
-        StartTurn(currentTeam);
-/*        // empty selectedPlayerArr
-        selectedPlayerArr[0] = null;
-        selectedPlayerArr[1] = null;
-        selectedPlayerArr[2] = null;
-        // empty actionArr
-        actionArr[0] = actionArr[1] = actionArr[2] = 0;
-        // reset actionIndex to 0
-        actionIndex = 0;
-        // set currentTeam to team set by GameManager and nonPlayingTeam
-        nonPlayingTeam = GetOppositeTeam(currentTeam);
-        // set selectable cards based on available action "Dig"
-        SetSelectableCardAction(actionIndex, currentTeam);
-        // set all cards unselectable on non playing side
-        SetAllSelectableCardAction(false, nonPlayingTeam);
-        // reset power text on UI
-        gameUI.UpdatePowerText(powerValue);
-        // change current team on UI
-        SetValidateButtonInteractable(false);*/
+        StartTurn();
     }
 
-    public void StartTurn(TeamClass team)
+    public void StartTurn()
     {
-        SetActionPhase(team);
+        SetActionPhase(currentTeam);
     }
 
     private void SetActionPhase(TeamClass team)
     {
         Debug.Log("Action phase");
         currentPhase = Phase.Action;
-        EmptySelectedPlayerArr();
+        EmptySelectedCardSlots();
         actionArr[0] = actionArr[1] = actionArr[2] = 0;
         actionIndex = 0;
         currentTeam = team;
         nonPlayingTeam = GetOppositeTeam(currentTeam);
-        SetSelectableCardAction(actionIndex, currentTeam);
-        SetAllSelectableCardAction(false, nonPlayingTeam);
+        SetSelectableCardAction();
+        SetAllSelectableCardAction(nonPlayingTeam, false);
         gameUI.UpdatePowerText(powerValue);
         SetValidateButtonInteractable(false);
     }
 
-    private void EmptySelectedPlayerArr()
+    private void EmptySelectedCardSlots()
     {
-        selectedPlayerArr[0] = null;
-        selectedPlayerArr[1] = null;
-        selectedPlayerArr[2] = null;
+        selectedCardSlots[0] = nonAttributed;
+        selectedCardSlots[1] = nonAttributed;
+        selectedCardSlots[2] = nonAttributed;
     }
 
     TeamClass GetOppositeTeam(TeamClass team)
@@ -108,12 +94,7 @@ public class Game : MonoBehaviour
 
     void SetBlockPhase()
     {
-        Debug.Log("Block phase");
-        foreach (GameObject slot in currentTeam.deckOnField.deckSlots)
-        {
-            bool isSelectable = (slot.GetComponentInChildren<VolleyPlayer>().slotIndex >= 2 && slot.GetComponentInChildren<VolleyPlayer>().slotIndex <= 4);
-            slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(isSelectable);
-        }
+        currentTeam.SetBlockPhase();
         SetValidateButtonInteractable(false);
     }
 
@@ -122,40 +103,42 @@ public class Game : MonoBehaviour
         if (actionIndex == 0)
         {
             actionArr[actionIndex] = selected.actionArr[actionIndex];
-            selectedPlayerArr[actionIndex] = selected;
+            selectedCardSlots[actionIndex] = selected.slotIndex;
             selected.SelectActionAnimation(actionIndex);
             selected.SetIsSelected(true);
             actionIndex++;
-            SetSelectableCardAction(actionIndex, currentTeam);
+            SetSelectableCardAction();
         }
         else if (actionIndex < 3)
         {
-            if (selectedPlayerArr[actionIndex - 1] == selected)
+            if (selectedCardSlots[actionIndex - 1] == selected.slotIndex)
             {
-                selectedPlayerArr[actionIndex - 1] = null;
+                selectedCardSlots[actionIndex - 1] = nonAttributed;
                 actionArr[actionIndex - 1] = 0;
                 selected.DeselectActionAnimation(actionIndex - 1);
                 selected.SetIsSelected(false);
                 actionIndex--;
-                SetSelectableCardAction(actionIndex, currentTeam);
+                SetSelectableCardAction();
             }
             else
             {
                 actionArr[actionIndex] = selected.actionArr[actionIndex];
-                selectedPlayerArr[actionIndex] = selected;
+                selectedCardSlots[actionIndex] = selected.slotIndex;
                 selected.SelectActionAnimation(actionIndex);
+
                 if (!selected.isSelected)
                     selected.SetIsSelected(true);
                 else selected.SetIsSelectedTwice(true);
+
                 actionIndex++;
-                SetSelectableCardAction(actionIndex, currentTeam);
+                SetSelectableCardAction();
             }
         }
         else if (actionIndex == 3)
         {
-            if (selectedPlayerArr[actionIndex - 1] == selected)
+            if (selectedCardSlots[actionIndex - 1] == selected.slotIndex)
             {
-                selectedPlayerArr[actionIndex - 1] = null;
+                selectedCardSlots[actionIndex - 1] = nonAttributed;
                 actionArr[actionIndex - 1] = 0;
                 selected.DeselectActionAnimation(actionIndex - 1);
                 if (selected.isSelectedTwice)
@@ -164,7 +147,7 @@ public class Game : MonoBehaviour
                 SetValidateButtonInteractable(false);
                 gameUI.DeactivateValidateButton();
                 actionIndex--;
-                SetSelectableCardAction(actionIndex, currentTeam);
+                SetSelectableCardAction();
             }
         }
 
@@ -176,23 +159,22 @@ public class Game : MonoBehaviour
         UpdatePowerValue();
     }
 
-    public void SelectBlockCard(VolleyPlayer player, int slotIndex)
+    public void SelectBlockCard(VolleyPlayer player)
     {
-        Debug.Log(selectedPlayerArr[0]);
-        if (selectedPlayerArr[0] == null)
+        if (selectedCardSlots[0] == nonAttributed)
         {
-            selectedPlayerArr[0] = player;
-            blockIndex = slotIndex;
-            SetAllSelectableCardAction(false, currentTeam);
-            selectedPlayerArr[0].SetSelectable(true);
-            selectedPlayerArr[0].SelectBlock();
+            selectedCardSlots[0] = player.slotIndex;
+            blockIndex = player.slotIndex;
+            SetAllSelectableCardAction(currentTeam, false);
+            player.SetSelectable(true);
+            player.SelectBlock();
             SetValidateButtonInteractable(true);
         }
         else
         {
-            selectedPlayerArr[0].DeselectBlock();
-            selectedPlayerArr[0] = null;
-            blockIndex = 0;
+            player.DeselectBlock();
+            selectedCardSlots[0] = nonAttributed;
+            blockIndex = nonAttributed;
             SetBlockPhase();
         }
     }
@@ -218,67 +200,33 @@ public class Game : MonoBehaviour
         card.getComponent<Effect>().Activate();*/
     }
 
-    void SetSelectableCardAction(int actionIndex, TeamClass team)
+    void SetSelectableCardAction()
     {
-        if (actionIndex == 3)
-        {
-            foreach (GameObject slot in team.deckOnField.deckSlots)
-            {
-                if (slot.GetComponentInChildren<VolleyPlayer>() == selectedPlayerArr[actionIndex - 1])
-                {
-                    slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(true);
-                }
-                else
-                {
-                    slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(false);
-                }
-            }
-        }
-        else
-        {
-            foreach (GameObject slot in team.deckOnField.deckSlots)
-            {
-                if (slot.GetComponentInChildren<VolleyPlayer>().isActionAvailable[actionIndex] || (actionIndex > 0 && slot.GetComponentInChildren<VolleyPlayer>() == selectedPlayerArr[actionIndex - 1]))
-                {
-                    slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(true);
-                }
-                else
-                {
-                    slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(false);
-                }
-            }
-        }
+        currentTeam.SetSelectableCardAction(actionIndex, actionArr, selectedCardSlots);
     }
 
-    void SetAllSelectableCardAction(bool selectable, TeamClass team)
+    void SetAllSelectableCardAction(TeamClass team, bool isSelectable)
     {
-        foreach (GameObject slot in team.deckOnField.deckSlots)
-        {
-            slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(selectable);
-        }
+        team.SetAllSelectableCardField(isSelectable);
     }
 
     void ValidateActions()
     {
-        SetAllSelectableCardAction(false, currentTeam);
-        for (int i = 0; i < selectedPlayerArr.Length; i++)
+        SetAllSelectableCardAction(currentTeam, false);
+        for (int i = 0; i < selectedCardSlots.Length; i++)
         {
-            selectedPlayerArr[i].SetActionUnavailable(i);
-            selectedPlayerArr[i].ResetScaleAction(i);
-            selectedPlayerArr[i].DeselectCard();
-            selectedPlayerArr[i].SetIsSelected(false);
-            selectedPlayerArr[i].SetIsSelectedTwice(false);
+            currentTeam.ValidateActionCombo(selectedCardSlots[i], i);
         }
-        EmptySelectedPlayerArr();
+        EmptySelectedCardSlots();
         SetValidateButtonInteractable(false);
+        attackIndex = selectedCardSlots[2];
         ChangePhase(Phase.Block);
     }
 
     void ValidateBlockSelection()
     {
-        SetAllSelectableCardAction(false, currentTeam);
-        selectedPlayerArr[0].DeselectCard();
-        selectedPlayerArr[0].DeselectBlock();
+        SetAllSelectableCardAction(currentTeam, false);
+        currentTeam.ValidateBlock(selectedCardSlots[0]);
         EndTurn();
     }
 
@@ -289,15 +237,14 @@ public class Game : MonoBehaviour
         gameManager.EndTurn();
     }
 
-    public void SelectCardButtonFunction(VolleyPlayer player, int slotIndex)
+    public void SelectCardButtonFunction(VolleyPlayer player)
     {
-        Debug.Log("Card clicked on " + currentPhase);
         switch (currentPhase)
         {
             case Phase.TeamSelection:
                 break;
             case Phase.Block:
-                SelectBlockCard(player, slotIndex);
+                SelectBlockCard(player);
                 break;
             case Phase.Action:
                 SelectAction(player);

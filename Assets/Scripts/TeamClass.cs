@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -28,5 +29,30 @@ public class TeamClass : MonoBehaviour
     void AddPlayerToTeam(GameObject playerCard)
     {
         playerList.Add(playerCard);
+    }
+
+    internal void SetBlockPhase()
+    {
+        deckOnField.SetBlockPhase();
+    }
+
+    internal void SetSelectableCardAction(int actionIndex, int[] actionArr, int[] selectedCardSlots)
+    {
+        deckOnField.SetSelectableCardAction(actionIndex, actionArr, selectedCardSlots);
+    }
+
+    internal void ValidateActionCombo(int slotIndex, int actionIndex)
+    {
+        deckOnField.ValidateActionCombo(slotIndex, actionIndex);
+    }
+
+    internal void ValidateBlock(int slotIndex)
+    {
+        deckOnField.ValidateBlock(slotIndex);
+    }
+
+    internal void SetAllSelectableCardField(bool isSelectable)
+    {
+        deckOnField.SetAllSelectableCardAction(isSelectable);
     }
 }

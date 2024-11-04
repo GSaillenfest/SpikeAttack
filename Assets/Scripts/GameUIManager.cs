@@ -1,16 +1,15 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using TMPro;
+using UnityEngine;
 
 public class GameUIManager : MonoBehaviour
 {
     //Calculator calculator;
-    [SerializeField] 
+    [SerializeField]
     private UIEffects uIEffects;
     [SerializeField]
-    TextMeshProUGUI powerText;
+    TextMeshProUGUI powerTextVal;
+    [SerializeField]
+    TextMeshProUGUI previousPowerTextVal;
 
     public void Awake()
     {
@@ -60,14 +59,19 @@ public class GameUIManager : MonoBehaviour
         uIEffects.ShowSelected(selectedPlayer);
     }
     // deprecated
-/*    internal void ChangeCurrentTeam(TeamClass currentTeam)
-    {
-        uIEffects.ChangeTeamColorGradient(currentTeam);
-    }*/
+    /*    internal void ChangeCurrentTeam(TeamClass currentTeam)
+        {
+            uIEffects.ChangeTeamColorGradient(currentTeam);
+        }*/
 
-    internal void UpdatePowerText(object powerValue)
+    internal void UpdatePowerText(int powerValue)
     {
-        powerText.text = powerValue.ToString();
+        powerTextVal.text = powerValue.ToString();
+    }
+
+    internal void UpdatePreviousPowerText(int powerValue)
+    {
+        previousPowerTextVal.text = powerValue.ToString();
     }
 
     internal void DeactivateValidateButton()

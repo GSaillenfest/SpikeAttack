@@ -55,8 +55,8 @@ public class GameManager : MonoBehaviour
         InitGame();
         //test loop to instantiate volley player cards
         CreateVolleyPlayerCardsOnAwake();
-        //test function to populate a player team. To be refactored.
 
+        //test function to populate a player team. To be refactored.
         PopulateTeam(playerOne, volleyPlayersOrange);
         PopulateTeam(playerTwo, volleyPlayersBlue);
     }
@@ -136,7 +136,7 @@ public class GameManager : MonoBehaviour
     void StartTurn(TeamClass team)
     {
         SetCurrentTeam(team);
-        game.StartTurn(currentTeam);
+        game.StartTurn();
     }
 
     public void EndTurn()
@@ -163,8 +163,7 @@ public class GameManager : MonoBehaviour
 
     TeamClass SwitchTeam()
     {
-        Debug.Log(currentTeam);
-        return currentTeam == team1 ? team2 : team1;
+        return currentTeam = currentTeam == team1 ? team2 : team1;
     }
 
     void SetCurrentTeam(TeamClass team)

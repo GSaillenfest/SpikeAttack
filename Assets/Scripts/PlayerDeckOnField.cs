@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -16,7 +17,7 @@ public class PlayerDeckOnField : MonoBehaviour
         RefreshDeck();
     }
 
-    void RefreshDeck()
+    public void RefreshDeck()
     {
         playersOnField.Clear();
         VolleyPlayer[] childList = gameObject.GetComponentsInChildren<VolleyPlayer>();
@@ -51,11 +52,75 @@ public class PlayerDeckOnField : MonoBehaviour
         RefreshDeck();
     }
 
+    internal void SetAllSelectableCardAction(bool isSelectable)
+    {
+        foreach (VolleyPlayer player in playersOnField)
+        {
+            player.SetSelectable(isSelectable);
+        }
+    }
+
+    internal void ValidateBlock(int slotIndex)
+    {
+        playersOnField[slotIndex].DeselectCard();
+        playersOnField[slotIndex].DeselectBlock();
+    }
+
+    internal void ValidateActionCombo(int slotIndex, int actionIndex)
+    {
+        playersOnField[slotIndex].SetActionUnavailable(actionIndex);
+        playersOnField[slotIndex].ResetScaleAction(actionIndex);
+        playersOnField[slotIndex].DeselectCard();
+        playersOnField[slotIndex].SetIsSelected(false);
+        playersOnField[slotIndex].SetIsSelectedTwice(false);
+    }
+
+    internal void SetSelectableCardAction(int actionIndex, int[] actionArr, int[] selectedCardSlots)
+    {
+        if (actionIndex == 3)
+        {
+            foreach (VolleyPlayer player in playersOnField)
+            {
+                if (player.slotIndex == selectedCardSlots[actionIndex - 1])
+                {
+                    player.SetSelectable(true);
+                }
+                else
+                {
+                    player.SetSelectable(false);
+                }
+            }
+        }
+        else
+        {
+            foreach (VolleyPlayer player in playersOnField)
+            {
+                if (player.isActionAvailable[actionIndex] || (actionIndex > 0 && player.slotIndex == selectedCardSlots[actionIndex - 1]))
+                {
+                    player.SetSelectable(true);
+                }
+                else
+                {
+                    player.SetSelectable(false);
+                }
+            }
+        };
+    }
+
     public void SetSlotIndex()
     {
         for (int i = 0; i < playersOnField.Count; i++)
         {
             playersOnField[i].slotIndex = i;
+        }
+    }
+
+    public void SetBlockPhase()
+    {
+        foreach (GameObject slot in deckSlots)
+        {
+            bool isSelectable = (slot.GetComponentInChildren<VolleyPlayer>().slotIndex >= 2 && slot.GetComponentInChildren<VolleyPlayer>().slotIndex <= 4);
+            slot.GetComponentInChildren<VolleyPlayer>().SetSelectable(isSelectable);
         }
     }
 }
