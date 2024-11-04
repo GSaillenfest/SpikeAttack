@@ -130,6 +130,12 @@ public class GameManager : MonoBehaviour
         return newPlayer;
     }
 
+    public void StartGame()
+    {
+        SetCurrentTeam(team1);
+        game.StartGame();
+    }
+
     public void PlayTurn()
     {
         Debug.Log("Turn :" + turn);
