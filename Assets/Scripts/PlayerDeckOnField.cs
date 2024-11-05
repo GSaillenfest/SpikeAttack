@@ -32,13 +32,13 @@ public class PlayerDeckOnField : MonoBehaviour
     public int GetActionValue(int slotIndex, int actionIndex)
     {
         return playersOnField[slotIndex].actionArr[actionIndex];
-    }    
-    
+    }
+
     public int GetBlockValue(int slotIndex)
     {
         return playersOnField[slotIndex].block;
-    }    
-    
+    }
+
     public int GetServeValue()
     {
         return playersOnField[5].serve;
@@ -102,7 +102,7 @@ public class PlayerDeckOnField : MonoBehaviour
         {
             foreach (VolleyPlayer player in playersOnField)
             {
-                if (player.slotIndex == blockIndex) break;
+
                 if (player.slotIndex == selectedCardSlots[actionIndex - 1])
                 {
                     player.SetSelectable(true);
@@ -117,13 +117,17 @@ public class PlayerDeckOnField : MonoBehaviour
         {
             foreach (VolleyPlayer player in playersOnField)
             {
-                if (player.isActionAvailable[actionIndex] || (actionIndex > 0 && player.slotIndex == selectedCardSlots[actionIndex - 1]))
-                {
-                    player.SetSelectable(true);
-                }
+                if (player.slotIndex == blockIndex) player.SetSelectable(false);
                 else
                 {
-                    player.SetSelectable(false);
+                    if (player.isActionAvailable[actionIndex] || (actionIndex > 0 && player.slotIndex == selectedCardSlots[actionIndex - 1]))
+                    {
+                        player.SetSelectable(true);
+                    }
+                    else
+                    {
+                        player.SetSelectable(false);
+                    }
                 }
             }
         };
@@ -144,6 +148,7 @@ public class PlayerDeckOnField : MonoBehaviour
 
     public void SetBlockPhase()
     {
+        if (blockIndex != -1) playersOnField[blockIndex].DeselectBlock();
         foreach (GameObject slot in deckSlots)
         {
             bool isSelectable = (slot.GetComponentInChildren<VolleyPlayer>().slotIndex >= 2 && slot.GetComponentInChildren<VolleyPlayer>().slotIndex <= 4);
@@ -155,5 +160,10 @@ public class PlayerDeckOnField : MonoBehaviour
     {
         playersOnField[5].DeselectCard();
         playersOnField[5].DeselectServe();
+    }
+
+    internal VolleyPlayer GetPlayer(int slotIndex)
+    {
+        return playersOnField[slotIndex];
     }
 }

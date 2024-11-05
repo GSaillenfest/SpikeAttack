@@ -106,10 +106,10 @@ public class Game : MonoBehaviour
     private void ResolveBlock()
     {
         int previousBlockIndex = currentTeam.deckOnField.GetBlockIndex();
+        if (previousBlockIndex != nonAttributed) currentTeam.GetPlayerOnField(previousBlockIndex).SelectBlock();
         if (previousBlockIndex == nonAttributed)
         {
             ChangePhase(Phase.Action);
-            Debug.Log("No block");
             return;
         }
         if (previousBlockIndex == 2 && (attackIndex == 4 || attackIndex == 5) ||
@@ -118,22 +118,19 @@ public class Game : MonoBehaviour
         {
             if (currentTeam.deckOnField.GetBlockValue(previousBlockIndex) >= previousPowerValue)
             {
-                Debug.Log("Block succeed : Point");
                 gameManager.EndPoint();
             }
             else
             {
-                Debug.Log("Block succeed : Previous power value is reduced");
                 previousPowerValue -= currentTeam.deckOnField.GetBlockValue(previousBlockIndex);
                 gameUI.UpdatePreviousPowerText(previousPowerValue);
                 gameUI.UpdatePreviousPowerMalusText(currentTeam.deckOnField.GetBlockValue(previousBlockIndex));
-                // Add UI FX
+                // TODO: Add UI FX
                 ChangePhase(Phase.Action);
             }
         }
         else
         {
-            Debug.Log("Block failed");
             ChangePhase(Phase.Action);
         }
     }

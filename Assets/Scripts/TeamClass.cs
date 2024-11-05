@@ -70,4 +70,9 @@ public class TeamClass : MonoBehaviour
     {
         return deckOnField.GetServeValue();
     }
+
+    internal VolleyPlayer GetPlayerOnField(int slotIndex)
+    {
+        return deckOnField.GetPlayer(slotIndex);
+    }
 }
