@@ -1,12 +1,11 @@
-using System;
-using System.Collections;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class UIEffects : MonoBehaviour
 {
     [SerializeField]
-    private float finalScaleTextFactor;    
+    private float finalScaleTextFactor;
     [SerializeField]
     private float finalScaleCardFactor;
     [SerializeField]
@@ -54,17 +53,18 @@ public class UIEffects : MonoBehaviour
 
     VertexGradient SelectTeamColorGradient(VolleyPlayer player)
     {
-        return player.isOrangeTeam? orangeGradient : blueGradient;
+        return player.isOrangeTeam ? orangeGradient : blueGradient;
     }
 
     public void ShowSelectable(VolleyPlayer playerCard, bool isSelectable)
     {
-        playerCard.image.color = isSelectable? Color.white : desaturationColor;
+        playerCard.image.color = isSelectable ? Color.white : desaturationColor;
     }
 
     public void ShowSelected(VolleyPlayer playerCard)
     {
-        BounceCardOnSelection(playerCard.gameObject);
+        ApplyCardDropEffect(playerCard.gameObject);
+        //BounceCardOnSelection(playerCard.gameObject);
     }
 
     public void ShowUnselected(VolleyPlayer playerCard)
@@ -77,12 +77,12 @@ public class UIEffects : MonoBehaviour
 
     public void ShowSelectedForBlock(VolleyPlayer playerCard)
     {
-        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20 , 20, 0);
+        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20, 20, 0);
         playerCard.blockText.colorGradient = SelectTeamColorGradient(playerCard);
         BounceOnSelection(playerCard.blockText.gameObject);
-        playerCard.gameObject.transform.position += offset ;
-    }    
-    
+        playerCard.gameObject.transform.position += offset;
+    }
+
     public void ShowUnselectedForBlock(VolleyPlayer playerCard)
     {
         Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20, 20, 0);
@@ -93,12 +93,12 @@ public class UIEffects : MonoBehaviour
 
     public void ShowSelectedForServe(VolleyPlayer playerCard)
     {
-        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20 , 20, 0);
+        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20, 20, 0);
         playerCard.serveText.colorGradient = SelectTeamColorGradient(playerCard);
         BounceOnSelection(playerCard.serveText.gameObject);
-        playerCard.gameObject.transform.position += offset ;
-    }    
-    
+        playerCard.gameObject.transform.position += offset;
+    }
+
     public void ShowUnselectedForServe(VolleyPlayer playerCard)
     {
         Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20, 20, 0);
@@ -136,17 +136,27 @@ public class UIEffects : MonoBehaviour
     {
         LeanTween.scale(go, scaleTextFactor * Vector3.one, scaleTextTime).setEaseOutBounce().setOnComplete(() => SetTextEndOfAnimScale(go));
     }
-    
+
     void BounceCardOnSelection(GameObject go)
     {
         LeanTween.scale(go, scaleCardFactor * Vector3.one, scaleCardTime).setEaseOutBounce().setOnComplete(() => SetCardEndOfAnimScale(go));
+    }
+
+    void ApplyCardDropEffect(GameObject go)
+    {
+        Vector3 initialPos = go.transform.parent.position;
+        Vector3 newPos = new Vector3(Random.Range(-10, 10), Random.Range(10, 30), 0);
+        go.transform.position = initialPos + newPos;
+        go.transform.rotation = Quaternion.Euler(0, 0, 10);
+        LeanTween.move(go, initialPos, 0.5f).setEaseOutBounce();
+        LeanTween.rotateZ(go, 0, 0.1f).setEaseInOutBounce();
     }
 
     void SetTextEndOfAnimScale(GameObject go)
     {
         LeanTween.scale(go, finalScaleTextFactor * Vector3.one, 0.05f).setEaseInOutQuad();
     }
-    
+
     void SetCardEndOfAnimScale(GameObject go)
     {
         LeanTween.scale(go, finalScaleCardFactor * Vector3.one, 0.05f).setEaseInOutQuad();
