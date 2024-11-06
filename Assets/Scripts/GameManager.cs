@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -133,7 +134,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         SetCurrentTeam(team1);
-        game.StartGame();
+        game.StartGame(currentTeam);
     }
 
     public void PlayTurn()
@@ -142,17 +143,9 @@ public class GameManager : MonoBehaviour
         turn++;
     }
 
-    void StartTurn(TeamClass team)
-    {
-        SetCurrentTeam(team);
-        game.StartTurn();
-    }
 
-    public void EndTurn()
-    {
-        Debug.Log("End Turn");
-        StartTurn(SwitchTeam());
-    }
+
+    
 
     public void EndPoint()
     {
@@ -170,15 +163,14 @@ public class GameManager : MonoBehaviour
 
     }
 
-    TeamClass SwitchTeam()
-    {
-        return currentTeam = currentTeam == team1 ? team2 : team1;
-    }
+    
 
+    // 
     void SetCurrentTeam(TeamClass team)
     {
         currentTeam = team;
         game.SetCurrentTeam(currentTeam);
     }
 
+    
 }

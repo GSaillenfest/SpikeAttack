@@ -75,4 +75,9 @@ public class TeamClass : MonoBehaviour
     {
         return deckOnField.GetPlayer(slotIndex);
     }
+
+    internal void ResetStatus()
+    {
+        deckOnField.ResetStatus();
+    }
 }

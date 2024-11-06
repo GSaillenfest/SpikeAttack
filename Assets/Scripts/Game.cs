@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,8 +19,10 @@ public class Game : MonoBehaviour
     private int[] selectedCardSlots;
     private int[] actionArr;
     private TeamClass currentTeam;
-    private TeamClass nonPlayingTeam;
+    private TeamClass oppositeTeam;
     private bool isGameStarted;
+    // to be refactored
+    private bool isServeSelected;
     private int powerValue = 0;
     private int previousPowerValue = 0;
     private int attackIndex;
@@ -29,6 +30,8 @@ public class Game : MonoBehaviour
 
     public int actionIndex = 0;
     private Phase currentPhase;
+    private int orangeSideScore = 0;
+    private int blueSideScore = 0;
 
     public Game(TeamClass t1, TeamClass t2)
     {
@@ -46,6 +49,7 @@ public class Game : MonoBehaviour
         EmptySelectedCardSlots();
         actionArr = new int[3];
         attackIndex = nonAttributed;
+        currentPhase = Phase.Inactive;
     }
 
     void ChangePhase(Phase phase)
@@ -77,24 +81,25 @@ public class Game : MonoBehaviour
     private void SetServePhase()
     {
         SetAllSelectableCardAction(currentTeam, false);
-        SetAllSelectableCardAction(nonPlayingTeam, false);
+        SetAllSelectableCardAction(oppositeTeam, false);
         currentTeam.SetServePhase();
     }
 
     private void SelectServeCard(VolleyPlayer selected)
     {
+        isServeSelected = true;
         selected.SelectServe();
         actionArr[0] = currentTeam.GetServeValue();
         UpdatePowerValue();
         SetValidateButtonInteractable(true);
-
     }
 
     private void ValidateServe()
     {
+        isServeSelected = false;
         SetAllSelectableCardAction(currentTeam, false);
         currentTeam.ValidateServe();
-        EndTurn();
+        EndCurrentTurn();
     }
 
     private void SetBlockResolutionPhase()
@@ -141,7 +146,7 @@ public class Game : MonoBehaviour
         actionArr[0] = actionArr[1] = actionArr[2] = 0;
         actionIndex = 0;
         SetSelectableCardAction();
-        SetAllSelectableCardAction(nonPlayingTeam, false);
+        SetAllSelectableCardAction(oppositeTeam, false);
         SetValidateButtonInteractable(false);
     }
 
@@ -226,7 +231,7 @@ public class Game : MonoBehaviour
         attackIndex = selectedCardSlots[2];
         EmptySelectedCardSlots();
         SetValidateButtonInteractable(false);
-        ChangePhase(Phase.BlockSelection);
+        CheckWinningConditions(powerValue, previousPowerValue);
     }
 
     void SetBlockSelectionPhase()
@@ -257,35 +262,53 @@ public class Game : MonoBehaviour
     {
         SetAllSelectableCardAction(currentTeam, false);
         currentTeam.ValidateBlock(selectedCardSlots[0]);
-        EndTurn();
+        EndCurrentTurn();
     }
 
 
     // Start a regular game (Called by UI Button for now)
-    public void StartGame(int team = 1)
+    public void StartGame(TeamClass team)
     {
         // avoid two startgame clicks
         startBtn.interactable = false;
+        startBtn.gameObject.SetActive(false);
+        currentTeam = team;
+        oppositeTeam = GetOppositeTeam(currentTeam);
+        StartPoint(team);
+    }
+
+    void StartPoint(TeamClass team)
+    {
+        ResetVariables();
+        ResetTeamStatus();
         gameUI.UpdatePowerText(powerValue);
         gameUI.UpdatePreviousPowerText(previousPowerValue);
         turn = 0;
         ChangePhase(Phase.Serve);
     }
 
-    public void StartTurn()
+    private void ResetTeamStatus()
+    {
+        currentTeam.ResetStatus();
+        oppositeTeam.ResetStatus();
+    }
+
+    public void StartTurn(TeamClass team)
     {
         turn++;
         ChangePhase(Phase.BlockResolution);
     }
 
-    void EndTurn()
+    void EndCurrentTurn()
     {
+        Debug.Log("No winning side : End Turn");
         previousPowerValue = powerValue;
         powerValue = 0;
         gameUI.UpdatePowerText(powerValue);
         gameUI.UpdatePreviousPowerText(previousPowerValue);
         gameUI.UpdatePreviousPowerMalusText(0);
-        gameManager.EndTurn();
+        SwitchTeam();
+        StartTurn(currentTeam);
     }
 
     private void EmptySelectedCardSlots()
@@ -298,7 +321,7 @@ public class Game : MonoBehaviour
     internal void SetCurrentTeam(TeamClass currentTeam)
     {
         this.currentTeam = currentTeam;
-        nonPlayingTeam = GetOppositeTeam(currentTeam);
+        oppositeTeam = GetOppositeTeam(currentTeam);
     }
 
     TeamClass GetOppositeTeam(TeamClass team)
@@ -344,7 +367,7 @@ public class Game : MonoBehaviour
             case Phase.Replacement:
                 break;
             case Phase.Serve:
-                SelectServeCard(player);
+                if (!isServeSelected) SelectServeCard(player);
                 break;
             default:
                 break;
@@ -374,5 +397,47 @@ public class Game : MonoBehaviour
                 break;
         }
     }
+
+    internal void CheckWinningConditions(int powerValue, int previousPowerValue)
+    {
+
+        if (powerValue > previousPowerValue)
+        {
+            ChangePhase(Phase.BlockSelection);
+        }
+        else EndPoint();
+    }
+
+    private void EndPoint()
+    {
+        // TODO: add btn to pass turn with double check
+        Debug.Log("End point, reset values");
+        ChangePhase(Phase.BlockSelection);
+        if (currentTeam == team1)
+        {
+            blueSideScore++;
+            gameUI.UpdateScore(Side.Blue, blueSideScore);
+        }
+        else
+        {
+            orangeSideScore++;
+            gameUI.UpdateScore(Side.Orange, orangeSideScore);
+        }
+        // TODO: Add Rotation and Replacement phases
+        SwitchTeam();
+        StartPoint(currentTeam);
+    }
+
+    internal void ResetVariables()
+    {
+        powerValue = previousPowerValue = 0;
+    }
+
+    void SwitchTeam()
+    {
+        currentTeam = currentTeam == team1 ? team2 : team1;
+        oppositeTeam = GetOppositeTeam(currentTeam);
+    }
+
 
 }

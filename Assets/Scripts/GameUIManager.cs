@@ -13,6 +13,10 @@ public class GameUIManager : MonoBehaviour
     TextMeshProUGUI previousPowerTextVal;    
     [SerializeField]
     TextMeshProUGUI powerMalusText;
+    [SerializeField]
+    TextMeshProUGUI orangeScore;
+    [SerializeField]
+    TextMeshProUGUI blueScore;
 
     public void Awake()
     {
@@ -110,5 +114,13 @@ public class GameUIManager : MonoBehaviour
     internal void DeselectPlayerServe(VolleyPlayer playerCard)
     {
         uIEffects.ShowUnselectedForServe(playerCard);
+    }
+
+    internal void UpdateScore(Side side, int sideScore)
+    {
+        if (side == Side.Orange)
+            orangeScore.text = sideScore.ToString();
+        else if (side == Side.Blue)
+            blueScore.text = sideScore.ToString();
     }
 }

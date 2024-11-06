@@ -166,4 +166,11 @@ public class PlayerDeckOnField : MonoBehaviour
     {
         return playersOnField[slotIndex];
     }
+
+    internal void ResetStatus()
+    {
+/*        if (blockIndex == -1) return;
+        playersOnField[blockIndex].DeselectBlock();*/
+        blockIndex = -1;
+    }
 }

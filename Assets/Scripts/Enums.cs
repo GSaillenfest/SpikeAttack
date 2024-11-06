@@ -35,4 +35,12 @@ public enum Phase
     Action,
     Replacement,
     Serve,
+    Inactive,
+}
+
+public enum Side
+{
+    Orange,
+    Blue,
+    Neutral,
 }
