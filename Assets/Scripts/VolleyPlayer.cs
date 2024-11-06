@@ -112,7 +112,7 @@ public class VolleyPlayer : MonoBehaviour
     // onclick function
     public void CallClickedFunction()
     {
-        gameScript.SelectCardButtonFunction(this);
+        gameScript.HandleCardButtonFunction(this);
     }
 
     internal void SetSelectable(bool selectable)
@@ -142,9 +142,9 @@ public class VolleyPlayer : MonoBehaviour
         gameUI.DeselectCard(this);
     }
 
-    internal void SelectBlock()
+    internal void SelectBlock(bool applyColor)
     {
-        gameUI.SelectPlayerBlock(this);
+        gameUI.SelectPlayerBlock(this, applyColor);
     }    
     
     internal void DeselectBlock()

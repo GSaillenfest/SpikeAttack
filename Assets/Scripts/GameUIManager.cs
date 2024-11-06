@@ -41,9 +41,9 @@ public class GameUIManager : MonoBehaviour
         uIEffects.ShowUnselectedAction(selectedPlayer, actionIndex);
     }
 
-    public void SelectPlayerBlock(VolleyPlayer playerCard)
+    public void SelectPlayerBlock(VolleyPlayer playerCard, bool applyColor)
     {
-        uIEffects.ShowSelectedForBlock(playerCard);
+        uIEffects.ShowSelectedForBlock(playerCard, applyColor);
     }
 
     public void DeselectPlayerBlock(VolleyPlayer playerCard)

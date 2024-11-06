@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -75,33 +76,38 @@ public class UIEffects : MonoBehaviour
         }
     }
 
-    public void ShowSelectedForBlock(VolleyPlayer playerCard)
+    public void ShowSelectedForBlock(VolleyPlayer playerCard, bool applyColor)
     {
-        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20, 20, 0);
-        playerCard.blockText.colorGradient = SelectTeamColorGradient(playerCard);
+        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 0, 0) : new Vector3(-20, 0, 0);
+        playerCard.gameObject.transform.parent.position += offset;
+        ApplyCardDropEffect(playerCard.gameObject);
+
+        if (applyColor) 
+            playerCard.blockText.colorGradient = SelectTeamColorGradient(playerCard);
+
         BounceOnSelection(playerCard.blockText.gameObject);
-        playerCard.gameObject.transform.position += offset;
     }
 
     public void ShowUnselectedForBlock(VolleyPlayer playerCard)
     {
-        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20, 20, 0);
+        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 0, 0) : new Vector3(-20, 0, 0);
         ResetScale(playerCard.blockText.gameObject);
         playerCard.blockText.colorGradient = whiteNonGradient;
-        playerCard.gameObject.transform.position -= offset;
+        playerCard.gameObject.transform.parent.position -= offset;
     }
 
     public void ShowSelectedForServe(VolleyPlayer playerCard)
     {
-        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20, 20, 0);
+        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(-20, 0, 0) : new Vector3(+20, 0, 0);
+        playerCard.gameObject.transform.parent.position += offset;
+        ApplyCardDropEffect(playerCard.gameObject);
         playerCard.serveText.colorGradient = SelectTeamColorGradient(playerCard);
         BounceOnSelection(playerCard.serveText.gameObject);
-        playerCard.gameObject.transform.position += offset;
     }
 
     public void ShowUnselectedForServe(VolleyPlayer playerCard)
     {
-        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 20, 0) : new Vector3(-20, 20, 0);
+        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(-20, 0, 0) : new Vector3(+20, 0, 0);
         ResetScale(playerCard.serveText.gameObject);
         playerCard.serveText.colorGradient = whiteNonGradient;
         playerCard.gameObject.transform.position -= offset;
@@ -166,4 +172,5 @@ public class UIEffects : MonoBehaviour
     {
         go.LeanScale(Vector3.one, 0.1f);
     }
+
 }

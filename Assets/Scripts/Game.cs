@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -13,6 +14,8 @@ public class Game : MonoBehaviour
     Button startBtn;
     [SerializeField]
     Button validateBtn;
+    [SerializeField]
+    float cooldownDuration;
 
     GameManager gameManager;
     private int turn;
@@ -50,6 +53,7 @@ public class Game : MonoBehaviour
         actionArr = new int[3];
         attackIndex = nonAttributed;
         currentPhase = Phase.Inactive;
+        cooldownDuration = 0.6f;
     }
 
     void ChangePhase(Phase phase)
@@ -72,6 +76,8 @@ public class Game : MonoBehaviour
                 break;
             case Phase.Serve:
                 SetServePhase();
+                break;
+            case Phase.Inactive:
                 break;
             default:
                 break;
@@ -99,7 +105,7 @@ public class Game : MonoBehaviour
         isServeSelected = false;
         SetAllSelectableCardAction(currentTeam, false);
         currentTeam.ValidateServe();
-        EndCurrentTurn();
+        ChangePhase(Phase.BlockSelection);
     }
 
     private void SetBlockResolutionPhase()
@@ -111,7 +117,6 @@ public class Game : MonoBehaviour
     private void ResolveBlock()
     {
         int previousBlockIndex = currentTeam.deckOnField.GetBlockIndex();
-        if (previousBlockIndex != nonAttributed) currentTeam.GetPlayerOnField(previousBlockIndex).SelectBlock();
         if (previousBlockIndex == nonAttributed)
         {
             ChangePhase(Phase.Action);
@@ -121,6 +126,7 @@ public class Game : MonoBehaviour
             previousBlockIndex == 3 && (attackIndex == 0 || attackIndex == 3) ||
             previousBlockIndex == 4 && (attackIndex == 1 || attackIndex == 2))
         {
+            currentTeam.GetPlayerOnField(previousBlockIndex).SelectBlock(true);
             if (currentTeam.deckOnField.GetBlockValue(previousBlockIndex) >= previousPowerValue)
             {
                 gameManager.EndPoint();
@@ -136,6 +142,7 @@ public class Game : MonoBehaviour
         }
         else
         {
+            currentTeam.GetPlayerOnField(previousBlockIndex).SelectBlock(false);
             ChangePhase(Phase.Action);
         }
     }
@@ -247,7 +254,7 @@ public class Game : MonoBehaviour
             selectedCardSlots[0] = player.slotIndex;
             SetAllSelectableCardAction(currentTeam, false);
             player.SetSelectable(true);
-            player.SelectBlock();
+            player.SelectBlock(true);
             SetValidateButtonInteractable(true);
         }
         else
@@ -350,7 +357,7 @@ public class Game : MonoBehaviour
         card.getComponent<Effect>().Activate();*/
     }
 
-    public void SelectCardButtonFunction(VolleyPlayer player)
+    public void HandleCardButtonFunction(VolleyPlayer player)
     {
         switch (currentPhase)
         {
@@ -369,9 +376,21 @@ public class Game : MonoBehaviour
             case Phase.Serve:
                 if (!isServeSelected) SelectServeCard(player);
                 break;
+            case Phase.Inactive:
+                return;
             default:
                 break;
         }
+
+        StartCoroutine(AddBtnCooldown());
+    }
+
+    IEnumerator AddBtnCooldown()
+    {
+        Phase initialPhase = currentPhase;
+        currentPhase = Phase.Inactive;
+        yield return new WaitForSeconds(cooldownDuration);
+        currentPhase = initialPhase;
     }
 
     public void SelectValidateButtonFunction()
