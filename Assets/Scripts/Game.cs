@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -435,12 +436,12 @@ public class Game : MonoBehaviour
         if (currentTeam == team1)
         {
             blueSideScore++;
-            gameUI.UpdateScore(Side.Blue, blueSideScore);
+            gameUI.UpdateScoreAnim(Side.Blue);
         }
         else
         {
             orangeSideScore++;
-            gameUI.UpdateScore(Side.Orange, orangeSideScore);
+            gameUI.UpdateScoreAnim(Side.Orange);
         }
         // TODO: Add Rotation and Replacement phases
         SwitchTeam();
@@ -458,5 +459,8 @@ public class Game : MonoBehaviour
         oppositeTeam = GetOppositeTeam(currentTeam);
     }
 
-
+    internal int[] GetScore()
+    {
+        return new int[] { orangeSideScore, blueSideScore};
+    }
 }

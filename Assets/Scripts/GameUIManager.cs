@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -10,16 +9,21 @@ public class GameUIManager : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI powerTextVal;
     [SerializeField]
-    TextMeshProUGUI previousPowerTextVal;    
+    TextMeshProUGUI previousPowerTextVal;
     [SerializeField]
     TextMeshProUGUI powerMalusText;
     [SerializeField]
     TextMeshProUGUI orangeScore;
     [SerializeField]
     TextMeshProUGUI blueScore;
+    [SerializeField]
+    ScorePanelAnimationHandler scoredPanel;
+
+    private Game game;
 
     public void Awake()
     {
+        game = FindObjectOfType<Game>();
         //calculator FindObjectOfType<GameManager>().gameObject.GetComponent<Calculator>(); 
     }
 
@@ -116,11 +120,24 @@ public class GameUIManager : MonoBehaviour
         uIEffects.ShowUnselectedForServe(playerCard);
     }
 
-    internal void UpdateScore(Side side, int sideScore)
+    internal void UpdateScoreAnim(Side side)
     {
         if (side == Side.Orange)
-            orangeScore.text = sideScore.ToString();
+        {
+            scoredPanel.UpdatePointText("Orange Scored !");
+        }
         else if (side == Side.Blue)
-            blueScore.text = sideScore.ToString();
+        {
+            scoredPanel.UpdatePointText("Blue Scored !");
+        }
+        scoredPanel.StartAnim(side);
     }
+
+    internal void UpdateScore()
+    {
+        int[] score = game.GetScore();
+        orangeScore.text = score[0].ToString();
+        blueScore.text = score[1].ToString();
+    }
+
 }
