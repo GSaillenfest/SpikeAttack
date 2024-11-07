@@ -16,6 +16,8 @@ public class Game : MonoBehaviour
     [SerializeField]
     Button validateBtn;
     [SerializeField]
+    private Button endTurnBtn;
+    [SerializeField]
     float cooldownDuration;
 
     GameManager gameManager;
@@ -156,6 +158,7 @@ public class Game : MonoBehaviour
         SetSelectableCardAction();
         SetAllSelectableCardAction(oppositeTeam, false);
         SetValidateButtonInteractable(false);
+        SetEndTurnBtnInteractable(true);
     }
 
     public void SelectAction(VolleyPlayer selected)
@@ -204,6 +207,7 @@ public class Game : MonoBehaviour
                 if (selected.isSelectedTwice)
                     selected.SetIsSelectedTwice(false);
                 else selected.SetIsSelected(false);
+                SetEndTurnBtnInteractable(true);
                 SetValidateButtonInteractable(false);
                 gameUI.DeactivateValidateButton();
                 actionIndex--;
@@ -213,6 +217,7 @@ public class Game : MonoBehaviour
 
         if (actionIndex == 3)
         {
+            SetEndTurnBtnInteractable(false);
             SetValidateButtonInteractable(true);
         }
 
@@ -239,6 +244,23 @@ public class Game : MonoBehaviour
         attackIndex = selectedCardSlots[2];
         EmptySelectedCardSlots();
         SetValidateButtonInteractable(false);
+        CheckWinningConditions(powerValue, previousPowerValue);
+    }
+
+    public void EndTurnOnClick()
+    {
+        SetAllSelectableCardAction(currentTeam, false);
+        for (int i = 0; i < actionIndex; i++)
+        {
+            currentTeam.GetPlayerOnField(selectedCardSlots[i]).SetIsSelected(false);
+            currentTeam.GetPlayerOnField(selectedCardSlots[i]).SetIsSelectedTwice(false);
+            currentTeam.GetPlayerOnField(selectedCardSlots[i]).DeselectActionAnimation(i);
+        }
+        EmptySelectedCardSlots();
+        SetValidateButtonInteractable(false);
+        SetEndTurnBtnInteractable(false);
+        powerValue = 0;
+        // TODO: Deselect Card with effect
         CheckWinningConditions(powerValue, previousPowerValue);
     }
 
@@ -340,6 +362,11 @@ public class Game : MonoBehaviour
     private void SetValidateButtonInteractable(bool isInteractable)
     {
         validateBtn.interactable = isInteractable;
+    }
+
+    private void SetEndTurnBtnInteractable(bool isInteractable)
+    {
+        endTurnBtn.interactable = isInteractable;
     }
 
     private void UpdatePowerValue()
