@@ -124,11 +124,11 @@ public class GameUIManager : MonoBehaviour
     {
         if (side == Side.Orange)
         {
-            scoredPanel.UpdatePointText("Orange Scored !");
+            scoredPanel.UpdateScoreText(side, "Orange Scored !");
         }
         else if (side == Side.Blue)
         {
-            scoredPanel.UpdatePointText("Blue Scored !");
+            scoredPanel.UpdateScoreText(side, "Blue Scored !");
         }
         scoredPanel.StartAnim(side);
     }

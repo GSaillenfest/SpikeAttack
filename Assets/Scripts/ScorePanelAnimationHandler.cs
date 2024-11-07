@@ -15,10 +15,24 @@ public class ScorePanelAnimationHandler : MonoBehaviour
     
     private GameUIManager gameUI;
 
+    VertexGradient orangeGradient = new VertexGradient(
+       new Color32(255, 165, 0, 255),  // Orange clair en haut à gauche
+       new Color32(255, 140, 0, 255),  // Orange moyen en haut à droite
+       new Color32(255, 69, 0, 255),   // Orange foncé en bas à gauche
+       new Color32(255, 69, 0, 255)// Orange foncé en bas à droite
+       );
+    VertexGradient blueGradient = new VertexGradient(
+            new Color32(135, 206, 250, 255), // Bleu clair en haut à gauche
+            new Color32(135, 206, 235, 255), // Bleu ciel en haut à droite
+            new Color32(70, 130, 180, 255),  // Bleu acier en bas à gauche
+            new Color32(70, 130, 160, 255)   // Bleu acier foncé en bas à droite
+        );
+
     void Awake()
     {
         Debug.Log("Awake");
         //animator.enabled = false;
+        panel.SetActive(false);
         gameUI = FindObjectOfType<GameUIManager>();
     }
 
@@ -55,8 +69,9 @@ public class ScorePanelAnimationHandler : MonoBehaviour
         particles.gameObject.SetActive(false);
     }
 
-    internal void UpdatePointText(string text)
+    internal void UpdateScoreText(Side side, string text)
     {
+        pointText.colorGradient = side == Side.Orange ? orangeGradient : blueGradient;
         pointText.text = text;
     }
 }
