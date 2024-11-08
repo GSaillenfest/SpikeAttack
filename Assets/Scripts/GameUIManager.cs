@@ -13,6 +13,8 @@ public class GameUIManager : MonoBehaviour
     [SerializeField]
     TextMeshProUGUI powerMalusText;
     [SerializeField]
+    TextMeshProUGUI powerBonusText;
+    [SerializeField]
     TextMeshProUGUI orangeScore;
     [SerializeField]
     TextMeshProUGUI blueScore;
@@ -24,6 +26,7 @@ public class GameUIManager : MonoBehaviour
     public void Awake()
     {
         game = FindObjectOfType<Game>();
+        ResetPowerBonusMalus();
         //calculator FindObjectOfType<GameManager>().gameObject.GetComponent<Calculator>(); 
     }
 
@@ -82,12 +85,26 @@ public class GameUIManager : MonoBehaviour
         previousPowerTextVal.text = powerValue.ToString();
     }
 
-    internal void UpdatePreviousPowerMalusText(int malusValue)
+    internal void UpdatePreviousPowerMalusText(int malusValue = 0)
     {
         if (malusValue == 0)
             powerMalusText.text = "";
         else
             powerMalusText.text = "(-" + malusValue + ")";
+    }
+    
+    internal void UpdatePowerBonusText(int bonusValue = 0)
+    {
+        if (bonusValue == 0)
+            powerBonusText.text = "";
+        else
+            powerBonusText.text = "(+" + bonusValue + ")";
+    }
+
+    internal void ResetPowerBonusMalus()
+    {
+        UpdatePowerBonusText();
+        UpdatePreviousPowerMalusText();
     }
 
     internal void DeactivateValidateButton()

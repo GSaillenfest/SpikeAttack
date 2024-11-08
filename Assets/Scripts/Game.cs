@@ -57,6 +57,8 @@ public class Game : MonoBehaviour
         attackIndex = nonAttributed;
         currentPhase = Phase.Inactive;
         cooldownDuration = 0.6f;
+        SetEndTurnBtnInteractable(false);
+        SetValidateButtonInteractable(false);
     }
 
     void ChangePhase(Phase phase)
@@ -336,7 +338,8 @@ public class Game : MonoBehaviour
         powerValue = 0;
         gameUI.UpdatePowerText(powerValue);
         gameUI.UpdatePreviousPowerText(previousPowerValue);
-        gameUI.UpdatePreviousPowerMalusText(0);
+        gameUI.UpdatePreviousPowerMalusText();
+        gameUI.UpdatePowerBonusText();
         SwitchTeam();
         StartTurn(currentTeam);
     }
