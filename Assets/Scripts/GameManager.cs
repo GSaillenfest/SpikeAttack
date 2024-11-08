@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -17,8 +16,8 @@ public class GameManager : MonoBehaviour
 
     public RectTransform playerRectTransform;
 
-/*    public int currentPowerValue;
-    public int previousPowerValue;*/
+    /*    public int currentPowerValue;
+        public int previousPowerValue;*/
 
     [SerializeField]
     Transform playerCardSet;
@@ -74,17 +73,32 @@ public class GameManager : MonoBehaviour
             if (slotIndex == 6) return;
             if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == true && slots[0].transform.childCount == 0)
             {
-                volleyPlayer.transform.SetParent(slots[0].transform, false);
+                volleyPlayer.transform.SetParent(slots[0].transform, true);
+                ResizeCard(volleyPlayer);
                 volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).slotIndex = 0;
                 volleyPlayer.SetActive(true);
             }
             else if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == false)
             {
-                volleyPlayer.transform.SetParent(slots[slotIndex].transform, false);
+                volleyPlayer.transform.SetParent(slots[slotIndex].transform, true);
+                ResizeCard(volleyPlayer);
                 volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).slotIndex = slotIndex;
                 volleyPlayer.SetActive(true);
                 slotIndex++;
             }
+        }
+    }
+
+    void ResizeCard(GameObject volleyPlayer)
+    {
+        RectTransform rectTransform = volleyPlayer.GetComponent<RectTransform>();
+        if (rectTransform != null) 
+        { 
+            rectTransform.anchorMin = new Vector2(0, 0); 
+            rectTransform.anchorMax = new Vector2(1, 1); 
+            rectTransform.offsetMin = Vector2.zero; 
+            rectTransform.offsetMax = Vector2.zero; 
+            rectTransform.localScale = Vector3.one;
         }
     }
 
@@ -109,9 +123,9 @@ public class GameManager : MonoBehaviour
         {
             GameObject volleyPlayer = CreateNewPlayer(player);
             volleyPlayer.transform.SetParent(playerCardSet);
-            volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchoredPosition = Vector2.zero;
-            volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchorMin = 0.5f * Vector2.one;
-            volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchorMax = 0.5f * Vector2.one;
+            /*            volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchoredPosition = Vector2.zero;
+                        volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchorMin = 0.5f * Vector2.one;
+                        volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchorMax = 0.5f * Vector2.one;*/
             if (volleyPlayer.GetComponentInChildren<VolleyPlayer>().isOrangeTeam)
                 volleyPlayersOrange.Add(volleyPlayer);
             else
@@ -144,9 +158,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-
-    
-
     public void EndPoint()
     {
         Debug.Log("End point");
@@ -157,14 +168,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("End match");
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
-    
-
     // 
     void SetCurrentTeam(TeamClass team)
     {
@@ -172,5 +175,5 @@ public class GameManager : MonoBehaviour
         game.SetCurrentTeam(currentTeam);
     }
 
-    
+
 }

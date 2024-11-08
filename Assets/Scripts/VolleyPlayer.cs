@@ -10,7 +10,9 @@ public class VolleyPlayer : MonoBehaviour
     [SerializeField]
     public TMP_Text blockText;
     [SerializeField]
-    public TMP_Text serveText;
+    public TMP_Text serveText;    
+    [SerializeField]
+    public TMP_Text effectText;
     [SerializeField]
     TMP_Text digText;
     [SerializeField]
@@ -83,6 +85,12 @@ public class VolleyPlayer : MonoBehaviour
             blockText.SetText(block.ToString());
             serveText.SetText(serve.ToString());
         }
+
+        if (effectDescription != null)
+        {
+            effectText.text = effectDescription;
+        }
+        else effectText.transform.parent.gameObject.SetActive(false);
 
         digText.SetText(dig.ToString());
         passText.SetText(pass.ToString());

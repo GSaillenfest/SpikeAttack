@@ -1369,7 +1369,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 14.9
+  m_fontSize: 20.35
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1504,7 +1504,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 9.75
+  m_fontSize: 12.55
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -1633,6 +1633,7 @@ MonoBehaviour:
   image: {fileID: 0}
   blockText: {fileID: 0}
   serveText: {fileID: 0}
+  effectText: {fileID: 0}
   digText: {fileID: 0}
   passText: {fileID: 0}
   attackText: {fileID: 0}
@@ -2009,7 +2010,7 @@ Canvas:
   serializedVersion: 3
   m_RenderMode: 1
   m_Camera: {fileID: 1721852643}
-  m_PlaneDistance: 100
+  m_PlaneDistance: 0
   m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
@@ -7761,6 +7762,7 @@ MonoBehaviour:
   image: {fileID: 0}
   blockText: {fileID: 0}
   serveText: {fileID: 0}
+  effectText: {fileID: 0}
   digText: {fileID: 0}
   passText: {fileID: 0}
   attackText: {fileID: 0}
@@ -8000,7 +8002,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 23.1
+  m_fontSize: 27.9
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8157,7 +8159,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 18.3
+  m_fontSize: 24.3
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8575,7 +8577,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 23.1
+  m_fontSize: 27.9
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -8672,6 +8674,7 @@ MonoBehaviour:
   image: {fileID: 0}
   blockText: {fileID: 0}
   serveText: {fileID: 0}
+  effectText: {fileID: 0}
   digText: {fileID: 0}
   passText: {fileID: 0}
   attackText: {fileID: 0}
@@ -8739,6 +8742,7 @@ MonoBehaviour:
   image: {fileID: 0}
   blockText: {fileID: 0}
   serveText: {fileID: 0}
+  effectText: {fileID: 0}
   digText: {fileID: 0}
   passText: {fileID: 0}
   attackText: {fileID: 0}
@@ -9361,7 +9365,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 12.2
+  m_fontSize: 13.95
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -9510,6 +9514,7 @@ MonoBehaviour:
   image: {fileID: 0}
   blockText: {fileID: 0}
   serveText: {fileID: 0}
+  effectText: {fileID: 0}
   digText: {fileID: 0}
   passText: {fileID: 0}
   attackText: {fileID: 0}
@@ -10378,6 +10383,7 @@ MonoBehaviour:
   image: {fileID: 0}
   blockText: {fileID: 0}
   serveText: {fileID: 0}
+  effectText: {fileID: 0}
   digText: {fileID: 0}
   passText: {fileID: 0}
   attackText: {fileID: 0}
