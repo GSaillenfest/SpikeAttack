@@ -61,7 +61,7 @@ public class TeamClass : MonoBehaviour
         deckOnField.SetAllSelectableCardAction(isSelectable);
     }
 
-    internal void SetServePhase()
+    internal void SetServePhase(bool blur = false)
     {
         deckOnField.SetServePhase();
     }

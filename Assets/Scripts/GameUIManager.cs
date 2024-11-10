@@ -5,7 +5,9 @@ public class GameUIManager : MonoBehaviour
 {
     //Calculator calculator;
     [SerializeField]
-    private UIEffects uIEffects;
+    BlurControl blurControl;
+    [SerializeField]
+    FXCardManager uIEffects;
     [SerializeField]
     TextMeshProUGUI powerTextVal;
     [SerializeField]
