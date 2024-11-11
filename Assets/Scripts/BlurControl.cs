@@ -3,45 +3,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
+using UnityEngine.UI;
 
 public class BlurControl : MonoBehaviour
 {
     [SerializeField]
-    Camera mainCamera;
+    Transform parent;
     [SerializeField]
-    Camera blurEffectCam;
+    RawImage blurImage;
+    [SerializeField]
+    RectTransform rectTransform;
 
-    int initLayer = -1;
-    Transform initParent = null;
     bool isActive = false;
-
-    public void OnEnter(GameObject go)
-    {
-        //SwitchMainCamera();
-        Debug.Log("ApplyBlur");
-        initLayer = go.layer;
-        initParent = go.transform.parent;
-        go.transform.SetParent(transform.GetChild(0), false);
-        go.layer = LayerMask.NameToLayer("NoBlur");
-        mainCamera.GetComponent<PostProcessLayer>().enabled = true;
-    }
-
-    void OnExit(GameObject go)
-    {
-        Debug.Log("UnApplyBlur");
-        go.transform.SetParent(initParent.transform, false);
-        go.layer = initLayer;
-        mainCamera.GetComponent<PostProcessLayer>().enabled = false;
-        //SwitchMainCamera();
-        initLayer = -1;
-    }
-
-    private void SwitchMainCamera()
-    {
-        Debug.Log("Change cam"); 
-        mainCamera.enabled = blurEffectCam.enabled;
-        blurEffectCam.enabled = !mainCamera.enabled;
-    }
 
     public void CallBlurEffect(GameObject go)
     {
@@ -54,18 +27,30 @@ public class BlurControl : MonoBehaviour
         {
             OnEnter(go);
         }
+        Rescale();
         isActive = !isActive;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public void OnEnter(GameObject go)
     {
-        
+        gameObject.transform.SetParent(go.transform);
+        blurImage.enabled = true;
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnExit(GameObject go)
     {
-        
+        blurImage.enabled = false;
+        gameObject.transform.SetParent(parent);
     }
+
+    void Rescale()
+    {
+        rectTransform.anchorMin = Vector2.zero;
+        rectTransform.anchorMax = Vector2.one;
+        rectTransform.offsetMin = Vector2.zero;
+        rectTransform.offsetMax = Vector2.zero;
+        rectTransform.localScale = Vector3.one;
+    }
+
+
 }
