@@ -61,6 +61,7 @@ public class Game : MonoBehaviour
         SetValidateButtonInteractable(false);
     }
 
+    // State machine switching between phases of a game
     void ChangePhase(Phase phase)
     {
         currentPhase = phase;
@@ -89,6 +90,7 @@ public class Game : MonoBehaviour
         }
     }
 
+    // Set only one playerCard for serve phase
     private void SetServePhase()
     {
         SetAllSelectableCardAction(currentTeam, false);
@@ -96,6 +98,7 @@ public class Game : MonoBehaviour
         currentTeam.SetServePhase();
     }
 
+    // Select and apply the serve value of the selected playerCard, update power
     private void SelectServeCard(VolleyPlayer selected)
     {
         isServeSelected = true;
@@ -105,6 +108,7 @@ public class Game : MonoBehaviour
         SetValidateButtonInteractable(true);
     }
 
+    // End Serve phase and switch to next state
     private void ValidateServe()
     {
         isServeSelected = false;
@@ -113,25 +117,35 @@ public class Game : MonoBehaviour
         ChangePhase(Phase.BlockSelection);
     }
 
+    // Switch to block resolution phase and call the resolve function
     private void SetBlockResolutionPhase()
     {
         currentPhase = Phase.BlockResolution;
         ResolveBlock();
     }
 
+    // Compare the last opponent attack position and the block position
+    // that has been selected at the end of the previous turn.
+    // Switch state to Action phase
     private void ResolveBlock()
     {
         int previousBlockIndex = currentTeam.deckOnField.GetBlockIndex();
+
+        // Return if no block has been previously selected
         if (previousBlockIndex == nonAttributed)
         {
             ChangePhase(Phase.Action);
             return;
         }
+
+        // Compare both positions and values
         if (previousBlockIndex == 2 && (attackIndex == 4 || attackIndex == 5) ||
             previousBlockIndex == 3 && (attackIndex == 0 || attackIndex == 3) ||
             previousBlockIndex == 4 && (attackIndex == 1 || attackIndex == 2))
         {
             currentTeam.GetPlayerOnField(previousBlockIndex).SelectBlock(true);
+            // End point if the block is greater or equal to the power, meaning that the current team has scored
+            // If not, reduce the power by block value
             if (currentTeam.deckOnField.GetBlockValue(previousBlockIndex) >= previousPowerValue)
             {
                 gameManager.EndPoint();
@@ -152,6 +166,7 @@ public class Game : MonoBehaviour
         }
     }
 
+    // Set playerCards selectable based on dig action availability
     private void SetActionPhase()
     {
         EmptySelectedCardSlots();
@@ -163,6 +178,7 @@ public class Game : MonoBehaviour
         SetEndTurnBtnInteractable(true);
     }
 
+    // Select actions on card and add value to power
     public void SelectAction(VolleyPlayer selected)
     {
         if (actionIndex == 0)
@@ -226,16 +242,19 @@ public class Game : MonoBehaviour
         UpdatePowerValue();
     }
 
+    // Set playerCards selectable based on action availability
     void SetSelectableCardAction()
     {
         currentTeam.SetSelectableCardAction(actionIndex, selectedCardSlots);
     }
 
+    // Set all playerCards selectable or not
     void SetAllSelectableCardAction(TeamClass team, bool isSelectable)
     {
         team.SetAllSelectableCardField(isSelectable);
     }
 
+    // End Action phase and perform a check 
     void ValidateActions()
     {
         SetAllSelectableCardAction(currentTeam, false);
@@ -249,6 +268,7 @@ public class Game : MonoBehaviour
         CheckWinningConditions(powerValue, previousPowerValue);
     }
 
+    // End turn without selecting actions, make opponent score
     public void EndTurnOnClick()
     {
         SetAllSelectableCardAction(currentTeam, false);
@@ -266,12 +286,14 @@ public class Game : MonoBehaviour
         CheckWinningConditions(powerValue, previousPowerValue);
     }
 
+    // Set front line playerCards selectable 
     void SetBlockSelectionPhase()
     {
         currentTeam.SetBlockPhase();
         SetValidateButtonInteractable(false);
     }
 
+    // Select/Unselect block playerCard
     public void SelectBlockCard(VolleyPlayer player)
     {
         if (selectedCardSlots[0] == nonAttributed)
@@ -290,13 +312,13 @@ public class Game : MonoBehaviour
         }
     }
 
+    // Validate block position and memories it, end turn
     void ValidateBlockSelection()
     {
         SetAllSelectableCardAction(currentTeam, false);
         currentTeam.ValidateBlock(selectedCardSlots[0]);
         EndCurrentTurn();
     }
-
 
     // Start a regular game (Called by UI Button for now)
     public void StartGame(TeamClass team)
@@ -309,6 +331,7 @@ public class Game : MonoBehaviour
         StartPoint(team);
     }
 
+    // Start a point, reset variables, Switch state to Serve phase
     void StartPoint(TeamClass team)
     {
         ResetVariables();
@@ -319,18 +342,21 @@ public class Game : MonoBehaviour
         ChangePhase(Phase.Serve);
     }
 
+    // Reset both teams status
     private void ResetTeamStatus()
     {
         currentTeam.ResetStatus();
         oppositeTeam.ResetStatus();
     }
 
+    // Start a new turn, switch state to BlockResolution
     public void StartTurn(TeamClass team)
     {
         turn++;
         ChangePhase(Phase.BlockResolution);
     }
 
+    // End normal turn and switch team then call start turn
     void EndCurrentTurn()
     {
         Debug.Log("No winning side : End Turn");
@@ -343,6 +369,38 @@ public class Game : MonoBehaviour
         SwitchTeam();
         StartTurn(currentTeam);
     }
+
+    // Compare current power and previous turn power
+    internal void CheckWinningConditions(int powerValue, int previousPowerValue)
+    {
+
+        if (powerValue > previousPowerValue)
+        {
+            ChangePhase(Phase.BlockSelection);
+        }
+        else EndPoint();
+    }
+
+    // End point, switch to BlockSelection phase, launch animation
+    private void EndPoint()
+    {
+        ChangePhase(Phase.BlockSelection);
+        if (currentTeam == team1)
+        {
+            blueSideScore++;
+            gameUI.UpdateScoreAnim(Side.Blue);
+        }
+        else
+        {
+            orangeSideScore++;
+            gameUI.UpdateScoreAnim(Side.Orange);
+        }
+        // TODO: Add Rotation and Replacement phases
+        SwitchTeam();
+        StartPoint(currentTeam);
+    }
+
+
 
     private void EmptySelectedCardSlots()
     {
@@ -362,6 +420,7 @@ public class Game : MonoBehaviour
         return team == team1 ? team2 : team1;
     }
 
+
     private void SetValidateButtonInteractable(bool isInteractable)
     {
         validateBtn.interactable = isInteractable;
@@ -371,6 +430,7 @@ public class Game : MonoBehaviour
     {
         endTurnBtn.interactable = isInteractable;
     }
+
 
     private void UpdatePowerValue()
     {
@@ -382,12 +442,14 @@ public class Game : MonoBehaviour
         gameUI.UpdatePowerText(powerValue);
     }
 
+    // TODO: To implement
     public void SelectCardEffect()
     {
         /*if (isSelected)
         card.getComponent<Effect>().Activate();*/
     }
 
+    // Select fucntion called by playerCard selection based on current state
     public void HandleCardButtonFunction(VolleyPlayer player)
     {
         switch (currentPhase)
@@ -416,6 +478,8 @@ public class Game : MonoBehaviour
         StartCoroutine(AddBtnCooldown());
     }
 
+    // Add button cooldown on card selection to avoid interferences with animations
+    // (could be handled by animator)
     IEnumerator AddBtnCooldown()
     {
         Phase initialPhase = currentPhase;
@@ -424,7 +488,8 @@ public class Game : MonoBehaviour
         currentPhase = initialPhase;
     }
 
-    public void SelectValidateButtonFunction()
+    // Select function called by validate button based on current state
+    public void HandleValidateButtonFunction()
     {
         switch (currentPhase)
         {
@@ -446,36 +511,6 @@ public class Game : MonoBehaviour
             default:
                 break;
         }
-    }
-
-    internal void CheckWinningConditions(int powerValue, int previousPowerValue)
-    {
-
-        if (powerValue > previousPowerValue)
-        {
-            ChangePhase(Phase.BlockSelection);
-        }
-        else EndPoint();
-    }
-
-    private void EndPoint()
-    {
-        // TODO: add btn to pass turn with double check
-        Debug.Log("End point, reset values");
-        ChangePhase(Phase.BlockSelection);
-        if (currentTeam == team1)
-        {
-            blueSideScore++;
-            gameUI.UpdateScoreAnim(Side.Blue);
-        }
-        else
-        {
-            orangeSideScore++;
-            gameUI.UpdateScoreAnim(Side.Orange);
-        }
-        // TODO: Add Rotation and Replacement phases
-        SwitchTeam();
-        StartPoint(currentTeam);
     }
 
     internal void ResetVariables()
