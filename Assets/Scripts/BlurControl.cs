@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.UI;
@@ -16,31 +17,46 @@ public class BlurControl : MonoBehaviour
 
     bool isActive = false;
 
-    public void CallBlurEffect(GameObject go)
+/*    public void OnButtonClick()
+    {
+        CallBlurEffect(GameObject.Find("General UI"), GameObject.Find("Libero"));
+    }*/
+
+    public void CallBlurEffect(GameObject blurTargetGameObject, GameObject excludedGameObject)
     {
         Debug.Log(isActive);
         if (isActive)
         {
-            OnExit(go);
+            OnExit(blurTargetGameObject, excludedGameObject);
         }
         else
         {
-            OnEnter(go);
+            OnEnter(blurTargetGameObject, excludedGameObject);
         }
         Rescale();
         isActive = !isActive;
     }
 
-    public void OnEnter(GameObject go)
+    public void OnEnter(GameObject blurTargetGameObject, GameObject excludedGameObject)
     {
-        gameObject.transform.SetParent(go.transform);
+        gameObject.transform.SetParent(blurTargetGameObject.transform);
         blurImage.enabled = true;
+        if (excludedGameObject.TryGetComponent(out Canvas canvas))
+        {
+            canvas.overrideSorting = true;
+            canvas.sortingLayerName = "NoBlur";
+        }
     }
 
-    void OnExit(GameObject go)
+    void OnExit(GameObject blurTargetGameObject, GameObject excludedGameObject)
     {
         blurImage.enabled = false;
         gameObject.transform.SetParent(parent);
+        if (excludedGameObject.TryGetComponent(out Canvas canvas))
+        {
+            canvas.sortingLayerName = string.Empty;
+            canvas.overrideSorting = false;
+        }
     }
 
     void Rescale()
