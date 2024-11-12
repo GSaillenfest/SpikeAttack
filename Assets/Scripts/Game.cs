@@ -19,7 +19,7 @@ public class Game : MonoBehaviour
     [SerializeField]
     float cooldownDuration;
     [SerializeField]
-    int allowedRemplacementNumber;
+    int allowedRemplacementNumber = 2;
 
     int replacement;
     GameManager gameManager;
@@ -447,7 +447,7 @@ public class Game : MonoBehaviour
     // Set front line playerCards selectable 
     void SetBlockSelectionPhase()
     {
-        currentTeam.SetBlockPhase();
+        currentTeam.SetBlockSelectionPhase();
         SetValidateButtonInteractable(false);
     }
 

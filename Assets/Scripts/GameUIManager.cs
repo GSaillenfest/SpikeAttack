@@ -8,7 +8,7 @@ public class GameUIManager : MonoBehaviour
     [SerializeField]
     BlurControl blurControl;
     [SerializeField]
-    FXCardManager uIEffects;
+    FXCardManager cardFX;
     [SerializeField]
     TextMeshProUGUI powerTextVal;
     [SerializeField]
@@ -35,42 +35,42 @@ public class GameUIManager : MonoBehaviour
 
     public void SetActionUnavailable(VolleyPlayer player, int actionIndex)
     {
-        uIEffects.ShowUnselectableAction(player, actionIndex);
+        cardFX.ShowUnselectableAction(player, actionIndex);
     }
 
     public void SelectAction(VolleyPlayer selectedPlayer, int actionIndex)
     {
-        uIEffects.ShowSelected(selectedPlayer);
-        uIEffects.ShowSelectedAction(selectedPlayer, actionIndex);
+        cardFX.ShowSelected(selectedPlayer);
+        cardFX.ShowSelectedAction(selectedPlayer, actionIndex);
     }
 
     public void DeselectAction(VolleyPlayer selectedPlayer, int actionIndex)
     {
-        uIEffects.ShowUnselected(selectedPlayer);
+        cardFX.ShowUnselected(selectedPlayer);
         //Action selectedAction = selectedPlayer.GetComponents<Action>()[actionIndex];
-        uIEffects.ShowUnselectedAction(selectedPlayer, actionIndex);
+        cardFX.ShowUnselectedAction(selectedPlayer, actionIndex);
     }
 
     public void SelectPlayerBlock(VolleyPlayer playerCard, bool applyColor)
     {
-        uIEffects.ShowSelectedForBlock(playerCard, applyColor);
+        cardFX.ShowSelectedForBlock(playerCard, applyColor);
     }
 
     public void DeselectPlayerBlock(VolleyPlayer playerCard)
     {
-        uIEffects.ShowUnselectedForBlock(playerCard);
+        cardFX.ShowUnselectedForBlock(playerCard);
     }
 
     public void SelectPlayerToReplace(VolleyPlayer selectedPlayer)
     {
         //select player from gamefield to be replaced
-        uIEffects.ShowSelected(selectedPlayer);
+        cardFX.ShowSelected(selectedPlayer);
     }
 
     public void SelectPlayerToPutOnField(VolleyPlayer selectedPlayer)
     {
         //select player from sidelines to put on game field
-        uIEffects.ShowSelected(selectedPlayer);
+        cardFX.ShowSelected(selectedPlayer);
     }
     // deprecated
     /*    internal void ChangeCurrentTeam(TeamClass currentTeam)
@@ -117,27 +117,27 @@ public class GameUIManager : MonoBehaviour
 
     internal void DeselectCard(VolleyPlayer volleyPlayer)
     {
-        uIEffects.ShowUnselected(volleyPlayer);
+        cardFX.ShowUnselected(volleyPlayer);
     }
 
     internal void SetCardSelectable(VolleyPlayer volleyPlayer, bool isSelectable)
     {
-        uIEffects.ShowSelectable(volleyPlayer, isSelectable);
+        cardFX.ShowSelectable(volleyPlayer, isSelectable);
     }
 
     internal void ResetScaleAction(VolleyPlayer volleyPlayer, int actionIndex)
     {
-        uIEffects.ResetActionScaleOnly(volleyPlayer, actionIndex);
+        cardFX.ResetActionScaleOnly(volleyPlayer, actionIndex);
     }
 
     internal void SelectPlayerServe(VolleyPlayer playerCard)
     {
-        uIEffects.ShowSelectedForServe(playerCard);
+        cardFX.ShowSelectedForServe(playerCard);
     }
 
     internal void DeselectPlayerServe(VolleyPlayer playerCard)
     {
-        uIEffects.ShowUnselectedForServe(playerCard);
+        cardFX.ShowUnselectedForServe(playerCard);
     }
 
     internal void UpdateScoreAnim(Side side)
@@ -162,7 +162,7 @@ public class GameUIManager : MonoBehaviour
 
     internal void SetActionAvailable(VolleyPlayer volleyPlayer, int actionIndex)
     {
-        uIEffects.ResetActionColorOnly(volleyPlayer, actionIndex);
+        cardFX.ResetActionColorOnly(volleyPlayer, actionIndex);
     }
 
     internal void CallBlurEffect(GameObject parent, GameObject[] exceptions = null)

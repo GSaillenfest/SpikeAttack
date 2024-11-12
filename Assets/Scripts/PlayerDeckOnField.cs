@@ -147,7 +147,7 @@ public class PlayerDeckOnField : MonoBehaviour
         }
     }
 
-    public void SetBlockPhase()
+    public void SetBlockSelectionPhase()
     {
         if (blockIndex != -1) playersOnField[blockIndex].DeselectBlock();
         foreach (GameObject slot in deckSlots)

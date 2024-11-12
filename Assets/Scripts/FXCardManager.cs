@@ -78,9 +78,13 @@ public class FXCardManager : MonoBehaviour
 
     public void ShowSelectedForBlock(VolleyPlayer playerCard, bool applyColor)
     {
-        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 0, 0) : new Vector3(-20, 0, 0);
-        playerCard.gameObject.transform.parent.position += offset;
-        ApplyCardDropEffect(playerCard.gameObject);
+        Vector2 initPosMin = Vector2.zero;
+        Vector2 initPosMax = Vector2.one;
+        Vector2 offset = playerCard.isOrangeTeam ? new Vector2(0.5f, 0) : new Vector2(-0.5f, 0);
+        playerCard.GetComponent<RectTransform>().anchorMin = initPosMin + offset;
+        playerCard.GetComponent<RectTransform>().anchorMax = initPosMax + offset;
+        playerCard.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+        //ApplyCardDropEffect(playerCard.gameObject);
 
         if (applyColor) 
             playerCard.blockText.colorGradient = SelectTeamColorGradient(playerCard);
@@ -90,27 +94,32 @@ public class FXCardManager : MonoBehaviour
 
     public void ShowUnselectedForBlock(VolleyPlayer playerCard)
     {
-        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(20, 0, 0) : new Vector3(-20, 0, 0);
         ResetScale(playerCard.blockText.gameObject);
         playerCard.blockText.colorGradient = whiteNonGradient;
-        playerCard.gameObject.transform.parent.position -= offset;
+        playerCard.GetComponent<RectTransform>().anchorMin = Vector2.zero;
+        playerCard.GetComponent<RectTransform>().anchorMax = Vector2.one;
     }
 
     public void ShowSelectedForServe(VolleyPlayer playerCard)
     {
-        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(-20, 0, 0) : new Vector3(+20, 0, 0);
-        playerCard.gameObject.transform.parent.position += offset;
-        ApplyCardDropEffect(playerCard.gameObject);
+        Vector2 initPosMin = Vector2.zero;
+        Vector2 initPosMax = Vector2.one;
+        Vector2 offset = playerCard.isOrangeTeam ? new Vector2(-1, 0) : new Vector2(1, 0);
+        playerCard.GetComponent<RectTransform>().anchorMin = initPosMin + offset;
+        playerCard.GetComponent<RectTransform>().anchorMax = initPosMax + offset;
+        playerCard.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+
+        //ApplyCardDropEffect(playerCard.gameObject);
         playerCard.serveText.colorGradient = SelectTeamColorGradient(playerCard);
         BounceOnSelection(playerCard.serveText.gameObject);
     }
 
     public void ShowUnselectedForServe(VolleyPlayer playerCard)
     {
-        Vector3 offset = playerCard.isOrangeTeam ? new Vector3(-20, 0, 0) : new Vector3(+20, 0, 0);
         ResetScale(playerCard.serveText.gameObject);
         playerCard.serveText.colorGradient = whiteNonGradient;
-        playerCard.gameObject.transform.position -= offset;
+        playerCard.GetComponent<RectTransform>().anchorMin = Vector2.zero;
+        playerCard.GetComponent<RectTransform>().anchorMax = Vector2.one;
     }
 
     public void ShowSelectedAction(VolleyPlayer player, int actionIndex)

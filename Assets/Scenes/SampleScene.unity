@@ -10128,7 +10128,7 @@ MonoBehaviour:
   validateBtn: {fileID: 2080401688}
   endTurnBtn: {fileID: 226059394}
   cooldownDuration: 0
-  allowedRemplacementNumber: 0
+  allowedRemplacementNumber: 2
   actionIndex: 0
   currentPhase: 0
 --- !u!1 &1844360147

@@ -33,9 +33,9 @@ public class TeamClass : MonoBehaviour
         playerList.Add(playerCard);
     }
 
-    internal void SetBlockPhase()
+    internal void SetBlockSelectionPhase()
     {
-        deckOnField.SetBlockPhase();
+        deckOnField.SetBlockSelectionPhase();
     }
 
     internal void SetSelectableCardAction(int actionIndex, int[] selectedCardSlots)
