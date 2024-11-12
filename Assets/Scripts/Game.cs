@@ -19,8 +19,9 @@ public class Game : MonoBehaviour
     [SerializeField]
     float cooldownDuration;
     [SerializeField]
-    int replacement;
+    int allowedRemplacementNumber;
 
+    int replacement;
     GameManager gameManager;
     private int turn;
     private int[] selectedCardSlots;
@@ -36,9 +37,11 @@ public class Game : MonoBehaviour
     private const int nonAttributed = -1;
     private int replacementNumber = 0;
     public int actionIndex = 0;
-    private Phase currentPhase;
+    public Phase currentPhase;
     private int orangeSideScore = 0;
     private int blueSideScore = 0;
+    private Phase tempPhase;
+
 
     public Game(TeamClass t1, TeamClass t2)
     {
@@ -52,11 +55,12 @@ public class Game : MonoBehaviour
         gameManager = FindObjectOfType<GameManager>();
         team1 = gameManager.teams[0];
         team2 = gameManager.teams[1];
-        selectedCardSlots = new int[3];
+        selectedCardSlots = new int[6];
         EmptySelectedCardSlots();
         actionArr = new int[3];
         attackIndex = nonAttributed;
         replacementNumber = 0;
+        replacement = allowedRemplacementNumber;
         currentPhase = Phase.Inactive;
         cooldownDuration = 0.6f;
         SetEndTurnBtnInteractable(false);
@@ -64,7 +68,7 @@ public class Game : MonoBehaviour
     }
 
     // State machine switching between phases of a game
-    void ChangePhase(Phase phase)
+    public void ChangePhase(Phase phase)
     {
         currentPhase = phase;
         switch (currentPhase)
@@ -81,7 +85,7 @@ public class Game : MonoBehaviour
                 SetActionPhase();
                 break;
             case Phase.Replacement:
-                SetReplacementPhase();
+                SetPreReplacementPhase();
                 break;
             case Phase.Serve:
                 SetServePhase();
@@ -93,54 +97,129 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void SetReplacementPhase()
+    internal void Temporize(Phase nextPhase)
+    {
+        tempPhase = nextPhase;
+        ChangePhase(Phase.Inactive);
+    }
+
+    internal void EndTemporization()
+    {
+        ChangePhase(tempPhase);
+    }
+
+    private void SetPreReplacementPhase()
     {
         currentTeam.RotateFieldCards();
         oppositeTeam.RotateFieldCards();
+        SetReplacementPhase();
+    }
+
+    private void SetReplacementPhase()
+    {
+        SwitchTeam();
+        EmptySelectedCardSlots();
 
         // show SideDeck and Set card Selectable
         currentTeam.ShowSidelines(true);
         SetAllSelectableCardOnField(currentTeam, true);
         SetAllSelectableCardOnSide(currentTeam, true);
-        gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, currentTeam.deckOnSide.deckSlots);
+        CallBlurReplacement();
+    }
+
+    private void CallBlurReplacement()
+    {
+        GameObject[] exceptionsBlur = new GameObject[currentTeam.deckOnSide.playersOnSidelines.Count];
+        for (int i = 0; i < exceptionsBlur.Length; i++)
+        {
+            exceptionsBlur[i] = currentTeam.deckOnSide.playersOnSidelines[i].gameObject;
+        }
+        gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, exceptionsBlur);
     }
 
     private void ReplaceCard(VolleyPlayer selectedCard)
     {
+
         // When a card is selected
         if (selectedCardSlots[0] == nonAttributed)
         {
             selectedCardSlots[0] = selectedCard.slotIndex;
 
             //Check if is a card on field
-            if (selectedCard.slotIndex < 5)
+            if (selectedCard.slotIndex < 6)
             {
-                SetAllSelectableCardOnField(currentTeam, false);
+                // Check if is a libero
+                if (selectedCard.isLibero)
+                {
+                    // Set all field cards unselectable
+                    SetAllSelectableCardOnField(currentTeam, false);
+                    // Set non libero cards on sidelines unselectable
+                    SetAllSelectableCardOnSide(currentTeam, false);
+                    currentTeam.GetPlayerBySlotIndex(6).SetSelectable(true);
+                }
+                else
+                {
+                    // Set all field cards unselectable
+                    SetAllSelectableCardOnField(currentTeam, false);
+                    // Set sidelines libero card unselectable
+                    currentTeam.GetPlayerBySlotIndex(6).SetSelectable(false);
+                }
             }
             else
             {
-                SetAllSelectableCardOnSide(currentTeam, false);
+                // Check if is libero
+                if (selectedCard.isLibero)
+                {
+                    // Set all sidelines cards unselectable
+                    SetAllSelectableCardOnSide(currentTeam, false);
+                    // Set all non libero field cards unselectable
+                    SetAllSelectableCardOnField(currentTeam, false);
+                    currentTeam.GetPlayerBySlotIndex(0).SetSelectable(true);
+                }
+                else
+                {
+                    // Set all side cards unselectable
+                    SetAllSelectableCardOnSide(currentTeam, false);
+                    // Set libero field card unselectable
+                    currentTeam.GetPlayerBySlotIndex(0).SetSelectable(false);
+                }
+            }
+            if (selectedCardSlots[2] != nonAttributed)
+            {
+                currentTeam.GetPlayerBySlotIndex(selectedCardSlots[2]).SetSelectable(false);
+                currentTeam.GetPlayerBySlotIndex(selectedCardSlots[3]).SetSelectable(false);
             }
             selectedCard.SetSelectable(true);
         }
         else if (selectedCard.slotIndex == selectedCardSlots[0])
         {
-            if (selectedCard.slotIndex < 5)
+            // Reset all cards selectable but the previously replaced
+            SetAllSelectableCardOnField(currentTeam, true);
+            SetAllSelectableCardOnSide(currentTeam, true);
+            if (selectedCardSlots[2] != nonAttributed)
             {
-                SetAllSelectableCardOnField(currentTeam, true);
-            }
-            else
-            {
-                SetAllSelectableCardOnSide(currentTeam, true);
+                currentTeam.GetPlayerBySlotIndex(selectedCardSlots[2]).SetSelectable(false);
+                currentTeam.GetPlayerBySlotIndex(selectedCardSlots[3]).SetSelectable(false);
             }
             selectedCardSlots[0] = nonAttributed;
         }
         else
         {
             selectedCardSlots[1] = selectedCard.slotIndex;
+            CallBlurReplacement();
             currentTeam.SwitchTwoCardPlayerSlot(selectedCardSlots[0], selectedCardSlots[1]);
-            selectedCard.ResetActions();
-            EmptySelectedCardSlots();
+            CallBlurReplacement();
+            SetAllSelectableCardOnField(currentTeam, true);
+            SetAllSelectableCardOnSide(currentTeam, true);
+            // Keep previously replaced cards in memory
+            selectedCardSlots[2] = selectedCardSlots[0];
+            selectedCardSlots[3] = selectedCardSlots[1];
+            selectedCardSlots[0] = nonAttributed;
+            selectedCardSlots[1] = nonAttributed;
+            // Set previously replaced cards unselectable
+            currentTeam.GetPlayerBySlotIndex(selectedCardSlots[2]).SetSelectable(false);
+            currentTeam.GetPlayerBySlotIndex(selectedCardSlots[3]).SetSelectable(false);
+            // count down from number of allowed replacement
             replacement--;
         }
 
@@ -149,6 +228,7 @@ public class Game : MonoBehaviour
             SetValidateButtonInteractable(true);
             SetAllSelectableCardOnField(currentTeam, false);
             SetAllSelectableCardOnSide(currentTeam, false);
+            replacement = allowedRemplacementNumber;
         }
 
     }
@@ -162,16 +242,18 @@ public class Game : MonoBehaviour
     {
         currentTeam.ShowSidelines(false);
         gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, currentTeam.deckOnSide.deckSlots);
+        replacementNumber++;
+        EmptySelectedCardSlots();
 
         // if both team made their replacement then start new turn
         if (replacementNumber == 2)
         {
             replacementNumber = 0;
+            SwitchTeam();
             ChangePhase(Phase.Serve);
         }
         else // else change replacement side
         {
-            SwitchTeam();
             SetReplacementPhase();
         }
     }
@@ -179,6 +261,8 @@ public class Game : MonoBehaviour
     // Set only one playerCard for serve phase
     private void SetServePhase()
     {
+        EmptySelectedCardSlots();
+        SetValidateButtonInteractable(false);
         SetAllSelectableCardOnField(currentTeam, false);
         SetAllSelectableCardOnField(oppositeTeam, false);
         currentTeam.SetServePhase();
@@ -229,7 +313,7 @@ public class Game : MonoBehaviour
             previousBlockIndex == 3 && (attackIndex == 0 || attackIndex == 3) ||
             previousBlockIndex == 4 && (attackIndex == 1 || attackIndex == 2))
         {
-            currentTeam.GetPlayerOnField(previousBlockIndex).SelectBlock(true);
+            currentTeam.GetPlayerBySlotIndex(previousBlockIndex).SelectBlock(true);
             // End point if the block is greater or equal to the power, meaning that the current team has scored
             // If not, reduce the power by block value
             if (currentTeam.deckOnField.GetBlockValue(previousBlockIndex) >= previousPowerValue)
@@ -247,7 +331,7 @@ public class Game : MonoBehaviour
         }
         else
         {
-            currentTeam.GetPlayerOnField(previousBlockIndex).SelectBlock(false);
+            currentTeam.GetPlayerBySlotIndex(previousBlockIndex).SelectBlock(false);
             ChangePhase(Phase.Action);
         }
     }
@@ -332,7 +416,7 @@ public class Game : MonoBehaviour
     void ValidateActions()
     {
         SetAllSelectableCardOnField(currentTeam, false);
-        for (int i = 0; i < selectedCardSlots.Length; i++)
+        for (int i = 0; i < 3; i++)
         {
             currentTeam.ValidateActionCombo(selectedCardSlots[i], i);
         }
@@ -348,9 +432,9 @@ public class Game : MonoBehaviour
         SetAllSelectableCardOnField(currentTeam, false);
         for (int i = 0; i < actionIndex; i++)
         {
-            currentTeam.GetPlayerOnField(selectedCardSlots[i]).SetIsSelected(false);
-            currentTeam.GetPlayerOnField(selectedCardSlots[i]).SetIsSelectedTwice(false);
-            currentTeam.GetPlayerOnField(selectedCardSlots[i]).DeselectActionAnimation(i);
+            currentTeam.GetPlayerBySlotIndex(selectedCardSlots[i]).SetIsSelected(false);
+            currentTeam.GetPlayerBySlotIndex(selectedCardSlots[i]).SetIsSelectedTwice(false);
+            currentTeam.GetPlayerBySlotIndex(selectedCardSlots[i]).DeselectActionAnimation(i);
         }
         EmptySelectedCardSlots();
         SetValidateButtonInteractable(false);
@@ -420,7 +504,8 @@ public class Game : MonoBehaviour
             isGameStart = false;
             ChangePhase(Phase.Serve);
         }
-        else ChangePhase(Phase.Replacement);
+        // else ChangePhase(Phase.Replacement);
+        // Next phase must be triggered by the end of animation
     }
 
     // Reset both teams status
@@ -440,7 +525,6 @@ public class Game : MonoBehaviour
     // End normal turn and switch team then call start turn
     void EndCurrentTurn()
     {
-        Debug.Log("No winning side : End Turn");
         previousPowerValue = powerValue;
         powerValue = 0;
         gameUI.UpdatePowerText(powerValue);
@@ -465,7 +549,8 @@ public class Game : MonoBehaviour
     // End point, switch to BlockSelection phase, launch animation
     private void EndPoint()
     {
-        ChangePhase(Phase.BlockSelection);
+        // ChangePhase(Phase.BlockSelection);
+        Temporize(Phase.Replacement);
         if (currentTeam == team1)
         {
             blueSideScore++;
@@ -476,7 +561,6 @@ public class Game : MonoBehaviour
             orangeSideScore++;
             gameUI.UpdateScoreAnim(Side.Orange);
         }
-        // TODO: Add Rotation and Replacement phases
         StartPoint(currentTeam);
     }
 
@@ -496,9 +580,10 @@ public class Game : MonoBehaviour
 
     private void EmptySelectedCardSlots()
     {
-        selectedCardSlots[0] = nonAttributed;
-        selectedCardSlots[1] = nonAttributed;
-        selectedCardSlots[2] = nonAttributed;
+        for (int i = 0; i < selectedCardSlots.Length; i++)
+        {
+            selectedCardSlots[i] = nonAttributed;
+        }
     }
 
     internal void SetCurrentTeam(TeamClass currentTeam)
@@ -623,4 +708,6 @@ public class Game : MonoBehaviour
     {
         return new int[] { orangeSideScore, blueSideScore };
     }
+
+
 }

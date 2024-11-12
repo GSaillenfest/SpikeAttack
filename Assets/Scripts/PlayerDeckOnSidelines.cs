@@ -8,7 +8,7 @@ public class PlayerDeckOnSidelines : MonoBehaviour
     [SerializeField]
     public GameObject[] deckSlots;
 
-    List<VolleyPlayer> playersOnSidelines = new();
+    public List<VolleyPlayer> playersOnSidelines = new();
 
     private void OnEnable()
     {

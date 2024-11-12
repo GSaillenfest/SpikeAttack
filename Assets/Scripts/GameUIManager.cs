@@ -169,4 +169,9 @@ public class GameUIManager : MonoBehaviour
     {
         blurControl.CallBlurEffect(parent, exceptions);
     }
+
+    internal void EndTemporization()
+    {
+        game.EndTemporization();
+    }
 }

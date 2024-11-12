@@ -170,8 +170,8 @@ public class PlayerDeckOnField : MonoBehaviour
 
     internal void ResetStatus()
     {
-/*        if (blockIndex == -1) return;
-        playersOnField[blockIndex].DeselectBlock();*/
+        if (blockIndex == -1) return;
+        playersOnField[blockIndex].DeselectBlock();
         blockIndex = -1;
     }
 }

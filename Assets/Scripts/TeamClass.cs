@@ -73,8 +73,9 @@ public class TeamClass : MonoBehaviour
         return deckOnField.GetServeValue();
     }
 
-    internal VolleyPlayer GetPlayerOnField(int slotIndex)
+    internal VolleyPlayer GetPlayerBySlotIndex(int slotIndex)
     {
+        if (slotIndex < 0) return null;
         if (slotIndex < 6)
             return deckOnField.GetPlayer(slotIndex);
         else
@@ -115,14 +116,16 @@ public class TeamClass : MonoBehaviour
             sideSlot = slotA;
         }
 
+        deckOnField.GetPlayer(fieldSlot).ResetActions();
+
         deckOnField.GetPlayer(fieldSlot).SetSelectable(false);
         deckOnSide.GetPlayer(sideSlot).SetSelectable(false);
 
         fieldPlayer = deckOnField.GetPlayer(fieldSlot).gameObject;
         sidePlayer = deckOnSide.GetPlayer(sideSlot).gameObject;
 
-        fieldPlayer.transform.SetParent(deckOnSide.deckSlots[sideSlot - 6].transform);
-        sidePlayer.transform.SetParent(deckOnField.deckSlots[fieldSlot].transform);
+        fieldPlayer.transform.SetParent(deckOnSide.deckSlots[sideSlot - 6].transform, false);
+        sidePlayer.transform.SetParent(deckOnField.deckSlots[fieldSlot].transform, false);
 
         deckOnField.RefreshDeck();
         deckOnSide.RefreshDeck();

@@ -24,7 +24,6 @@ public class BlurControl : MonoBehaviour
 
     public void CallBlurEffect(GameObject blurTargetGameObject, GameObject[] excludedGameObject = null)
     {
-        Debug.Log(isActive);
         if (isActive)
         {
             OnExit(blurTargetGameObject, excludedGameObject);

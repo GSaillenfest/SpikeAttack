@@ -30,7 +30,6 @@ public class ScorePanelAnimationHandler : MonoBehaviour
 
     void Awake()
     {
-        Debug.Log("Awake");
         //animator.enabled = false;
         panel.SetActive(false);
         gameUI = FindObjectOfType<GameUIManager>();
@@ -56,6 +55,7 @@ public class ScorePanelAnimationHandler : MonoBehaviour
         Debug.Log("Stop anim");
         //animator.enabled = false;
         panel.SetActive(false);
+        gameUI.EndTemporization();
     }
 
     public void UpdateScore()
