@@ -22,7 +22,7 @@ public class BlurControl : MonoBehaviour
         CallBlurEffect(GameObject.Find("General UI"), GameObject.Find("Libero"));
     }*/
 
-    public void CallBlurEffect(GameObject blurTargetGameObject, GameObject excludedGameObject)
+    public void CallBlurEffect(GameObject blurTargetGameObject, GameObject[] excludedGameObject = null)
     {
         Debug.Log(isActive);
         if (isActive)
@@ -37,25 +37,31 @@ public class BlurControl : MonoBehaviour
         isActive = !isActive;
     }
 
-    public void OnEnter(GameObject blurTargetGameObject, GameObject excludedGameObject)
+    public void OnEnter(GameObject blurTargetGameObject, GameObject[] excludedGameObject = null)
     {
         gameObject.transform.SetParent(blurTargetGameObject.transform);
         blurImage.enabled = true;
-        if (excludedGameObject.TryGetComponent(out Canvas canvas))
+        foreach (GameObject child in excludedGameObject)
         {
-            canvas.overrideSorting = true;
-            canvas.sortingLayerName = "NoBlur";
+            if (child.TryGetComponent(out Canvas canvas))
+            {
+                canvas.overrideSorting = true;
+                canvas.sortingLayerName = "NoBlur";
+            }
         }
     }
 
-    void OnExit(GameObject blurTargetGameObject, GameObject excludedGameObject)
+    void OnExit(GameObject blurTargetGameObject, GameObject[] excludedGameObject = null)
     {
         blurImage.enabled = false;
         gameObject.transform.SetParent(parent);
-        if (excludedGameObject.TryGetComponent(out Canvas canvas))
+        foreach (GameObject child in excludedGameObject)
         {
-            canvas.sortingLayerName = string.Empty;
-            canvas.overrideSorting = false;
+            if (child.TryGetComponent(out Canvas canvas))
+            {
+                canvas.sortingLayerName = string.Empty;
+                canvas.overrideSorting = false;
+            }
         }
     }
 
