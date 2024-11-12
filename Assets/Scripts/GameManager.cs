@@ -113,12 +113,12 @@ public class GameManager : MonoBehaviour
     void ResizeCard(GameObject volleyPlayer)
     {
         RectTransform rectTransform = volleyPlayer.GetComponent<RectTransform>();
-        if (rectTransform != null)
+        if (rectTransform != null) 
         {
-            rectTransform.anchorMin = new Vector2(0, 0);
-            rectTransform.anchorMax = new Vector2(1, 1);
-            rectTransform.offsetMin = Vector2.zero;
-            rectTransform.offsetMax = Vector2.zero;
+            rectTransform.anchorMin = Vector2.zero;
+            rectTransform.anchorMax = Vector2.one;
+            rectTransform.offsetMin = Vector2.zero; 
+            rectTransform.offsetMax = Vector2.zero; 
             rectTransform.localScale = Vector3.one;
         }
     }
