@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 
@@ -159,4 +160,13 @@ public class GameUIManager : MonoBehaviour
         blueScore.text = score[1].ToString();
     }
 
+    internal void SetActionAvailable(VolleyPlayer volleyPlayer, int actionIndex)
+    {
+        uIEffects.ResetActionColorOnly(volleyPlayer, actionIndex);
+    }
+
+    internal void CallBlurEffect(GameObject parent, GameObject[] exceptions = null)
+    {
+        blurControl.CallBlurEffect(parent, exceptions);
+    }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,6 +18,8 @@ public class Game : MonoBehaviour
     private Button endTurnBtn;
     [SerializeField]
     float cooldownDuration;
+    [SerializeField]
+    int replacement;
 
     GameManager gameManager;
     private int turn;
@@ -26,14 +27,14 @@ public class Game : MonoBehaviour
     private int[] actionArr;
     private TeamClass currentTeam;
     private TeamClass oppositeTeam;
-    private bool isGameStarted;
+    private bool isGameStart;
     // to be refactored
     private bool isServeSelected;
     private int powerValue = 0;
     private int previousPowerValue = 0;
     private int attackIndex;
     private const int nonAttributed = -1;
-
+    private int replacementNumber = 0;
     public int actionIndex = 0;
     private Phase currentPhase;
     private int orangeSideScore = 0;
@@ -55,6 +56,7 @@ public class Game : MonoBehaviour
         EmptySelectedCardSlots();
         actionArr = new int[3];
         attackIndex = nonAttributed;
+        replacementNumber = 0;
         currentPhase = Phase.Inactive;
         cooldownDuration = 0.6f;
         SetEndTurnBtnInteractable(false);
@@ -79,6 +81,7 @@ public class Game : MonoBehaviour
                 SetActionPhase();
                 break;
             case Phase.Replacement:
+                SetReplacementPhase();
                 break;
             case Phase.Serve:
                 SetServePhase();
@@ -90,11 +93,94 @@ public class Game : MonoBehaviour
         }
     }
 
+    private void SetReplacementPhase()
+    {
+        currentTeam.RotateFieldCards();
+        oppositeTeam.RotateFieldCards();
+
+        // show SideDeck and Set card Selectable
+        currentTeam.ShowSidelines(true);
+        SetAllSelectableCardOnField(currentTeam, true);
+        SetAllSelectableCardOnSide(currentTeam, true);
+        gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, currentTeam.deckOnSide.deckSlots);
+    }
+
+    private void ReplaceCard(VolleyPlayer selectedCard)
+    {
+        // When a card is selected
+        if (selectedCardSlots[0] == nonAttributed)
+        {
+            selectedCardSlots[0] = selectedCard.slotIndex;
+
+            //Check if is a card on field
+            if (selectedCard.slotIndex < 5)
+            {
+                SetAllSelectableCardOnField(currentTeam, false);
+            }
+            else
+            {
+                SetAllSelectableCardOnSide(currentTeam, false);
+            }
+            selectedCard.SetSelectable(true);
+        }
+        else if (selectedCard.slotIndex == selectedCardSlots[0])
+        {
+            if (selectedCard.slotIndex < 5)
+            {
+                SetAllSelectableCardOnField(currentTeam, true);
+            }
+            else
+            {
+                SetAllSelectableCardOnSide(currentTeam, true);
+            }
+            selectedCardSlots[0] = nonAttributed;
+        }
+        else
+        {
+            selectedCardSlots[1] = selectedCard.slotIndex;
+            currentTeam.SwitchTwoCardPlayerSlot(selectedCardSlots[0], selectedCardSlots[1]);
+            selectedCard.ResetActions();
+            EmptySelectedCardSlots();
+            replacement--;
+        }
+
+        if (replacement == 0)
+        {
+            SetValidateButtonInteractable(true);
+            SetAllSelectableCardOnField(currentTeam, false);
+            SetAllSelectableCardOnSide(currentTeam, false);
+        }
+
+    }
+
+    private void SetAllSelectableCardOnSide(TeamClass currentTeam, bool isSelectable)
+    {
+        currentTeam.SetAllSelectableCardOnSide(isSelectable);
+    }
+
+    private void ValidateReplacement()
+    {
+        currentTeam.ShowSidelines(false);
+        gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, currentTeam.deckOnSide.deckSlots);
+
+        // if both team made their replacement then start new turn
+        if (replacementNumber == 2)
+        {
+            replacementNumber = 0;
+            ChangePhase(Phase.Serve);
+        }
+        else // else change replacement side
+        {
+            SwitchTeam();
+            SetReplacementPhase();
+        }
+    }
+
     // Set only one playerCard for serve phase
     private void SetServePhase()
     {
-        SetAllSelectableCardAction(currentTeam, false);
-        SetAllSelectableCardAction(oppositeTeam, false);
+        SetAllSelectableCardOnField(currentTeam, false);
+        SetAllSelectableCardOnField(oppositeTeam, false);
         currentTeam.SetServePhase();
     }
 
@@ -112,7 +198,7 @@ public class Game : MonoBehaviour
     private void ValidateServe()
     {
         isServeSelected = false;
-        SetAllSelectableCardAction(currentTeam, false);
+        SetAllSelectableCardOnField(currentTeam, false);
         currentTeam.ValidateServe();
         ChangePhase(Phase.BlockSelection);
     }
@@ -172,8 +258,8 @@ public class Game : MonoBehaviour
         EmptySelectedCardSlots();
         actionArr[0] = actionArr[1] = actionArr[2] = 0;
         actionIndex = 0;
-        SetSelectableCardAction();
-        SetAllSelectableCardAction(oppositeTeam, false);
+        SetSelectableCardByAction();
+        SetAllSelectableCardOnField(oppositeTeam, false);
         SetValidateButtonInteractable(false);
         SetEndTurnBtnInteractable(true);
     }
@@ -188,7 +274,7 @@ public class Game : MonoBehaviour
             selected.SelectActionAnimation(actionIndex);
             selected.SetIsSelected(true);
             actionIndex++;
-            SetSelectableCardAction();
+            SetSelectableCardByAction();
         }
         else if (actionIndex < 3)
         {
@@ -199,7 +285,7 @@ public class Game : MonoBehaviour
                 selected.DeselectActionAnimation(actionIndex - 1);
                 selected.SetIsSelected(false);
                 actionIndex--;
-                SetSelectableCardAction();
+                SetSelectableCardByAction();
             }
             else
             {
@@ -212,7 +298,7 @@ public class Game : MonoBehaviour
                 else selected.SetIsSelectedTwice(true);
 
                 actionIndex++;
-                SetSelectableCardAction();
+                SetSelectableCardByAction();
             }
         }
         else if (actionIndex == 3)
@@ -229,7 +315,7 @@ public class Game : MonoBehaviour
                 SetValidateButtonInteractable(false);
                 gameUI.DeactivateValidateButton();
                 actionIndex--;
-                SetSelectableCardAction();
+                SetSelectableCardByAction();
             }
         }
 
@@ -242,22 +328,10 @@ public class Game : MonoBehaviour
         UpdatePowerValue();
     }
 
-    // Set playerCards selectable based on action availability
-    void SetSelectableCardAction()
-    {
-        currentTeam.SetSelectableCardAction(actionIndex, selectedCardSlots);
-    }
-
-    // Set all playerCards selectable or not
-    void SetAllSelectableCardAction(TeamClass team, bool isSelectable)
-    {
-        team.SetAllSelectableCardField(isSelectable);
-    }
-
     // End Action phase and perform a check 
     void ValidateActions()
     {
-        SetAllSelectableCardAction(currentTeam, false);
+        SetAllSelectableCardOnField(currentTeam, false);
         for (int i = 0; i < selectedCardSlots.Length; i++)
         {
             currentTeam.ValidateActionCombo(selectedCardSlots[i], i);
@@ -271,7 +345,7 @@ public class Game : MonoBehaviour
     // End turn without selecting actions, make opponent score
     public void EndTurnOnClick()
     {
-        SetAllSelectableCardAction(currentTeam, false);
+        SetAllSelectableCardOnField(currentTeam, false);
         for (int i = 0; i < actionIndex; i++)
         {
             currentTeam.GetPlayerOnField(selectedCardSlots[i]).SetIsSelected(false);
@@ -299,7 +373,7 @@ public class Game : MonoBehaviour
         if (selectedCardSlots[0] == nonAttributed)
         {
             selectedCardSlots[0] = player.slotIndex;
-            SetAllSelectableCardAction(currentTeam, false);
+            SetAllSelectableCardOnField(currentTeam, false);
             player.SetSelectable(true);
             player.SelectBlock(true);
             SetValidateButtonInteractable(true);
@@ -315,7 +389,7 @@ public class Game : MonoBehaviour
     // Validate block position and memories it, end turn
     void ValidateBlockSelection()
     {
-        SetAllSelectableCardAction(currentTeam, false);
+        SetAllSelectableCardOnField(currentTeam, false);
         currentTeam.ValidateBlock(selectedCardSlots[0]);
         EndCurrentTurn();
     }
@@ -326,6 +400,8 @@ public class Game : MonoBehaviour
         // avoid two startgame clicks
         startBtn.interactable = false;
         startBtn.gameObject.SetActive(false);
+
+        isGameStart = true;
         currentTeam = team;
         oppositeTeam = GetOppositeTeam(currentTeam);
         StartPoint(team);
@@ -339,7 +415,12 @@ public class Game : MonoBehaviour
         gameUI.UpdatePowerText(powerValue);
         gameUI.UpdatePreviousPowerText(previousPowerValue);
         turn = 0;
-        ChangePhase(Phase.Serve);
+        if (isGameStart)
+        {
+            isGameStart = false;
+            ChangePhase(Phase.Serve);
+        }
+        else ChangePhase(Phase.Replacement);
     }
 
     // Reset both teams status
@@ -396,11 +477,22 @@ public class Game : MonoBehaviour
             gameUI.UpdateScoreAnim(Side.Orange);
         }
         // TODO: Add Rotation and Replacement phases
-        SwitchTeam();
         StartPoint(currentTeam);
     }
 
 
+
+    // Set playerCards selectable based on action availability
+    void SetSelectableCardByAction()
+    {
+        currentTeam.SetSelectableCardAction(actionIndex, selectedCardSlots);
+    }
+
+    // Set all playerCards selectable or not
+    void SetAllSelectableCardOnField(TeamClass team, bool isSelectable)
+    {
+        team.SetAllSelectableCardField(isSelectable);
+    }
 
     private void EmptySelectedCardSlots()
     {
@@ -465,6 +557,7 @@ public class Game : MonoBehaviour
                 SelectAction(player);
                 break;
             case Phase.Replacement:
+                ReplaceCard(player);
                 break;
             case Phase.Serve:
                 if (!isServeSelected) SelectServeCard(player);
@@ -504,6 +597,7 @@ public class Game : MonoBehaviour
                 ValidateActions();
                 break;
             case Phase.Replacement:
+                ValidateReplacement();
                 break;
             case Phase.Serve:
                 ValidateServe();
@@ -512,6 +606,7 @@ public class Game : MonoBehaviour
                 break;
         }
     }
+
 
     internal void ResetVariables()
     {
@@ -526,6 +621,6 @@ public class Game : MonoBehaviour
 
     internal int[] GetScore()
     {
-        return new int[] { orangeSideScore, blueSideScore};
+        return new int[] { orangeSideScore, blueSideScore };
     }
 }

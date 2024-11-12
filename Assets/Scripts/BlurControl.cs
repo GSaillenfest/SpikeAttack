@@ -6,24 +6,16 @@ using UnityEngine.Rendering.PostProcessing;
 
 public class BlurControl : MonoBehaviour
 {
-    [SerializeField]
-    Camera mainCamera;
-    [SerializeField]
-    Camera blurEffectCam;
-
     int initLayer = -1;
     Transform initParent = null;
     bool isActive = false;
 
     public void OnEnter(GameObject go)
     {
-        //SwitchMainCamera();
-        Debug.Log("ApplyBlur");
         initLayer = go.layer;
         initParent = go.transform.parent;
         go.transform.SetParent(transform.GetChild(0), false);
         go.layer = LayerMask.NameToLayer("NoBlur");
-        mainCamera.GetComponent<PostProcessLayer>().enabled = true;
     }
 
     void OnExit(GameObject go)
@@ -31,28 +23,18 @@ public class BlurControl : MonoBehaviour
         Debug.Log("UnApplyBlur");
         go.transform.SetParent(initParent.transform, false);
         go.layer = initLayer;
-        mainCamera.GetComponent<PostProcessLayer>().enabled = false;
-        //SwitchMainCamera();
         initLayer = -1;
     }
 
-    private void SwitchMainCamera()
+    public void CallBlurEffect(GameObject target, GameObject[] exceptions = null)
     {
-        Debug.Log("Change cam"); 
-        mainCamera.enabled = blurEffectCam.enabled;
-        blurEffectCam.enabled = !mainCamera.enabled;
-    }
-
-    public void CallBlurEffect(GameObject go)
-    {
-        Debug.Log(isActive);
         if (isActive)
         {
-            OnExit(go);
+           // OnExit(target);
         }
         else
         {
-            OnEnter(go);
+           // OnEnter(target);
         }
         isActive = !isActive;
     }

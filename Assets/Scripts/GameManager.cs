@@ -66,21 +66,42 @@ public class GameManager : MonoBehaviour
 
     private void PopulateTeam(GameObject player, List<GameObject> volleyPlayers)
     {
-        GameObject[] slots = player.GetComponentInChildren<PlayerDeckOnField>().deckSlots;
+        GameObject[] fieldSlots = player.GetComponentInChildren<PlayerDeckOnField>(true).deckSlots;
+        GameObject[] sideSlots = player.GetComponentInChildren<PlayerDeckOnSidelines>(true).deckSlots;
+
         int slotIndex = 1;
+
         foreach (GameObject volleyPlayer in volleyPlayers)
         {
-            if (slotIndex == 6) return;
-            if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == true && slots[0].transform.childCount == 0)
+            if (slotIndex < 6)
             {
-                volleyPlayer.transform.SetParent(slots[0].transform, true);
-                ResizeCard(volleyPlayer);
-                volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).slotIndex = 0;
-                volleyPlayer.SetActive(true);
+
+                if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == true && fieldSlots[0].transform.childCount == 0)
+                {
+                    volleyPlayer.transform.SetParent(fieldSlots[0].transform, true);
+                    ResizeCard(volleyPlayer);
+                    volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).slotIndex = 0;
+                    volleyPlayer.SetActive(true);
+                }
+                else if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == false)
+                {
+                    volleyPlayer.transform.SetParent(fieldSlots[slotIndex].transform, true);
+                    ResizeCard(volleyPlayer);
+                    volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).slotIndex = slotIndex;
+                    volleyPlayer.SetActive(true);
+                    slotIndex++;
+                }
+                else if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero)
+                {
+                    volleyPlayer.transform.SetParent(sideSlots[0].transform, true);
+                    ResizeCard(volleyPlayer);
+                    volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).slotIndex = slotIndex;
+                    volleyPlayer.SetActive(true);
+                }
             }
-            else if (volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).isLibero == false)
+            else
             {
-                volleyPlayer.transform.SetParent(slots[slotIndex].transform, true);
+                volleyPlayer.transform.SetParent(sideSlots[slotIndex - 6 + 1].transform, true);
                 ResizeCard(volleyPlayer);
                 volleyPlayer.GetComponentInChildren<VolleyPlayer>(true).slotIndex = slotIndex;
                 volleyPlayer.SetActive(true);
@@ -92,12 +113,12 @@ public class GameManager : MonoBehaviour
     void ResizeCard(GameObject volleyPlayer)
     {
         RectTransform rectTransform = volleyPlayer.GetComponent<RectTransform>();
-        if (rectTransform != null) 
-        { 
-            rectTransform.anchorMin = new Vector2(0, 0); 
-            rectTransform.anchorMax = new Vector2(1, 1); 
-            rectTransform.offsetMin = Vector2.zero; 
-            rectTransform.offsetMax = Vector2.zero; 
+        if (rectTransform != null)
+        {
+            rectTransform.anchorMin = new Vector2(0, 0);
+            rectTransform.anchorMax = new Vector2(1, 1);
+            rectTransform.offsetMin = Vector2.zero;
+            rectTransform.offsetMax = Vector2.zero;
             rectTransform.localScale = Vector3.one;
         }
     }

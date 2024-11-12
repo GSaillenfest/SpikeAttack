@@ -128,6 +128,11 @@ public class FXCardManager : MonoBehaviour
         //add effect around action
     }
 
+    public void ResetActionColorOnly(VolleyPlayer player, int actionIndex)
+    {
+        player.actionTexts[actionIndex].colorGradient = whiteNonGradient;
+    }
+
     public void ResetActionScaleOnly(VolleyPlayer player, int actionIndex)
     {
         ResetScale(player.actionTexts[actionIndex].gameObject);

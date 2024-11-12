@@ -42,7 +42,7 @@ public class VolleyPlayer : MonoBehaviour
     Game gameScript;
     GameUIManager gameUI;
 
-    public int slotIndex = 0;
+    public int slotIndex = 10;
 
     internal void Initialize(VolleyPlayersSO sO)
     {
@@ -133,6 +133,12 @@ public class VolleyPlayer : MonoBehaviour
     {
         isActionAvailable[i] = false;
         gameUI.SetActionUnavailable(this, i);
+    }    
+    
+    internal void SetActionAvailable(int actionIndex)
+    {
+        isActionAvailable[actionIndex] = true;
+        gameUI.SetActionAvailable(this, actionIndex);
     }
 
     internal void SetIsSelected(bool selected)
@@ -164,9 +170,17 @@ public class VolleyPlayer : MonoBehaviour
     {
         gameUI.SelectPlayerServe(this);
     }
+
     internal void DeselectServe()
     {
         gameUI.DeselectPlayerServe(this);
+    }
+
+    internal void ResetActions()
+    {
+        SetActionAvailable(0);
+        SetActionAvailable(1);
+        SetActionAvailable(2);
     }
 }
 

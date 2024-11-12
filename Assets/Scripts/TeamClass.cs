@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class TeamClass : MonoBehaviour
@@ -8,6 +9,7 @@ public class TeamClass : MonoBehaviour
 
     public List<GameObject> playerList;
     public PlayerDeckOnField deckOnField;
+    public PlayerDeckOnSidelines deckOnSide;
 
     public TeamClass()
     {
@@ -73,11 +75,61 @@ public class TeamClass : MonoBehaviour
 
     internal VolleyPlayer GetPlayerOnField(int slotIndex)
     {
-        return deckOnField.GetPlayer(slotIndex);
+        if (slotIndex < 6)
+            return deckOnField.GetPlayer(slotIndex);
+        else
+            return deckOnSide.GetPlayer(slotIndex);
     }
 
     internal void ResetStatus()
     {
         deckOnField.ResetStatus();
+    }
+
+    internal void RotateFieldCards()
+    {
+        deckOnField.RotatePlayerCards();
+    }
+
+    internal void SetAllSelectableCardOnSide(bool isSelectable)
+    {
+        deckOnSide.SetAllSelectableCard(isSelectable);
+    }
+
+    // Switch playerCards and set them unselectable
+    internal void SwitchTwoCardPlayerSlot(int slotA, int slotB)
+    {
+        GameObject fieldPlayer;
+        GameObject sidePlayer;
+        int fieldSlot = -1;
+        int sideSlot = -1;
+
+        if (slotA < 6)
+        {
+            fieldSlot = slotA;
+            sideSlot = slotB;
+        }
+        else
+        {
+            fieldSlot = slotB;
+            sideSlot = slotA;
+        }
+
+        deckOnField.GetPlayer(fieldSlot).SetSelectable(false);
+        deckOnSide.GetPlayer(sideSlot).SetSelectable(false);
+
+        fieldPlayer = deckOnField.GetPlayer(fieldSlot).gameObject;
+        sidePlayer = deckOnSide.GetPlayer(sideSlot).gameObject;
+
+        fieldPlayer.transform.SetParent(deckOnSide.deckSlots[sideSlot - 6].transform);
+        sidePlayer.transform.SetParent(deckOnField.deckSlots[fieldSlot].transform);
+
+        deckOnField.RefreshDeck();
+        deckOnSide.RefreshDeck();
+    }
+
+    internal void ShowSidelines(bool isShow)
+    {
+        deckOnSide.gameObject.SetActive(isShow);
     }
 }
