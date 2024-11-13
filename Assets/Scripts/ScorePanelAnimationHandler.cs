@@ -67,6 +67,7 @@ public class ScorePanelAnimationHandler : MonoBehaviour
     {
         particles.Stop(true, stopBehavior: ParticleSystemStopBehavior.StopEmittingAndClear);
         particles.gameObject.SetActive(false);
+        gameUI.CallBlurEffect(gameUI.gameObject);
     }
 
     internal void UpdateScoreText(Side side, string text)

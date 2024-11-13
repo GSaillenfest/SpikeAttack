@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 
@@ -17,6 +16,8 @@ public class GameUIManager : MonoBehaviour
     TextMeshProUGUI powerMalusText;
     [SerializeField]
     TextMeshProUGUI powerBonusText;
+    [SerializeField]
+    TextMeshProUGUI descriptionText;
     [SerializeField]
     TextMeshProUGUI orangeScore;
     [SerializeField]
@@ -95,7 +96,7 @@ public class GameUIManager : MonoBehaviour
         else
             powerMalusText.text = "(-" + malusValue + ")";
     }
-    
+
     internal void UpdatePowerBonusText(int bonusValue = 0)
     {
         if (bonusValue == 0)
@@ -142,6 +143,7 @@ public class GameUIManager : MonoBehaviour
 
     internal void UpdateScoreAnim(Side side)
     {
+        CallBlurEffect(gameObject, 6);
         if (side == Side.Orange)
         {
             scoredPanel.UpdateScoreText(side, "Orange Scored !");
@@ -165,13 +167,19 @@ public class GameUIManager : MonoBehaviour
         cardFX.ResetActionColorOnly(volleyPlayer, actionIndex);
     }
 
-    internal void CallBlurEffect(GameObject parent, GameObject[] exceptions = null)
+    internal void CallBlurEffect(GameObject parent, int orderInLayer = 0, GameObject[] exceptions = null)
     {
-        blurControl.CallBlurEffect(parent, exceptions);
+        blurControl.CallBlurEffect(parent, orderInLayer, exceptions);
     }
 
+    // Must be called by animations on exit
     internal void EndTemporization()
     {
         game.EndTemporization();
+    }
+
+    internal void UpdateDescriptionText(string text)
+    {
+        descriptionText.text = text;
     }
 }

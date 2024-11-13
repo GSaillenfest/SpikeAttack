@@ -117,6 +117,7 @@ public class Game : MonoBehaviour
 
     private void SetReplacementPhase()
     {
+        gameUI.UpdateDescriptionText("Replace 2 players");
         SwitchTeam();
         EmptySelectedCardSlots();
 
@@ -134,7 +135,7 @@ public class Game : MonoBehaviour
         {
             exceptionsBlur[i] = currentTeam.deckOnSide.playersOnSidelines[i].gameObject;
         }
-        gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, exceptionsBlur);
+        gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, 0, exceptionsBlur);
     }
 
     private void ReplaceCard(VolleyPlayer selectedCard)
@@ -221,6 +222,7 @@ public class Game : MonoBehaviour
             currentTeam.GetPlayerBySlotIndex(selectedCardSlots[3]).SetSelectable(false);
             // count down from number of allowed replacement
             replacement--;
+            gameUI.UpdateDescriptionText("Replace 1 player");
         }
 
         if (replacement == 0)
@@ -241,7 +243,7 @@ public class Game : MonoBehaviour
     private void ValidateReplacement()
     {
         currentTeam.ShowSidelines(false);
-        gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, currentTeam.deckOnSide.deckSlots);
+        gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, 0, currentTeam.deckOnSide.deckSlots);
         replacementNumber++;
         EmptySelectedCardSlots();
 
@@ -261,6 +263,7 @@ public class Game : MonoBehaviour
     // Set only one playerCard for serve phase
     private void SetServePhase()
     {
+        gameUI.UpdateDescriptionText("Select the server then click on Validate");
         EmptySelectedCardSlots();
         SetValidateButtonInteractable(false);
         SetAllSelectableCardOnField(currentTeam, false);
@@ -346,6 +349,8 @@ public class Game : MonoBehaviour
         SetAllSelectableCardOnField(oppositeTeam, false);
         SetValidateButtonInteractable(false);
         SetEndTurnBtnInteractable(true);
+        gameUI.UpdateDescriptionText("Select Dig, Pass and Attack");
+
     }
 
     // Select actions on card and add value to power
@@ -447,6 +452,7 @@ public class Game : MonoBehaviour
     // Set front line playerCards selectable 
     void SetBlockSelectionPhase()
     {
+        gameUI.UpdateDescriptionText("Select a block then click on Validate");
         currentTeam.SetBlockSelectionPhase();
         SetValidateButtonInteractable(false);
     }
