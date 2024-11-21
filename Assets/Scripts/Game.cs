@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,8 @@ public class Game : MonoBehaviour
     Button validateBtn;
     [SerializeField]
     private Button endTurnBtn;
+    [SerializeField]
+    private Button noBlockButton;
     [SerializeField]
     float cooldownDuration;
     [SerializeField]
@@ -41,7 +44,6 @@ public class Game : MonoBehaviour
     private int orangeSideScore = 0;
     private int blueSideScore = 0;
     private Phase tempPhase;
-
 
     public Game(TeamClass t1, TeamClass t2)
     {
@@ -455,13 +457,32 @@ public class Game : MonoBehaviour
         gameUI.UpdateDescriptionText("Select a block then click on Validate");
         currentTeam.SetBlockSelectionPhase();
         SetValidateButtonInteractable(false);
+        noBlockButton.gameObject.SetActive(true);
+        SetNoBlockButton(true);
     }
 
     // Select/Unselect block playerCard
-    public void SelectBlockCard(VolleyPlayer player)
+    void SelectBlockCard(VolleyPlayer player)
     {
+        if (player == null)
+        {
+            if (selectedCardSlots[0] != nonAttributed)
+            {
+                SetNoBlockButton(true);
+                player.DeselectBlock();
+                selectedCardSlots[0] = nonAttributed;
+                SetBlockSelectionPhase();
+            }
+
+            selectedCardSlots[0] = nonAttributed;
+            SetValidateButtonInteractable(true);
+            SetNoBlockButton(false);
+            return;
+        }
+
         if (selectedCardSlots[0] == nonAttributed)
         {
+            SetNoBlockButton(false);
             selectedCardSlots[0] = player.slotIndex;
             SetAllSelectableCardOnField(currentTeam, false);
             player.SetSelectable(true);
@@ -470,17 +491,30 @@ public class Game : MonoBehaviour
         }
         else
         {
+            SetNoBlockButton(true);
             player.DeselectBlock();
             selectedCardSlots[0] = nonAttributed;
             SetBlockSelectionPhase();
         }
     }
 
+    private void SetNoBlockButton(bool isInteractable)
+    {
+        noBlockButton.interactable = isInteractable;
+    }
+
+    public void SelectNoBlock()
+    {
+        SelectBlockCard(null);
+    }
+
     // Validate block position and memories it, end turn
     void ValidateBlockSelection()
     {
+        noBlockButton.gameObject.SetActive(false);
         SetAllSelectableCardOnField(currentTeam, false);
-        currentTeam.ValidateBlock(selectedCardSlots[0]);
+        if (selectedCardSlots[0] != nonAttributed)
+            currentTeam.ValidateBlock(selectedCardSlots[0]);
         EndCurrentTurn();
     }
 
