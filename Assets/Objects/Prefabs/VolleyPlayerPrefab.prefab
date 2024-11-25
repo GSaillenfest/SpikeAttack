@@ -2087,6 +2087,7 @@ GameObject:
   - component: {fileID: 2092337018759799079}
   - component: {fileID: 40604838434068742}
   - component: {fileID: 9077573018334992659}
+  - component: {fileID: -5318978906655039484}
   m_Layer: 0
   m_Name: VolleyPlayerPrefab
   m_TagString: Untagged
@@ -2245,3 +2246,17 @@ MonoBehaviour:
   isSelectedTwice: 0
   actionTexts: []
   slotIndex: 0
+--- !u!114 &-5318978906655039484
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8916281788958163287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86710e43de46f6f4bac7c8e50813a599, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AspectMode: 3
+  m_AspectRatio: 0.70454544

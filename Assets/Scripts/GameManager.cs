@@ -170,6 +170,8 @@ public class GameManager : MonoBehaviour
     {
         SetCurrentTeam(team1);
         game.StartGame(currentTeam);
+        team1.OnStart();
+        team2.OnStart();
     }
 
     public void PlayTurn()

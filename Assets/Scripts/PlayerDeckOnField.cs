@@ -11,8 +11,7 @@ public class PlayerDeckOnField : MonoBehaviour
     List<VolleyPlayer> playersOnField = new();
     private int blockIndex = -1;
 
-    // Start is called before the first frame update
-    void Start()
+    internal void OnStart()
     {
         //deckSlots = new GameObject[6];
         RefreshDeck();
@@ -21,10 +20,10 @@ public class PlayerDeckOnField : MonoBehaviour
     public void RefreshDeck()
     {
         playersOnField.Clear();
-        VolleyPlayer[] childList = gameObject.GetComponentsInChildren<VolleyPlayer>();
-        foreach (VolleyPlayer child in childList)
+
+        foreach (GameObject child in deckSlots)
         {
-            playersOnField.Add(child);
+            playersOnField.Add(child.GetComponentInChildren<VolleyPlayer>());
         }
         SetSlotIndex();
     }

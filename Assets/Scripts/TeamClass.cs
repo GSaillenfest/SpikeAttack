@@ -135,4 +135,9 @@ public class TeamClass : MonoBehaviour
     {
         deckOnSide.gameObject.SetActive(isShow);
     }
+
+    internal void OnStart()
+    {
+        deckOnField.OnStart();
+    }
 }
