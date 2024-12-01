@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -10,25 +11,28 @@ public class GameManager : MonoBehaviour
     public TeamClass currentTeam;
     public List<TeamClass> teams = new();
     private List<VolleyPlayersSO> playerCardSOs;
-    private List<ActionCardSO> actionCardSOs;
+    private List<BonusCardSO> bonusCardSOs;
     private List<GameObject> volleyPlayersOrange = new List<GameObject>();
     private List<GameObject> volleyPlayersBlue = new List<GameObject>();
 
-    public RectTransform playerRectTransform;
-
-    /*    public int currentPowerValue;
-        public int previousPowerValue;*/
+    //public RectTransform playerRectTransform;
 
     [SerializeField]
     Transform playerCardSet;
     [SerializeField]
-    Transform actionCardSet;
+    Transform bonusCardSet;
     [SerializeField]
     GameObject playerCardPrefab;
     [SerializeField]
+    GameObject bonusCardPrefab;
+    [SerializeField]
     GameObject playerOne;
     [SerializeField]
-    GameObject playerTwo;
+    GameObject playerTwo;    
+    [SerializeField]
+    CardSet cardSet;
+    [SerializeField]
+    BonusCardDeckHandler bonusDeckHandler;
 
     Game game;
     private int turn;
@@ -45,8 +49,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        playerCardSOs = GetComponentInChildren<CardSet>().playerCardSOs;
-        actionCardSOs = GetComponentInChildren<CardSet>().actionCardSOs;
+        playerCardSOs = cardSet.playerCardSOs;
+        bonusCardSOs = cardSet.bonusCardSOs;
         game = GetComponent<Game>();
         teams.Add(team1);
         teams.Add(team2);
@@ -58,6 +62,7 @@ public class GameManager : MonoBehaviour
         InitGame();
         //test loop to instantiate volley player cards
         CreateVolleyPlayerCardsOnAwake();
+        CreateBonusCardsOnAwake();
 
         //test function to populate a player team. To be refactored.
         PopulateTeam(playerOne, volleyPlayersOrange);
@@ -113,12 +118,12 @@ public class GameManager : MonoBehaviour
     void ResizeCard(GameObject volleyPlayer)
     {
         RectTransform rectTransform = volleyPlayer.GetComponent<RectTransform>();
-        if (rectTransform != null) 
+        if (rectTransform != null)
         {
             rectTransform.anchorMin = Vector2.zero;
             rectTransform.anchorMax = Vector2.one;
-            rectTransform.offsetMin = Vector2.zero; 
-            rectTransform.offsetMax = Vector2.zero; 
+            rectTransform.offsetMin = Vector2.zero;
+            rectTransform.offsetMax = Vector2.zero;
             rectTransform.localScale = Vector3.one;
         }
     }
@@ -136,6 +141,16 @@ public class GameManager : MonoBehaviour
     {
 
     }
+    void CreateBonusCardsOnAwake()
+    {
+        foreach (BonusCardSO bonusCard in bonusCardSOs)
+        {
+            GameObject bonusCardInstance = CreateNewBonusCard(bonusCard);
+            bonusDeckHandler.OrganizeCard(bonusCardInstance);
+            //To remove
+            //bonusCardInstance.SetActive(false);
+        }
+    }
 
     void CreateVolleyPlayerCardsOnAwake()
     {
@@ -144,13 +159,12 @@ public class GameManager : MonoBehaviour
         {
             GameObject volleyPlayer = CreateNewPlayer(player);
             volleyPlayer.transform.SetParent(playerCardSet);
-            /*            volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchoredPosition = Vector2.zero;
-                        volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchorMin = 0.5f * Vector2.one;
-                        volleyPlayer.GetComponentsInParent<RectTransform>()[0].anchorMax = 0.5f * Vector2.one;*/
+
             if (volleyPlayer.GetComponentInChildren<VolleyPlayer>().isOrangeTeam)
                 volleyPlayersOrange.Add(volleyPlayer);
             else
                 volleyPlayersBlue.Add(volleyPlayer);
+
             volleyPlayer.gameObject.SetActive(false);
             i++;
         }
@@ -164,6 +178,15 @@ public class GameManager : MonoBehaviour
         newPlayer.name = sO.playerName;
         newPlayer.GetComponentInChildren<VolleyPlayer>().Initialize(sO);
         return newPlayer;
+    }
+
+    GameObject CreateNewBonusCard(BonusCardSO sO)
+    {
+        GameObject newBonusCard = Instantiate(bonusCardPrefab);
+
+        newBonusCard.name = sO.cardName;
+        newBonusCard.GetComponentInChildren<BonusCard>().Initialize(sO);
+        return newBonusCard;
     }
 
     public void StartGame()

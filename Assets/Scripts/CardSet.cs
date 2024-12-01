@@ -8,5 +8,5 @@ public class CardSet : MonoBehaviour
     public List<VolleyPlayersSO> playerCardSOs;
 
     [SerializeField]
-    public List<ActionCardSO> actionCardSOs;
+    public List<BonusCardSO> bonusCardSOs;
 }
