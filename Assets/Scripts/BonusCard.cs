@@ -18,5 +18,4 @@ public class BonusCard : MonoBehaviour
         cardEffect = sO.cardEffect;
         cardEffectText.text = sO.cardEffectDescription;
     }
-
 }

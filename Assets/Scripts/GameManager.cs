@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -32,7 +33,7 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     CardSet cardSet;
     [SerializeField]
-    BonusCardDeckHandler bonusDeckHandler;
+    BonusCardSetHandler bonusDeckHandler;
 
     Game game;
     private int turn;
@@ -67,6 +68,14 @@ public class GameManager : MonoBehaviour
         //test function to populate a player team. To be refactored.
         PopulateTeam(playerOne, volleyPlayersOrange);
         PopulateTeam(playerTwo, volleyPlayersBlue);
+
+        DrawBonusCards(team1, 3);
+        DrawBonusCards(team2, 3);
+    }
+
+    private void DrawBonusCards(TeamClass team, int nbOfCards)
+    {
+        team.AddBonusCard(nbOfCards);
     }
 
     private void PopulateTeam(GameObject player, List<GameObject> volleyPlayers)

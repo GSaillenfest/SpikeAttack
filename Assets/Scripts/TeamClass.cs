@@ -6,6 +6,10 @@ using UnityEngine;
 
 public class TeamClass : MonoBehaviour
 {
+    [SerializeField]
+    BonusCardSetHandler bonusCardSetHandler;
+    [SerializeField]
+    BonusCardHandler bonusCardHandler;
 
     public List<GameObject> playerList;
     public PlayerDeckOnField deckOnField;
@@ -31,6 +35,18 @@ public class TeamClass : MonoBehaviour
     void AddPlayerToTeam(GameObject playerCard)
     {
         playerList.Add(playerCard);
+    }
+
+    internal void AddBonusCard(int numberOfCards)
+    {
+        for (int i = 0; i < numberOfCards; i++)
+        {
+            GameObject card = bonusCardSetHandler.WithdrawCard();
+            if (card != null)
+            {
+                bonusCardHandler.AddCard(card);
+            }
+        }
     }
 
     internal void SetBlockSelectionPhase()

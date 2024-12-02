@@ -2,11 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BonusCardDeckHandler : MonoBehaviour
+public class BonusCardSetHandler : MonoBehaviour
 {
     int slotCount = 0;
     int slotIndex = 0;
-    List<BonusCard> bonusCards = new List<BonusCard>();
+    List<GameObject> bonusCards = new List<GameObject>();
 
     private void Start()
     {
@@ -19,14 +19,14 @@ public class BonusCardDeckHandler : MonoBehaviour
         {
             bonusCard.transform.SetParent(transform.GetChild(0).GetChild(slotIndex));
             ResizeCard(bonusCard);
-            bonusCards.Add(bonusCard.GetComponentInChildren<BonusCard>());
+            bonusCards.Add(bonusCard.gameObject);
             slotIndex++;
         }
         else
             Debug.LogWarning("Not enough slots for new bonus cards");
     }
 
-    void ResizeCard(GameObject card)
+    internal void ResizeCard(GameObject card)
     {
         RectTransform rectTransform = card.GetComponent<RectTransform>();
         if (rectTransform != null)
@@ -37,5 +37,16 @@ public class BonusCardDeckHandler : MonoBehaviour
             rectTransform.offsetMax = Vector2.zero;
             rectTransform.localScale = Vector3.one;
         }
+    }
+
+    internal GameObject WithdrawCard()
+    {
+        if (bonusCards.Count > 0)
+        {
+            GameObject bonusCard = bonusCards[bonusCards.Count - 1];
+            bonusCards.Remove(bonusCard);
+            return bonusCard;
+        }
+        else return null;
     }
 }
