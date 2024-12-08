@@ -516,9 +516,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 8916281788958163287}
         m_TargetAssemblyTypeName: VolleyPlayer, Assembly-CSharp
-        m_MethodName: CallClickedFunction
+        m_MethodName: 
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -573,4 +573,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cardName: 
   cardIllustration: {fileID: 0}
+  cardEffect: 0
   cardEffectText: {fileID: 1200558470221982506}

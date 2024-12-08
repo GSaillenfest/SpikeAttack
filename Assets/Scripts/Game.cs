@@ -1,5 +1,5 @@
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -23,18 +23,27 @@ public class Game : MonoBehaviour
     float cooldownDuration;
     [SerializeField]
     int allowedRemplacementNumber = 2;
+    [SerializeField]
+    private EffectManager effectManager;
 
     int replacement;
     GameManager gameManager;
     private int turn;
     private int[] selectedCardSlots;
     private int[] actionArr;
+    //private List<BonusCard> selectedBonusCards = new();
     private TeamClass currentTeam;
     private TeamClass oppositeTeam;
     private bool isGameStart;
     // to be refactored
     private bool isServeSelected;
     private int powerValue = 0;
+    private int bonusPowerValue = 0;
+    public int BonusPowerValue { get => bonusPowerValue; set => SetBonusPowerValue(value); }
+    private void SetBonusPowerValue(int value)
+    {
+        bonusPowerValue = value;
+    }
     private int previousPowerValue = 0;
     private int attackIndex;
     private const int nonAttributed = -1;
@@ -44,6 +53,7 @@ public class Game : MonoBehaviour
     private int orangeSideScore = 0;
     private int blueSideScore = 0;
     private Phase tempPhase;
+    private List<BonusCard> bonusCardList = new();
 
     public Game(TeamClass t1, TeamClass t2)
     {
@@ -58,6 +68,7 @@ public class Game : MonoBehaviour
         team1 = gameManager.teams[0];
         team2 = gameManager.teams[1];
         selectedCardSlots = new int[6];
+
         EmptySelectedCardSlots();
         actionArr = new int[3];
         attackIndex = nonAttributed;
@@ -648,7 +659,6 @@ public class Game : MonoBehaviour
         endTurnBtn.interactable = isInteractable;
     }
 
-
     private void UpdatePowerValue()
     {
         powerValue = 0;
@@ -656,17 +666,47 @@ public class Game : MonoBehaviour
         {
             powerValue += actionArr[i];
         }
+
+        // Add value from effect card
+        CallBonusCardEffects();
+
+        gameUI.UpdatePowerBonusText();
         gameUI.UpdatePowerText(powerValue);
     }
 
-    // TODO: To implement
-    public void SelectCardEffect()
+    private void CallBonusCardEffects()
     {
-        /*if (isSelected)
-        card.getComponent<Effect>().Activate();*/
+        effectManager.ApplyCardEffects();
     }
 
-    // Select fucntion called by playerCard selection based on current state
+    public void OnBonusSelection(BonusCard card)
+    {
+        if (bonusCardList.Contains(card))
+        {
+            bonusCardList.Remove(card);
+            DeselectBonusCard(card);
+        }
+        else
+        {
+            bonusCardList.Add(card);
+            SelectBonusCard(card);
+        }
+    }
+
+    public void SelectBonusCard(BonusCard card)
+    {
+        // TODO gameUI.CardSelection
+        effectManager.AddEffectToList(card.cardEffect);
+        UpdatePowerValue();
+    }
+
+    void DeselectBonusCard(BonusCard card)
+    {
+        effectManager.RemoveEffectFromList(card.cardEffect);
+        UpdatePowerValue();
+    }
+
+    // Select function called by playerCard selection based on current state
     public void HandleCardButtonFunction(VolleyPlayer player)
     {
         switch (currentPhase)
