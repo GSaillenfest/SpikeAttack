@@ -223,7 +223,6 @@ public class GameManager : MonoBehaviour
         Debug.Log("End match");
     }
 
-    // 
     void SetCurrentTeam(TeamClass team)
     {
         currentTeam = team;

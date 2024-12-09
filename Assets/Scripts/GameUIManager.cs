@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +30,10 @@ public class GameUIManager : MonoBehaviour
     Button bonusButtonOrange;
     [SerializeField]
     Button bonusButtonBlue;
+    [SerializeField]
+    private BonusPanelHandler bonusPanelOrange;
+    [SerializeField]
+    private BonusPanelHandler bonusPanelBlue;
 
     private Game game;
 
@@ -198,5 +203,13 @@ public class GameUIManager : MonoBehaviour
     internal void UpdateDescriptionText(string text)
     {
         descriptionText.text = text;
+    }
+
+    internal void HideBonusPanel(Side side)
+    {
+        if (side == Side.Orange)
+            bonusPanelOrange.DesactivatePanel();
+        else if (side == Side.Blue)
+            bonusPanelBlue.DesactivatePanel();
     }
 }

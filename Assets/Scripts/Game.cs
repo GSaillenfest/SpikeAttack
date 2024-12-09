@@ -33,6 +33,7 @@ public class Game : MonoBehaviour
     private int[] actionArr;
     //private List<BonusCard> selectedBonusCards = new();
     private TeamClass currentTeam;
+    private Side currentSide;
     private TeamClass oppositeTeam;
     private bool isGameStart;
     // to be refactored
@@ -43,6 +44,7 @@ public class Game : MonoBehaviour
     private void SetBonusPowerValue(int value)
     {
         bonusPowerValue = value;
+        gameUI.UpdatePowerBonusText(bonusPowerValue);
     }
     private int previousPowerValue = 0;
     private int attackIndex;
@@ -458,6 +460,7 @@ public class Game : MonoBehaviour
         attackIndex = selectedCardSlots[2];
         EmptySelectedCardSlots();
         SetValidateButtonInteractable(false);
+        powerValue += bonusPowerValue;
         CheckWinningConditions(powerValue, previousPowerValue);
     }
 
@@ -676,24 +679,16 @@ public class Game : MonoBehaviour
         endTurnBtn.interactable = isInteractable;
     }
 
-    private void UpdatePowerValue()
+    public void UpdatePowerValue()
     {
+        Debug.Log("test");
         powerValue = 0;
         for (int i = 0; i < actionArr.Length; i++)
         {
             powerValue += actionArr[i];
         }
-
-        // Add value from effect card
-        CallBonusCardEffects();
-
-        gameUI.UpdatePowerBonusText();
+        gameUI.UpdatePowerBonusText(bonusPowerValue);
         gameUI.UpdatePowerText(powerValue);
-    }
-
-    private void CallBonusCardEffects()
-    {
-        effectManager.ApplyCardEffects();
     }
 
     public void OnBonusSelection(BonusCard card)
@@ -714,13 +709,11 @@ public class Game : MonoBehaviour
     {
         // TODO gameUI.CardSelection
         effectManager.AddEffectToList(card.cardEffect);
-        UpdatePowerValue();
     }
 
     void DeselectBonusCard(BonusCard card)
     {
         effectManager.RemoveEffectFromList(card.cardEffect);
-        UpdatePowerValue();
     }
 
     // Select function called by playerCard selection based on current state
@@ -771,17 +764,21 @@ public class Game : MonoBehaviour
             case Phase.TeamSelection:
                 break;
             case Phase.BlockSelection:
+                gameUI.HideBonusPanel(currentSide);
                 ValidateBlockSelection();
                 break;
             case Phase.BlockResolution:
                 break;
             case Phase.Action:
+                gameUI.HideBonusPanel(currentSide);
                 ValidateActions();
                 break;
             case Phase.Replacement:
+                gameUI.HideBonusPanel(currentSide);
                 ValidateReplacement();
                 break;
             case Phase.Serve:
+                gameUI.HideBonusPanel(currentSide);
                 ValidateServe();
                 break;
             default:
@@ -798,7 +795,9 @@ public class Game : MonoBehaviour
     void SwitchTeam()
     {
         currentTeam = currentTeam == team1 ? team2 : team1;
+        currentSide = currentTeam == team1 ? Side.Orange : Side.Blue;
         oppositeTeam = GetOppositeTeam(currentTeam);
+        effectManager.ClearEffectList();
     }
 
     internal int[] GetScore()

@@ -7,19 +7,42 @@ public class EffectManager : MonoBehaviour
     Game game;
 
     public delegate void CardEffectDelegate();
+    public delegate void ReverseCardEffectDelegate();
 
     // public for debug purpose
-    public Dictionary<EffectType, Dictionary<CardEffect, CardEffectDelegate>> effectTypeRegistry = new();
+    public Dictionary<EffectType, Dictionary<CardEffect, CardEffectDelegate>> effectTypeRegistery = new();
+    public Dictionary<EffectType, Dictionary<CardEffect, ReverseCardEffectDelegate>> effectReverseTypeRegistery = new();
+    Dictionary<CardEffect, CardEffectDelegate> powerDict;
+    Dictionary<CardEffect, ReverseCardEffectDelegate> reversePowerDict;
     List<CardEffect> activeEffects = new List<CardEffect>();
 
     private void Start()
     {
+        AddEffectToRegistery();
+        AddReverseEffectToRegistery();
+        AddEffectTypeToRegistery();
+        AddReverseEffectTypeToRegistery();
+    }
 
+    private void AddReverseEffectTypeToRegistery()
+    {
+        effectReverseTypeRegistery[EffectType.Power] = reversePowerDict;
+    }
+
+    private void AddReverseEffectToRegistery()
+    {
+        reversePowerDict = new()
+        {
+            { CardEffect.AddOneToPowerValue, CancelPowerValueOne },
+            { CardEffect.AddThreeToPowerValue, CancelPowerValueThree },
+            { CardEffect.AddFiveToPowerValue, CancelPowerValueFive },
+            { CardEffect.AddTenToPowerValue, CancelPowerValueTen }
+        };
     }
 
     internal void AddEffectToRegistery()
     {
-        Dictionary<CardEffect, CardEffectDelegate> powerDict = new()
+        powerDict = new()
         {
             { CardEffect.AddOneToPowerValue, AddPowerValueOne },
             { CardEffect.AddThreeToPowerValue, AddPowerValueThree },
@@ -28,21 +51,39 @@ public class EffectManager : MonoBehaviour
         };
     }
 
-    public void ApplyCardEffects()
+    private void AddEffectTypeToRegistery()
     {
-        foreach (CardEffect effect in activeEffects)
+        effectTypeRegistery[EffectType.Power] = powerDict;
+    }
+
+    public void ApplyCardEffects(CardEffect effect)
+    {
+        foreach (EffectType effectType in effectTypeRegistery.Keys)
         {
-            foreach (EffectType effectType in effectTypeRegistry.Keys)
+            if (effectTypeRegistery[effectType].ContainsKey(effect))
             {
-                if (effectTypeRegistry[effectType].ContainsKey(effect))
-                {
-                    effectTypeRegistry[effectType][effect].Invoke();
-                    break;
-                }
-                else
-                {
-                    Debug.LogWarning($"Effect {effect} is not registered in the effectRegistry.");
-                }
+                effectTypeRegistery[effectType][effect].Invoke();
+                break;
+            }
+            else
+            {
+                Debug.LogWarning($"Effect {effect} is not registered in the effectRegistry.");
+            }
+        }
+    }
+
+    void UnapplyCardEffects(CardEffect effect)
+    {
+        foreach (EffectType effectType in effectReverseTypeRegistery.Keys)
+        {
+            if (effectReverseTypeRegistery[effectType].ContainsKey(effect))
+            {
+                effectReverseTypeRegistery[effectType][effect].Invoke();
+                break;
+            }
+            else
+            {
+                Debug.LogWarning($"Effect {effect} is not registered in the effectRegistry.");
             }
         }
     }
@@ -50,14 +91,16 @@ public class EffectManager : MonoBehaviour
     internal void AddEffectToList(CardEffect cardEffect)
     {
         activeEffects.Add(cardEffect);
-    }    
-    
+        ApplyCardEffects(cardEffect);
+    }
+
     internal void RemoveEffectFromList(CardEffect cardEffect)
     {
         activeEffects.Remove(cardEffect);
+        UnapplyCardEffects(cardEffect);
     }
 
-    void ClearEffectList()
+    internal void ClearEffectList()
     {
         activeEffects.Clear();
     }
@@ -75,7 +118,16 @@ public class EffectManager : MonoBehaviour
 
     void AddPowerValue(int valueToAdd)
     {
-        game.BonusPowerValue = valueToAdd;
+        game.BonusPowerValue += valueToAdd;
+    }
+
+    void CancelPowerValueOne() { CancelPowerValue(1); }
+    void CancelPowerValueThree() { CancelPowerValue(3); }
+    void CancelPowerValueFive() { CancelPowerValue(5); }
+    void CancelPowerValueTen() { CancelPowerValue(10); }
+    void CancelPowerValue(int value)
+    {
+        game.BonusPowerValue -= value;
     }
 
     #endregion
