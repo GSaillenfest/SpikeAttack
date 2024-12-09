@@ -6,8 +6,8 @@ public class BonusCardHandler : MonoBehaviour
 {
     [SerializeField]
     GameObject[] slots;
-    [SerializeField]
-    BonusCardSetHandler bonusCardSetHandler;
+/*    [SerializeField]
+    BonusCardSetHandler bonusCardSetHandler;*/
 
     internal void AddCard(GameObject card)
     {

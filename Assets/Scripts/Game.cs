@@ -53,7 +53,7 @@ public class Game : MonoBehaviour
     private int orangeSideScore = 0;
     private int blueSideScore = 0;
     private Phase tempPhase;
-    private List<BonusCard> bonusCardList = new();
+    private List<BonusCard> bonusCardList;
 
     public Game(TeamClass t1, TeamClass t2)
     {
@@ -78,6 +78,7 @@ public class Game : MonoBehaviour
         cooldownDuration = 0.6f;
         SetEndTurnBtnInteractable(false);
         SetValidateButtonInteractable(false);
+        bonusCardList = new();
     }
 
     // State machine switching between phases of a game
@@ -282,6 +283,7 @@ public class Game : MonoBehaviour
         SetAllSelectableCardOnField(currentTeam, false);
         SetAllSelectableCardOnField(oppositeTeam, false);
         currentTeam.SetServePhase();
+        SetBonusButton();
     }
 
     // Select and apply the serve value of the selected playerCard, update power
@@ -306,6 +308,7 @@ public class Game : MonoBehaviour
     // Switch to block resolution phase and call the resolve function
     private void SetBlockResolutionPhase()
     {
+        // ////////////////// TODO: Check if necessary 
         currentPhase = Phase.BlockResolution;
         ResolveBlock();
     }
@@ -363,7 +366,21 @@ public class Game : MonoBehaviour
         SetValidateButtonInteractable(false);
         SetEndTurnBtnInteractable(true);
         gameUI.UpdateDescriptionText("Select Dig, Pass and Attack");
+        SetBonusButton();
+    }
 
+    void SetBonusButton()
+    {
+        if (currentTeam == team1)
+        {
+            gameUI.SetBonusButton(Side.Orange, true);
+            gameUI.SetBonusButton(Side.Blue, false);
+        }
+        else
+        {
+            gameUI.SetBonusButton(Side.Blue, true);
+            gameUI.SetBonusButton(Side.Orange, false);
+        }
     }
 
     // Select actions on card and add value to power

@@ -15,3 +15,4 @@ MonoBehaviour:
   cardName: Power boost
   cardIllustration: {fileID: 0}
   cardEffectDescription: Add +10 to your power value
+  cardEffect: 3

@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameUIManager : MonoBehaviour
 {
@@ -24,6 +25,10 @@ public class GameUIManager : MonoBehaviour
     TextMeshProUGUI blueScore;
     [SerializeField]
     ScorePanelAnimationHandler scoredPanel;
+    [SerializeField]
+    Button bonusButtonOrange;
+    [SerializeField]
+    Button bonusButtonBlue;
 
     private Game game;
 
@@ -32,6 +37,18 @@ public class GameUIManager : MonoBehaviour
         game = FindObjectOfType<Game>();
         ResetPowerBonusMalus();
         //calculator FindObjectOfType<GameManager>().gameObject.GetComponent<Calculator>(); 
+    }
+
+    public void SetBonusButton(Side side, bool value)
+    {
+        if (side == Side.Orange)
+        {
+            bonusButtonOrange.gameObject.SetActive(value);
+        }
+        else if (side == Side.Blue)
+        {
+            bonusButtonBlue.gameObject.SetActive(value);
+        }
     }
 
     public void SetActionUnavailable(VolleyPlayer player, int actionIndex)
