@@ -50,7 +50,6 @@ public class PlayerDeckOnSidelines : MonoBehaviour
 
     internal VolleyPlayer GetPlayer(int slotIndex)
     {
-        Debug.Log(slotIndex);
         return playersOnSidelines[slotIndex - 6];
     }
 

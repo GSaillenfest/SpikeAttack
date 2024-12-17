@@ -52,7 +52,6 @@ public class ScorePanelAnimationHandler : MonoBehaviour
 
     public void StopAnimation()
     {
-        Debug.Log("Stop anim");
         //animator.enabled = false;
         panel.SetActive(false);
         gameUI.EndTemporization();

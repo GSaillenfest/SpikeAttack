@@ -31,8 +31,6 @@ public class BonusPanelHandler : MonoBehaviour
 
     public void OnButtonClick()
     {
-        Debug.Log("Button clicked");
-
         if (!isActive)
         {
             targetMinPosX = activeMinPosX;

@@ -21,18 +21,21 @@ public class FXCardManager : MonoBehaviour
     private TeamClass team1;
     private TeamClass team2;
 
+    [SerializeField]
     VertexGradient orangeGradient = new VertexGradient(
         new Color32(255, 165, 0, 255),  // Orange clair en haut à gauche
         new Color32(255, 140, 0, 255),  // Orange moyen en haut à droite
         new Color32(255, 69, 0, 255),   // Orange foncé en bas à gauche
         new Color32(255, 69, 0, 255)// Orange foncé en bas à droite
         );
+    [SerializeField]
     VertexGradient blueGradient = new VertexGradient(
             new Color32(135, 206, 250, 255), // Bleu clair en haut à gauche
             new Color32(135, 206, 235, 255), // Bleu ciel en haut à droite
             new Color32(70, 130, 180, 255),  // Bleu acier en bas à gauche
             new Color32(70, 130, 160, 255)   // Bleu acier foncé en bas à droite
         );
+    [SerializeField]
     VertexGradient greyGradient = new VertexGradient(
             new Color32(192, 192, 192, 255), // Gris clair en haut à gauche
             new Color32(169, 169, 169, 255), // Gris moyen en haut à droite

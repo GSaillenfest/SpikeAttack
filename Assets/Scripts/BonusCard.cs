@@ -33,4 +33,5 @@ public class BonusCard : MonoBehaviour
         cardEffectType = sO.cardEffectType;   
         cardEffectText.text = sO.cardEffectDescription;
     }
+
 }

@@ -58,6 +58,7 @@ public class EffectManager : MonoBehaviour
 
     public void ApplyCardEffects(CardEffect effect)
     {
+        Debug.Log(effect);
         foreach (EffectType effectType in effectTypeRegistery.Keys)
         {
             if (effectTypeRegistery[effectType].ContainsKey(effect))

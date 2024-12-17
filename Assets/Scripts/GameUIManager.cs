@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -34,6 +33,14 @@ public class GameUIManager : MonoBehaviour
     private BonusPanelHandler bonusPanelOrange;
     [SerializeField]
     private BonusPanelHandler bonusPanelBlue;
+    [SerializeField]
+    VertexGradient greenColorGradient = new VertexGradient(
+        new Color32(255, 165, 0, 255),
+        new Color32(255, 140, 0, 255),
+        new Color32(255, 69, 0, 255),
+        new Color32(255, 69, 0, 255)
+        );
+    VertexGradient whiteNonGradient = new VertexGradient(Color.white);
 
     private Game game;
 
@@ -101,9 +108,11 @@ public class GameUIManager : MonoBehaviour
             uIEffects.ChangeTeamColorGradient(currentTeam);
         }*/
 
-    internal void UpdatePowerText(int powerValue)
+    // Update power text and apply color if a bonus is added
+    internal void UpdatePowerText(int powerValue, bool hasBonusApplied = false)
     {
         powerTextVal.text = powerValue.ToString();
+        powerTextVal.colorGradient = hasBonusApplied ? greenColorGradient : whiteNonGradient;
     }
 
     internal void UpdatePreviousPowerText(int powerValue)

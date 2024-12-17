@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -25,6 +26,8 @@ public class Game : MonoBehaviour
     int allowedRemplacementNumber = 2;
     [SerializeField]
     private EffectManager effectManager;
+    [SerializeField]
+    private BonusCardSetHandler bonusCardSetHandler;
 
     int replacement;
     GameManager gameManager;
@@ -44,6 +47,7 @@ public class Game : MonoBehaviour
     private void SetBonusPowerValue(int value)
     {
         bonusPowerValue = value;
+        UpdatePowerValue();
         gameUI.UpdatePowerBonusText(bonusPowerValue);
     }
     private int previousPowerValue = 0;
@@ -55,7 +59,7 @@ public class Game : MonoBehaviour
     private int orangeSideScore = 0;
     private int blueSideScore = 0;
     private Phase tempPhase;
-    private List<BonusCard> bonusCardList;
+    private List<BonusCard> selectedBonusCards;
 
     public Game(TeamClass t1, TeamClass t2)
     {
@@ -80,12 +84,13 @@ public class Game : MonoBehaviour
         cooldownDuration = 0.6f;
         SetEndTurnBtnInteractable(false);
         SetValidateButtonInteractable(false);
-        bonusCardList = new();
+        selectedBonusCards = new();
     }
 
     // State machine switching between phases of a game
     public void ChangePhase(Phase phase)
     {
+        Debug.Log($"Actual phase is {phase}");
         currentPhase = phase;
         switch (currentPhase)
         {
@@ -107,6 +112,8 @@ public class Game : MonoBehaviour
                 SetServePhase();
                 break;
             case Phase.Inactive:
+                gameUI.SetBonusButton(currentSide, false);
+                gameUI.SetBonusButton(GetOppositeSide(), false);
                 break;
             default:
                 break;
@@ -126,6 +133,7 @@ public class Game : MonoBehaviour
 
     private void SetPreReplacementPhase()
     {
+        // TO ANIMATE
         currentTeam.RotateFieldCards();
         oppositeTeam.RotateFieldCards();
         SetReplacementPhase();
@@ -134,7 +142,10 @@ public class Game : MonoBehaviour
     private void SetReplacementPhase()
     {
         gameUI.UpdateDescriptionText("Replace 2 players");
+        // Hide bonus card button
         SwitchTeam();
+        gameUI.SetBonusButton(currentSide, false);
+
         EmptySelectedCardSlots();
 
         // show SideDeck and Set card Selectable
@@ -154,7 +165,7 @@ public class Game : MonoBehaviour
         gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, 0, exceptionsBlur);
     }
 
-    private void ReplaceCard(VolleyPlayer selectedCard)
+    private void ReplacePlayerCard(VolleyPlayer selectedCard)
     {
 
         // When a card is selected
@@ -276,7 +287,7 @@ public class Game : MonoBehaviour
         }
     }
 
-    // Set only one playerCard for serve phase
+    // Set only one playerCard clickable for serve phase
     private void SetServePhase()
     {
         gameUI.UpdateDescriptionText("Select the server then click on Validate");
@@ -460,8 +471,19 @@ public class Game : MonoBehaviour
         attackIndex = selectedCardSlots[2];
         EmptySelectedCardSlots();
         SetValidateButtonInteractable(false);
-        powerValue += bonusPowerValue;
+        EmptyBonusCards();
+        // Done in UpdatePowerValue
+        // powerValue += bonusPowerValue;
         CheckWinningConditions(powerValue, previousPowerValue);
+    }
+
+    private void EmptyBonusCards()
+    {
+        foreach (BonusCard bonusCard in selectedBonusCards)
+        {
+            bonusCardSetHandler.DiscardCard(bonusCard.gameObject);
+        }
+        selectedBonusCards.Clear();
     }
 
     // End turn without selecting actions, make opponent score
@@ -602,6 +624,7 @@ public class Game : MonoBehaviour
         gameUI.UpdatePreviousPowerText(previousPowerValue);
         gameUI.UpdatePreviousPowerMalusText();
         gameUI.UpdatePowerBonusText();
+        gameUI.SetBonusButton(currentSide, false);
         SwitchTeam();
         StartTurn(currentTeam);
     }
@@ -668,6 +691,10 @@ public class Game : MonoBehaviour
         return team == team1 ? team2 : team1;
     }
 
+    Side GetOppositeSide()
+    {
+        return currentSide == Side.Orange ? Side.Blue : Side.Orange;
+    }
 
     private void SetValidateButtonInteractable(bool isInteractable)
     {
@@ -681,26 +708,26 @@ public class Game : MonoBehaviour
 
     public void UpdatePowerValue()
     {
-        Debug.Log("test");
         powerValue = 0;
         for (int i = 0; i < actionArr.Length; i++)
         {
             powerValue += actionArr[i];
         }
+        powerValue += bonusPowerValue;
         gameUI.UpdatePowerBonusText(bonusPowerValue);
-        gameUI.UpdatePowerText(powerValue);
+        gameUI.UpdatePowerText(powerValue, bonusPowerValue != 0);
     }
 
     public void OnBonusSelection(BonusCard card)
     {
-        if (bonusCardList.Contains(card))
+        if (selectedBonusCards.Contains(card))
         {
-            bonusCardList.Remove(card);
+            selectedBonusCards.Remove(card);
             DeselectBonusCard(card);
         }
         else
         {
-            bonusCardList.Add(card);
+            selectedBonusCards.Add(card);
             SelectBonusCard(card);
         }
     }
@@ -719,7 +746,6 @@ public class Game : MonoBehaviour
     // Select function called by playerCard selection based on current state
     public void HandleCardButtonFunction(VolleyPlayer player)
     {
-        Debug.Log(player.name);
         switch (currentPhase)
         {
             case Phase.TeamSelection:
@@ -733,7 +759,7 @@ public class Game : MonoBehaviour
                 SelectAction(player);
                 break;
             case Phase.Replacement:
-                ReplaceCard(player);
+                ReplacePlayerCard(player);
                 break;
             case Phase.Serve:
                 if (!isServeSelected) SelectServeCard(player);
@@ -790,7 +816,7 @@ public class Game : MonoBehaviour
 
     internal void ResetVariables()
     {
-        powerValue = previousPowerValue = 0;
+        powerValue = previousPowerValue = BonusPowerValue = 0;
     }
 
     void SwitchTeam()

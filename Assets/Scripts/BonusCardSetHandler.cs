@@ -1,12 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 public class BonusCardSetHandler : MonoBehaviour
 {
+    [SerializeField]
+    GameObject Discard;
+    
     int slotCount = 0;
     int slotIndex = 0;
     List<GameObject> bonusCards = new List<GameObject>();
+    List<GameObject> dispatchedBonusCards = new List<GameObject>();
 
     private void Start()
     {
@@ -48,5 +53,11 @@ public class BonusCardSetHandler : MonoBehaviour
             return bonusCard;
         }
         else return null;
+    }
+
+    internal void DiscardCard(GameObject bonusCard)
+    {
+        dispatchedBonusCards.Add(bonusCard);
+        bonusCard.transform.SetParent(Discard.transform, false);
     }
 }
