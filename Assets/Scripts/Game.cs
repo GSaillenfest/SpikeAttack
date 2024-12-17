@@ -719,6 +719,7 @@ public class Game : MonoBehaviour
     // Select function called by playerCard selection based on current state
     public void HandleCardButtonFunction(VolleyPlayer player)
     {
+        Debug.Log(player.name);
         switch (currentPhase)
         {
             case Phase.TeamSelection:

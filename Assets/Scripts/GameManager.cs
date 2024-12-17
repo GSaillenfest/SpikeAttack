@@ -134,6 +134,7 @@ public class GameManager : MonoBehaviour
             rectTransform.offsetMin = Vector2.zero;
             rectTransform.offsetMax = Vector2.zero;
             rectTransform.localScale = Vector3.one;
+            rectTransform.anchoredPosition3D = Vector3.zero;
         }
     }
 

@@ -2618,6 +2618,7 @@ MonoBehaviour:
   playerName: 
   illustration: {fileID: 0}
   effectDescription: 
+  cardEffect: 0
   block: 0
   serve: 0
   actionArr: {x: 0, y: 0, z: 0}
