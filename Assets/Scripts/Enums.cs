@@ -2,13 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum PlayerCardAction
+public enum VolleyPlayerAction
 {
-    reception,
-    pass,
-    attack,
-    block,
-    serv
+    dig = 0,
+    pass = 1,
+    attack = 2,
+    block = 3,
+    serve = 4,
 }
 
 public enum ActionCardEffect

@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,18 +6,43 @@ public class VolleyPlayer : MonoBehaviour
 {
     [SerializeField]
     public RawImage image;
+
     [SerializeField]
-    public TMP_Text blockText;
+    TMP_Text blockValText;
     [SerializeField]
-    public TMP_Text serveText;    
+    TMP_Text serveValText;
     [SerializeField]
-    public TMP_Text effectText;
+    TMP_Text effectDescrText;
+    [SerializeField]
+    TMP_Text digValText;
+    [SerializeField]
+    TMP_Text passValText;
+    [SerializeField]
+    TMP_Text attackValText;
+    [SerializeField]
+    TMP_Text blockText;
+    [SerializeField]
+    TMP_Text serveText;
+    [SerializeField]
+    TMP_Text effectText;
     [SerializeField]
     TMP_Text digText;
     [SerializeField]
     TMP_Text passText;
     [SerializeField]
     TMP_Text attackText;
+    [SerializeField]
+    Image blockBg;
+    [SerializeField]
+    Image serveBg;
+    [SerializeField]
+    Image effectBg;
+    [SerializeField]
+    Image digBg;
+    [SerializeField]
+    Image passBg;
+    [SerializeField]
+    Image attackBg;
     [SerializeField]
     Button clickableButton;
 
@@ -37,12 +61,14 @@ public class VolleyPlayer : MonoBehaviour
     public bool isOrangeTeam;
     public bool isSelected;
     public bool isSelectedTwice;
-    public TMP_Text[] actionTexts;
+    public TMP_Text[] actionValTxtArr;
+    public TMP_Text[] actionTxtArr;
+    public Image[] actionBgArr;
+    public int slotIndex = 10;
 
     Game gameScript;
     GameUIManager gameUI;
 
-    public int slotIndex = 10;
 
     internal void Initialize(VolleyPlayersSO sO)
     {
@@ -77,29 +103,50 @@ public class VolleyPlayer : MonoBehaviour
 
         if (isLibero)
         {
-            blockText.transform.parent.gameObject.SetActive(false);
-            serveText.transform.parent.gameObject.SetActive(false);
+            blockValText.transform.parent.gameObject.SetActive(false);
+            serveValText.transform.parent.gameObject.SetActive(false);
         }
         else
         {
-            blockText.SetText(block.ToString());
-            serveText.SetText(serve.ToString());
+            blockValText.SetText(block.ToString());
+            serveValText.SetText(serve.ToString());
         }
 
-        if (effectDescription != null)
+        if (effectDescription != "")
         {
-            effectText.text = effectDescription;
+            effectDescrText.text = effectDescription;
         }
-        else effectText.transform.parent.gameObject.SetActive(false);
+        else
+        {
+            effectDescrText.transform.parent.gameObject.SetActive(false);
+        }
 
-        digText.SetText(dig.ToString());
-        passText.SetText(pass.ToString());
-        attackText.SetText(attack.ToString());
+        digValText.SetText(dig.ToString());
+        passValText.SetText(pass.ToString());
+        attackValText.SetText(attack.ToString());
 
-        actionTexts = new TMP_Text[3];
-        actionTexts[0] = digText;
-        actionTexts[1] = passText;
-        actionTexts[2] = attackText;
+        actionValTxtArr = new TMP_Text[] {
+            digValText,
+            passValText,
+            attackValText,
+            blockValText,
+            serveValText,
+        };
+
+        actionTxtArr = new TMP_Text[3];
+        actionTxtArr[0] = digText;
+        actionTxtArr[1] = passText;
+        actionTxtArr[2] = attackText;
+
+        actionBgArr = new Image[] {
+            digBg,
+            passBg,
+            attackBg,
+            blockBg,
+            serveBg,
+        };
+
+
     }
 
     internal void DeselectActionAnimation(int actionIndex)
@@ -133,8 +180,8 @@ public class VolleyPlayer : MonoBehaviour
     {
         isActionAvailable[i] = false;
         gameUI.SetActionUnavailable(this, i);
-    }    
-    
+    }
+
     internal void SetActionAvailable(int actionIndex)
     {
         isActionAvailable[actionIndex] = true;
@@ -159,12 +206,12 @@ public class VolleyPlayer : MonoBehaviour
     internal void SelectBlock(bool applyColor)
     {
         gameUI.SelectPlayerBlock(this, applyColor);
-    }    
-    
+    }
+
     internal void DeselectBlock()
     {
         gameUI.DeselectPlayerBlock(this);
-    }    
+    }
 
     internal void SelectServe()
     {

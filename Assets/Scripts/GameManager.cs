@@ -147,10 +147,12 @@ public class GameManager : MonoBehaviour
         currentTeam = team1;
     }
 
+    // ////// TODO: Select first playing team (random or on player selection)
     public void ChoseTeamPlayer()
     {
 
     }
+
     void CreateBonusCardsOnAwake()
     {
         foreach (BonusCardSO bonusCard in bonusCardSOs)
@@ -180,6 +182,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    // Instantiate Cards from scriptable objects
     GameObject CreateNewPlayer(VolleyPlayersSO sO)
     {
         // create a new game object
@@ -190,6 +193,7 @@ public class GameManager : MonoBehaviour
         return newPlayer;
     }
 
+    // Instantiate Cards from scriptable objects
     GameObject CreateNewBonusCard(BonusCardSO sO)
     {
         GameObject newBonusCard = Instantiate(bonusCardPrefab);

@@ -23,30 +23,40 @@ public class FXCardManager : MonoBehaviour
 
     [SerializeField]
     VertexGradient orangeGradient = new VertexGradient(
-        new Color32(255, 165, 0, 255),  // Orange clair en haut à gauche
-        new Color32(255, 140, 0, 255),  // Orange moyen en haut à droite
-        new Color32(255, 69, 0, 255),   // Orange foncé en bas à gauche
-        new Color32(255, 69, 0, 255)// Orange foncé en bas à droite
+        new Color32(255, 165, 0, 255),  
+        new Color32(255, 140, 0, 255), 
+        new Color32(255, 69, 0, 255),   
+        new Color32(255, 69, 0, 255)
         );
     [SerializeField]
     VertexGradient blueGradient = new VertexGradient(
-            new Color32(135, 206, 250, 255), // Bleu clair en haut à gauche
-            new Color32(135, 206, 235, 255), // Bleu ciel en haut à droite
-            new Color32(70, 130, 180, 255),  // Bleu acier en bas à gauche
-            new Color32(70, 130, 160, 255)   // Bleu acier foncé en bas à droite
+            new Color32(135, 206, 250, 255), 
+            new Color32(135, 206, 235, 255), 
+            new Color32(70, 130, 180, 255), 
+            new Color32(70, 130, 160, 255)  
         );
     [SerializeField]
     VertexGradient greyGradient = new VertexGradient(
-            new Color32(192, 192, 192, 255), // Gris clair en haut à gauche
-            new Color32(169, 169, 169, 255), // Gris moyen en haut à droite
-            new Color32(128, 128, 128, 255), // Gris foncé en bas à gauche
-            new Color32(105, 105, 105, 255)  // Gris très foncé en bas à droite
+            new Color32(192, 192, 192, 255), 
+            new Color32(169, 169, 169, 255), 
+            new Color32(128, 128, 128, 255), 
+            new Color32(105, 105, 105, 255)  
+        );
+    [SerializeField]
+    VertexGradient darkGreyGradient = new VertexGradient(
+            new Color32(192, 192, 192, 255), 
+            new Color32(169, 169, 169, 255), 
+            new Color32(128, 128, 128, 255), 
+            new Color32(105, 105, 105, 255)  
         );
     VertexGradient whiteNonGradient = new VertexGradient(Color.white);
+    VertexGradient blackNonGradient = new VertexGradient(Color.black);
 
     VertexGradient currentTeamGradient;
 
     Color32 desaturationColor = new Color32(128, 128, 128, 255);
+    Color32 unselectableAction = new Color32(55, 55, 55, 215);
+    Color32 selectableAction = new Color32(255, 255, 255, 155);
 
     private void Start()
     {
@@ -89,16 +99,16 @@ public class FXCardManager : MonoBehaviour
         playerCard.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
         //ApplyCardDropEffect(playerCard.gameObject);
 
-        if (applyColor) 
-            playerCard.blockText.colorGradient = SelectTeamColorGradient(playerCard);
+        if (applyColor)
+            playerCard.actionValTxtArr[(int)VolleyPlayerAction.block].colorGradient = SelectTeamColorGradient(playerCard);
 
-        BounceOnSelection(playerCard.blockText.gameObject);
+        BounceOnSelection(playerCard.actionValTxtArr[(int)VolleyPlayerAction.block].gameObject);
     }
 
     public void ShowUnselectedForBlock(VolleyPlayer playerCard)
     {
-        ResetScale(playerCard.blockText.gameObject);
-        playerCard.blockText.colorGradient = whiteNonGradient;
+        ResetScale(playerCard.actionValTxtArr[(int)VolleyPlayerAction.block].gameObject);
+        playerCard.actionValTxtArr[(int)VolleyPlayerAction.block].colorGradient = darkGreyGradient;
         playerCard.GetComponent<RectTransform>().anchorMin = Vector2.zero;
         playerCard.GetComponent<RectTransform>().anchorMax = Vector2.one;
     }
@@ -113,14 +123,14 @@ public class FXCardManager : MonoBehaviour
         playerCard.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
 
         //ApplyCardDropEffect(playerCard.gameObject);
-        playerCard.serveText.colorGradient = SelectTeamColorGradient(playerCard);
-        BounceOnSelection(playerCard.serveText.gameObject);
+        playerCard.actionValTxtArr[(int)VolleyPlayerAction.serve].colorGradient = SelectTeamColorGradient(playerCard);
+        BounceOnSelection(playerCard.actionValTxtArr[(int)VolleyPlayerAction.serve].gameObject);
     }
 
     public void ShowUnselectedForServe(VolleyPlayer playerCard)
     {
-        ResetScale(playerCard.serveText.gameObject);
-        playerCard.serveText.colorGradient = whiteNonGradient;
+        ResetScale(playerCard.actionValTxtArr[(int)VolleyPlayerAction.serve].gameObject);
+        playerCard.actionValTxtArr[(int)VolleyPlayerAction.serve].colorGradient = darkGreyGradient;
         playerCard.GetComponent<RectTransform>().anchorMin = Vector2.zero;
         playerCard.GetComponent<RectTransform>().anchorMax = Vector2.one;
     }
@@ -128,31 +138,33 @@ public class FXCardManager : MonoBehaviour
     public void ShowSelectedAction(VolleyPlayer player, int actionIndex)
     {
 
-        player.actionTexts[actionIndex].colorGradient = SelectTeamColorGradient(player);
-        BounceOnSelection(player.actionTexts[actionIndex].gameObject);
+        player.actionValTxtArr[actionIndex].colorGradient = SelectTeamColorGradient(player);
+        BounceOnSelection(player.actionValTxtArr[actionIndex].gameObject);
         //add effect around action
     }
 
     public void ShowUnselectedAction(VolleyPlayer player, int actionIndex)
     {
-        player.actionTexts[actionIndex].colorGradient = whiteNonGradient;
+        player.actionValTxtArr[actionIndex].colorGradient = darkGreyGradient;
         ResetActionScaleOnly(player, actionIndex);
         //add effect around action
     }
 
     public void ResetActionColorOnly(VolleyPlayer player, int actionIndex)
     {
-        player.actionTexts[actionIndex].colorGradient = whiteNonGradient;
+        player.actionValTxtArr[actionIndex].colorGradient = darkGreyGradient;
+        player.actionBgArr[actionIndex].color = selectableAction;
     }
 
     public void ResetActionScaleOnly(VolleyPlayer player, int actionIndex)
     {
-        ResetScale(player.actionTexts[actionIndex].gameObject);
+        ResetScale(player.actionValTxtArr[actionIndex].gameObject);
     }
 
     public void ShowUnselectableAction(VolleyPlayer player, int actionIndex)
     {
-        player.actionTexts[actionIndex].colorGradient = greyGradient;
+        player.actionValTxtArr[actionIndex].colorGradient = greyGradient;
+        player.actionBgArr[actionIndex].color = unselectableAction;
     }
 
     void BounceOnSelection(GameObject go)

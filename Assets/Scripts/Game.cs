@@ -577,6 +577,10 @@ public class Game : MonoBehaviour
         // avoid two startgame clicks
         startBtn.interactable = false;
         startBtn.gameObject.SetActive(false);
+        endTurnBtn.gameObject.SetActive(true);
+        endTurnBtn.interactable = false;
+        validateBtn.gameObject.SetActive(true);
+        validateBtn.interactable = false;
 
         isGameStart = true;
         currentTeam = team;
