@@ -11,5 +11,6 @@ public class BonusCardSO : ScriptableObject
     public string cardEffectDescription;
     public CardEffect cardEffect;
     internal EffectType cardEffectType;
+    public EffectCardCategory effectCardCategory;
 
 }

@@ -8,16 +8,23 @@ using UnityEngine.UI;
 
 public class BonusCard : MonoBehaviour
 {
+    [SerializeField]
+    public Image image;
+    [SerializeField]
+    Button clickableButton;
     public string cardName;
     public Texture cardIllustration;
     private EffectType cardEffectType;
     public CardEffect cardEffect;
     public TMP_Text cardEffectText;
+    public EffectCardCategory effectCardCategory;
     Game game;
+    GameUIManager gameUI;
 
     private void Start()
     {
         game = FindObjectOfType<Game>();
+        gameUI = FindObjectOfType<GameUIManager>();
     }
 
     public void OnButtonClick()
@@ -32,6 +39,17 @@ public class BonusCard : MonoBehaviour
         cardEffect = sO.cardEffect;
         cardEffectType = sO.cardEffectType;   
         cardEffectText.text = sO.cardEffectDescription;
+        effectCardCategory = sO.effectCardCategory;
     }
-
+    internal void SetSelectable()
+    {
+        bool isSelectable = false;
+        // TODO Rework this condition
+        if (effectCardCategory.ToString() == game.currentPhase.ToString())
+        {
+            isSelectable = true;
+        }
+        clickableButton.interactable = isSelectable;
+        gameUI.SetCardSelectable(this, isSelectable);
+    }
 }

@@ -14218,7 +14218,6 @@ GameObject:
   - component: {fileID: 1721852641}
   - component: {fileID: 1721852642}
   - component: {fileID: 1721852644}
-  - component: {fileID: 1721852645}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -14290,20 +14289,6 @@ MonoBehaviour:
   bonusCardSetHandler: {fileID: 1405028058}
   actionIndex: 0
   currentPhase: 0
---- !u!114 &1721852645
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1721852640}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c6365360322d8443bfe7f5b04c66ef0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  raycaster: {fileID: 710421726}
-  eventSystem: {fileID: 1672869982}
 --- !u!1 &1761383605
 GameObject:
   m_ObjectHideFlags: 0

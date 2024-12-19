@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -33,7 +32,7 @@ public class Game : MonoBehaviour
     GameManager gameManager;
     private int turn;
     private int[] selectedCardSlots;
-    private int[] actionArr;
+    private int[] actionValueArr;
     //private List<BonusCard> selectedBonusCards = new();
     private TeamClass currentTeam;
     private Side currentSide;
@@ -76,7 +75,7 @@ public class Game : MonoBehaviour
         selectedCardSlots = new int[6];
 
         EmptySelectedCardSlots();
-        actionArr = new int[3];
+        actionValueArr = new int[3];
         attackIndex = nonAttributed;
         replacementNumber = 0;
         replacement = allowedRemplacementNumber;
@@ -114,6 +113,8 @@ public class Game : MonoBehaviour
             case Phase.Inactive:
                 gameUI.SetBonusButton(currentSide, false);
                 gameUI.SetBonusButton(GetOppositeSide(), false);
+                gameUI.HideBonusPanel(currentSide);
+                gameUI.HideBonusPanel(GetOppositeSide());
                 break;
             default:
                 break;
@@ -133,6 +134,7 @@ public class Game : MonoBehaviour
 
     private void SetPreReplacementPhase()
     {
+
         // TO ANIMATE
         currentTeam.RotateFieldCards();
         oppositeTeam.RotateFieldCards();
@@ -304,7 +306,7 @@ public class Game : MonoBehaviour
     {
         isServeSelected = true;
         selected.SelectServe();
-        actionArr[0] = currentTeam.GetServeValue();
+        actionValueArr[0] = currentTeam.GetServeValue();
         UpdatePowerValue();
         SetValidateButtonInteractable(true);
     }
@@ -372,7 +374,7 @@ public class Game : MonoBehaviour
     private void SetActionPhase()
     {
         EmptySelectedCardSlots();
-        actionArr[0] = actionArr[1] = actionArr[2] = 0;
+        actionValueArr[0] = actionValueArr[1] = actionValueArr[2] = 0;
         actionIndex = 0;
         SetSelectableCardByAction();
         SetAllSelectableCardOnField(oppositeTeam, false);
@@ -401,7 +403,7 @@ public class Game : MonoBehaviour
     {
         if (actionIndex == 0)
         {
-            actionArr[actionIndex] = selected.actionArr[actionIndex];
+            actionValueArr[actionIndex] = selected.actionArr[actionIndex];
             selectedCardSlots[actionIndex] = selected.slotIndex;
             selected.SelectActionAnimation(actionIndex);
             selected.SetIsSelected(true);
@@ -413,7 +415,7 @@ public class Game : MonoBehaviour
             if (selectedCardSlots[actionIndex - 1] == selected.slotIndex)
             {
                 selectedCardSlots[actionIndex - 1] = nonAttributed;
-                actionArr[actionIndex - 1] = 0;
+                actionValueArr[actionIndex - 1] = 0;
                 selected.DeselectActionAnimation(actionIndex - 1);
                 selected.SetIsSelected(false);
                 actionIndex--;
@@ -421,7 +423,7 @@ public class Game : MonoBehaviour
             }
             else
             {
-                actionArr[actionIndex] = selected.actionArr[actionIndex];
+                actionValueArr[actionIndex] = selected.actionArr[actionIndex];
                 selectedCardSlots[actionIndex] = selected.slotIndex;
                 selected.SelectActionAnimation(actionIndex);
 
@@ -438,7 +440,7 @@ public class Game : MonoBehaviour
             if (selectedCardSlots[actionIndex - 1] == selected.slotIndex)
             {
                 selectedCardSlots[actionIndex - 1] = nonAttributed;
-                actionArr[actionIndex - 1] = 0;
+                actionValueArr[actionIndex - 1] = 0;
                 selected.DeselectActionAnimation(actionIndex - 1);
                 if (selected.isSelectedTwice)
                     selected.SetIsSelectedTwice(false);
@@ -499,8 +501,16 @@ public class Game : MonoBehaviour
         EmptySelectedCardSlots();
         SetValidateButtonInteractable(false);
         SetEndTurnBtnInteractable(false);
+
+
+        foreach (BonusCard bonusCard in selectedBonusCards)
+        {
+            DeselectBonusCard(bonusCard);
+        }
+        selectedBonusCards.Clear();
+
+        BonusPowerValue = 0;
         powerValue = 0;
-        // TODO: Deselect Card with effect
         CheckWinningConditions(powerValue, previousPowerValue);
     }
 
@@ -591,8 +601,8 @@ public class Game : MonoBehaviour
     // Start a point, reset variables, Switch state to Serve phase
     void StartPoint(TeamClass team)
     {
-        ResetVariables();
         ResetTeamStatus();
+        ResetVariables();
         gameUI.UpdatePowerText(powerValue);
         gameUI.UpdatePreviousPowerText(previousPowerValue);
         turn = 0;
@@ -622,13 +632,18 @@ public class Game : MonoBehaviour
     // End normal turn and switch team then call start turn
     void EndCurrentTurn()
     {
+        for (int i = 0; i < actionValueArr.Length; i++)
+            actionValueArr[i] = 0;
         previousPowerValue = powerValue;
         powerValue = 0;
+        BonusPowerValue = 0;
         gameUI.UpdatePowerText(powerValue);
         gameUI.UpdatePreviousPowerText(previousPowerValue);
         gameUI.UpdatePreviousPowerMalusText();
         gameUI.UpdatePowerBonusText();
         gameUI.SetBonusButton(currentSide, false);
+        gameUI.HideBonusPanel(currentSide);
+        gameUI.HideBonusPanel(GetOppositeSide());
         SwitchTeam();
         StartTurn(currentTeam);
     }
@@ -636,7 +651,7 @@ public class Game : MonoBehaviour
     // Compare current power and previous turn power
     internal void CheckWinningConditions(int powerValue, int previousPowerValue)
     {
-
+        Debug.Log(powerValue + ", " + previousPowerValue);
         if (powerValue > previousPowerValue)
         {
             ChangePhase(Phase.BlockSelection);
@@ -713,9 +728,9 @@ public class Game : MonoBehaviour
     public void UpdatePowerValue()
     {
         powerValue = 0;
-        for (int i = 0; i < actionArr.Length; i++)
+        for (int i = 0; i < actionValueArr.Length; i++)
         {
-            powerValue += actionArr[i];
+            powerValue += actionValueArr[i];
         }
         powerValue += bonusPowerValue;
         gameUI.UpdatePowerBonusText(bonusPowerValue);
@@ -820,7 +835,11 @@ public class Game : MonoBehaviour
 
     internal void ResetVariables()
     {
-        powerValue = previousPowerValue = BonusPowerValue = 0;
+        powerValue = 0;
+        previousPowerValue = 0;
+        BonusPowerValue = 0;
+        for (int i = 0; i < actionValueArr.Length; i++)
+            actionValueArr[i] = 0;
     }
 
     void SwitchTeam()

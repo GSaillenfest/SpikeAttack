@@ -111,6 +111,7 @@ public class GameUIManager : MonoBehaviour
     // Update power text and apply color if a bonus is added
     internal void UpdatePowerText(int powerValue, bool hasBonusApplied = false)
     {
+        Debug.Log(powerValue);
         powerTextVal.text = powerValue.ToString();
         powerTextVal.colorGradient = hasBonusApplied ? greenColorGradient : whiteNonGradient;
     }
@@ -155,6 +156,11 @@ public class GameUIManager : MonoBehaviour
     internal void SetCardSelectable(VolleyPlayer volleyPlayer, bool isSelectable)
     {
         cardFX.ShowSelectable(volleyPlayer, isSelectable);
+    }    
+    
+    internal void SetCardSelectable(BonusCard bonusCard, bool isSelectable)
+    {
+        cardFX.ShowSelectable(bonusCard, isSelectable);
     }
 
     internal void ResetScaleAction(VolleyPlayer volleyPlayer, int actionIndex)

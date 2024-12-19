@@ -11,9 +11,11 @@ public enum VolleyPlayerAction
     serve = 4,
 }
 
-public enum ActionCardEffect
+public enum EffectCardCategory
 {
-    //to populate
+    BlockSelection,
+    Action,
+    Serve,
 }
 
 public enum PlayerCard

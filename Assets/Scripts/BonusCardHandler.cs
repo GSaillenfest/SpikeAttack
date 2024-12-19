@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -36,4 +37,12 @@ public class BonusCardHandler : MonoBehaviour
         }
     }
 
+    internal void CheckCardSelectable()
+    {
+        foreach (GameObject slot in slots)
+        {
+            if (slot.GetComponentInChildren<BonusCard>())
+                slot.GetComponentInChildren<BonusCard>().SetSelectable();
+        }
+    }
 }

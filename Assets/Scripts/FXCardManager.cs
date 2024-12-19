@@ -75,6 +75,11 @@ public class FXCardManager : MonoBehaviour
         playerCard.image.color = isSelectable ? Color.white : desaturationColor;
     }
 
+    public void ShowSelectable(BonusCard bonusCard, bool isSelectable)
+    {
+        bonusCard.image.color = isSelectable ? Color.white : desaturationColor;
+    }
+
     public void ShowSelected(VolleyPlayer playerCard)
     {
         ApplyCardDropEffect(playerCard.gameObject);

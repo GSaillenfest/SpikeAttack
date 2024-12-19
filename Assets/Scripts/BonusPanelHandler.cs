@@ -16,6 +16,8 @@ public class BonusPanelHandler : MonoBehaviour
     float initMaxPosX;
     [SerializeField]
     private Animator animator;
+    [SerializeField]
+    BonusCardHandler cardHandler;
     
     float targetMinPosX;
     float targetMaxPosX;
@@ -51,7 +53,7 @@ public class BonusPanelHandler : MonoBehaviour
         AnimatePanel();
         if (isActive)
         {
-            //SetCardSelectable();
+            cardHandler.CheckCardSelectable();
         }
     }
 
