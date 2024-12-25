@@ -41,8 +41,8 @@ public class BonusCardHandler : MonoBehaviour
     {
         foreach (GameObject slot in slots)
         {
-            if (slot.GetComponentInChildren<BonusCard>())
-                slot.GetComponentInChildren<BonusCard>().SetSelectable();
+            if (slot.TryGetComponentInChildren<BonusCard>(out BonusCard bonusCard))
+                bonusCard.SetSelectable();
         }
     }
 }

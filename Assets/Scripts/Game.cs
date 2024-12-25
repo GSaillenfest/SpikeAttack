@@ -69,7 +69,7 @@ public class Game : MonoBehaviour
 
     private void Awake()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        gameManager = FindFirstObjectByType<GameManager>();
         team1 = gameManager.teams[0];
         team2 = gameManager.teams[1];
         selectedCardSlots = new int[6];
@@ -90,6 +90,8 @@ public class Game : MonoBehaviour
     public void ChangePhase(Phase phase)
     {
         Debug.Log($"Actual phase is {phase}");
+        gameUI.HideBonusPanel(currentSide);
+        gameUI.HideBonusPanel(GetOppositeSide());
         currentPhase = phase;
         switch (currentPhase)
         {
@@ -113,8 +115,6 @@ public class Game : MonoBehaviour
             case Phase.Inactive:
                 gameUI.SetBonusButton(currentSide, false);
                 gameUI.SetBonusButton(GetOppositeSide(), false);
-                gameUI.HideBonusPanel(currentSide);
-                gameUI.HideBonusPanel(GetOppositeSide());
                 break;
             default:
                 break;
@@ -511,6 +511,7 @@ public class Game : MonoBehaviour
 
         BonusPowerValue = 0;
         powerValue = 0;
+        //gameUI.UpdatePowerText(powerValue, bonusPowerValue != 0);
         CheckWinningConditions(powerValue, previousPowerValue);
     }
 
@@ -662,7 +663,6 @@ public class Game : MonoBehaviour
     // End point, switch to BlockSelection phase, launch animation
     private void EndPoint()
     {
-        // ChangePhase(Phase.BlockSelection);
         Temporize(Phase.Replacement);
         if (currentTeam == team1)
         {
@@ -835,11 +835,11 @@ public class Game : MonoBehaviour
 
     internal void ResetVariables()
     {
+        for (int i = 0; i < actionValueArr.Length; i++)
+            actionValueArr[i] = 0;
         powerValue = 0;
         previousPowerValue = 0;
         BonusPowerValue = 0;
-        for (int i = 0; i < actionValueArr.Length; i++)
-            actionValueArr[i] = 0;
     }
 
     void SwitchTeam()

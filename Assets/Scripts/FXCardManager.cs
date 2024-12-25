@@ -60,7 +60,7 @@ public class FXCardManager : MonoBehaviour
 
     private void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
+        gameManager = FindFirstObjectByType<GameManager>();
         team1 = gameManager.teams[0];
         team2 = gameManager.teams[1];
     }
@@ -77,7 +77,7 @@ public class FXCardManager : MonoBehaviour
 
     public void ShowSelectable(BonusCard bonusCard, bool isSelectable)
     {
-        bonusCard.image.color = isSelectable ? Color.white : desaturationColor;
+        bonusCard.image.color = isSelectable ? new Color(0,0,0,0) : new Color(0,0,0,0.8f);
     }
 
     public void ShowSelected(VolleyPlayer playerCard)

@@ -9,7 +9,7 @@ using UnityEngine.UI;
 public class BonusCard : MonoBehaviour
 {
     [SerializeField]
-    public Image image;
+    public RawImage image;
     [SerializeField]
     Button clickableButton;
     public string cardName;
@@ -45,6 +45,7 @@ public class BonusCard : MonoBehaviour
     {
         bool isSelectable = false;
         // TODO Rework this condition
+        Debug.Log(effectCardCategory.ToString() + " " + game.currentPhase.ToString());
         if (effectCardCategory.ToString() == game.currentPhase.ToString())
         {
             isSelectable = true;

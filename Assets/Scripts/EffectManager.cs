@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class EffectManager : MonoBehaviour
@@ -36,7 +37,8 @@ public class EffectManager : MonoBehaviour
             { CardEffect.AddOneToPowerValue, CancelPowerValueOne },
             { CardEffect.AddThreeToPowerValue, CancelPowerValueThree },
             { CardEffect.AddFiveToPowerValue, CancelPowerValueFive },
-            { CardEffect.AddTenToPowerValue, CancelPowerValueTen }
+            { CardEffect.AddTenToPowerValue, CancelPowerValueTen },
+            { CardEffect.AddTwoToServeValue, CanceServeValueTwo }
         };
     }
 
@@ -48,6 +50,7 @@ public class EffectManager : MonoBehaviour
             { CardEffect.AddThreeToPowerValue, AddPowerValueThree },
             { CardEffect.AddFiveToPowerValue, AddPowerValueFive },
             { CardEffect.AddTenToPowerValue, AddPowerValueTen },
+            { CardEffect.AddTwoToServeValue, AddTwoToServeValue }
         };
     }
 
@@ -117,6 +120,11 @@ public class EffectManager : MonoBehaviour
 
     void AddPowerValueTen() { AddPowerValue(10); }
 
+    private void AddTwoToServeValue()
+    {
+        AddPowerValue(2);
+    }
+
     void AddPowerValue(int valueToAdd)
     {
         game.BonusPowerValue += valueToAdd;
@@ -126,6 +134,7 @@ public class EffectManager : MonoBehaviour
     void CancelPowerValueThree() { CancelPowerValue(3); }
     void CancelPowerValueFive() { CancelPowerValue(5); }
     void CancelPowerValueTen() { CancelPowerValue(10); }
+    void CanceServeValueTwo() { CancelPowerValue(2); }
     void CancelPowerValue(int value)
     {
         game.BonusPowerValue -= value;
@@ -141,6 +150,7 @@ public enum CardEffect
     AddThreeToPowerValue,
     AddFiveToPowerValue,
     AddTenToPowerValue,
+    AddTwoToServeValue,
 }
 
 public enum EffectType
