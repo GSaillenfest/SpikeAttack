@@ -16,3 +16,4 @@ MonoBehaviour:
   cardIllustration: {fileID: 0}
   cardEffectDescription: Add +10 to your power value
   cardEffect: 3
+  effectCardCategory: 1
