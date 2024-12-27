@@ -11,7 +11,7 @@ public class BonusCardSetHandler : MonoBehaviour
     int slotCount = 0;
     int slotIndex = 0;
     List<GameObject> bonusCards = new List<GameObject>();
-    List<GameObject> dispatchedBonusCards = new List<GameObject>();
+    List<GameObject> discardedBonusCards = new List<GameObject>();
 
     private void Start()
     {
@@ -57,7 +57,7 @@ public class BonusCardSetHandler : MonoBehaviour
 
     internal void DiscardCard(GameObject bonusCard)
     {
-        dispatchedBonusCards.Add(bonusCard);
+        discardedBonusCards.Add(bonusCard);
         bonusCard.transform.SetParent(Discard.transform, false);
     }
 }

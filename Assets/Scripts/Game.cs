@@ -27,6 +27,8 @@ public class Game : MonoBehaviour
     private EffectManager effectManager;
     [SerializeField]
     private BonusCardSetHandler bonusCardSetHandler;
+    [SerializeField]
+    private int maxNbBonusCard = 3;
 
     int replacement;
     GameManager gameManager;
@@ -52,13 +54,13 @@ public class Game : MonoBehaviour
     private int previousPowerValue = 0;
     private int attackIndex;
     private const int nonAttributed = -1;
-    private int replacementNumber = 0;
     public int actionIndex = 0;
     public Phase currentPhase;
     private int orangeSideScore = 0;
     private int blueSideScore = 0;
     private Phase tempPhase;
     private List<BonusCard> selectedBonusCards;
+    private List<BonusCard> selectedBonusCardsToDiscard;
 
     public Game(TeamClass t1, TeamClass t2)
     {
@@ -77,19 +79,19 @@ public class Game : MonoBehaviour
         EmptySelectedCardSlots();
         actionValueArr = new int[3];
         attackIndex = nonAttributed;
-        replacementNumber = 0;
         replacement = allowedRemplacementNumber;
         currentPhase = Phase.Inactive;
         cooldownDuration = 0.6f;
         SetEndTurnBtnInteractable(false);
         SetValidateButtonInteractable(false);
         selectedBonusCards = new();
+        selectedBonusCardsToDiscard = new();
     }
 
     // State machine switching between phases of a game
     public void ChangePhase(Phase phase)
     {
-        Debug.Log($"Actual phase is {phase}");
+        Debug.Log($"Current phase is {phase}");
         gameUI.HideBonusPanel(currentSide);
         gameUI.HideBonusPanel(GetOppositeSide());
         currentPhase = phase;
@@ -116,6 +118,9 @@ public class Game : MonoBehaviour
                 gameUI.SetBonusButton(currentSide, false);
                 gameUI.SetBonusButton(GetOppositeSide(), false);
                 break;
+            case Phase.BonusCardSelection:
+                SetBonusCardSelectionPhase();
+                break;
             default:
                 break;
         }
@@ -137,12 +142,17 @@ public class Game : MonoBehaviour
 
         // TO ANIMATE
         currentTeam.RotateFieldCards();
+        currentTeam.AddBonusCard(1);
+        //currentTeam.hasDoneReplacements = false;
         oppositeTeam.RotateFieldCards();
+        oppositeTeam.AddBonusCard(2);
+        //oppositeTeam.hasDoneReplacements = false;
         SetReplacementPhase();
     }
 
     private void SetReplacementPhase()
     {
+        currentPhase = Phase.Replacement;
         gameUI.UpdateDescriptionText("Replace 2 players");
         // Hide bonus card button
         SwitchTeam();
@@ -273,25 +283,19 @@ public class Game : MonoBehaviour
     {
         currentTeam.ShowSidelines(false);
         gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, 0, currentTeam.deckOnSide.deckSlots);
-        replacementNumber++;
+        currentTeam.hasDoneReplacements = true;
         EmptySelectedCardSlots();
 
-        // if both team made their replacement then start new turn
-        if (replacementNumber == 2)
-        {
-            replacementNumber = 0;
-            SwitchTeam();
-            ChangePhase(Phase.Serve);
-        }
-        else // else change replacement side
-        {
-            SetReplacementPhase();
-        }
+        ChangePhase(Phase.BonusCardSelection);
     }
 
     // Set only one playerCard clickable for serve phase
     private void SetServePhase()
     {
+        currentTeam.hasSelectedBonusCard = false;
+        oppositeTeam.hasSelectedBonusCard = false;
+        currentTeam.hasDoneReplacements = false;
+        oppositeTeam.hasDoneReplacements = false;
         gameUI.UpdateDescriptionText("Select the server then click on Validate");
         EmptySelectedCardSlots();
         SetValidateButtonInteractable(false);
@@ -763,33 +767,105 @@ public class Game : MonoBehaviour
     }
 
     // Select function called by playerCard selection based on current state
-    public void HandleCardButtonFunction(VolleyPlayer player)
+    public void HandleCardButtonFunction(VolleyPlayer card)
     {
         switch (currentPhase)
         {
             case Phase.TeamSelection:
                 break;
             case Phase.BlockSelection:
-                SelectBlockCard(player);
+                SelectBlockCard(card);
                 break;
             case Phase.BlockResolution:
                 break;
             case Phase.Action:
-                SelectAction(player);
+                SelectAction(card);
                 break;
             case Phase.Replacement:
-                ReplacePlayerCard(player);
+                ReplacePlayerCard(card);
                 break;
             case Phase.Serve:
-                if (!isServeSelected) SelectServeCard(player);
+                if (!isServeSelected) SelectServeCard(card);
                 break;
             case Phase.Inactive:
+                return;
+            case Phase.BonusCardSelection:
                 return;
             default:
                 break;
         }
 
         StartCoroutine(AddBtnCooldown());
+    }
+
+    public void HandleBonusCardClickFunction(BonusCard card)
+    {
+        switch (currentPhase)
+        {
+            case Phase.BonusCardSelection:
+                SelectCardForDiscard(card);
+                return;
+            default:
+                OnBonusSelection(card);
+                break;
+        }
+    }
+    // TODO: check if working
+    private void SetBonusCardSelectionPhase()
+    {
+        if (currentTeam.bonusCardHandler.bonusCards.Count > maxNbBonusCard)
+            currentTeam.SetBonusDiscardPhase(true);
+        else
+            ValidateBonusDiscard();
+    }
+
+    private void SelectCardForDiscard(BonusCard bonusCard)
+    {
+        int nbOfBonusCard = currentTeam.bonusCardHandler.bonusCards.Count;
+        if (selectedBonusCardsToDiscard == null && nbOfBonusCard > maxNbBonusCard)
+            selectedBonusCardsToDiscard.Add(bonusCard);
+        else if (selectedBonusCardsToDiscard.Contains(bonusCard))
+        {
+            selectedBonusCardsToDiscard.Remove(bonusCard);
+        }
+        else if (!selectedBonusCardsToDiscard.Contains(bonusCard) && nbOfBonusCard - selectedBonusCardsToDiscard.Count > maxNbBonusCard)
+        {
+            selectedBonusCardsToDiscard.Add(bonusCard);
+        }
+
+        if (nbOfBonusCard - selectedBonusCardsToDiscard.Count == maxNbBonusCard)
+        {
+            SetDiscardButton(true);
+        }
+        else
+            SetDiscardButton(false);
+    }
+
+    private void SetDiscardButton(bool isInteractable)
+    {
+        currentTeam.SetDiscardButton(isInteractable);
+    }
+
+    // Set bool true and change phase if both player has selected bonus cards
+    // TODO : Change logic. Selection should happen after replacement. 
+    public void ValidateBonusDiscard()
+    {
+        foreach (BonusCard bonusCard in selectedBonusCardsToDiscard)
+        {
+            bonusCardSetHandler.DiscardCard(bonusCard.gameObject);
+        }
+        selectedBonusCardsToDiscard.Clear();
+
+        currentTeam.hasSelectedBonusCard = true;
+        currentTeam.SetBonusDiscardPhase(false);
+        if (oppositeTeam.hasSelectedBonusCard)
+        {
+            ChangePhase(Phase.Serve);
+        }
+        else
+        {
+            SetReplacementPhase();
+        }
     }
 
     // Add button cooldown on card selection to avoid interferences with animations

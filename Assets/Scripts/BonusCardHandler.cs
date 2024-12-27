@@ -7,9 +7,15 @@ public class BonusCardHandler : MonoBehaviour
 {
     [SerializeField]
     GameObject[] slots;
+    [SerializeField]
+    GameObject tempSlot;
+
+    public List<BonusCard> bonusCards = new();
 /*    [SerializeField]
     BonusCardSetHandler bonusCardSetHandler;*/
 
+    // Add card to an empty slot, and add to list
+    // TODO: handle error if no slot is empty
     internal void AddCard(GameObject card)
     {
         for (int i = 0; i < slots.Length; i++)
@@ -18,6 +24,7 @@ public class BonusCardHandler : MonoBehaviour
             {
                 card.transform.SetParent(slots[i].transform);
                 ResizeCard(card);
+                bonusCards.Add(card.GetComponent<BonusCard>());
                 break;
             }
         }
@@ -44,5 +51,10 @@ public class BonusCardHandler : MonoBehaviour
             if (slot.TryGetComponentInChildren<BonusCard>(out BonusCard bonusCard))
                 bonusCard.SetSelectable();
         }
+    }
+
+    internal void ShowTempSlot(bool isActive)
+    {
+        tempSlot.SetActive(isActive);
     }
 }

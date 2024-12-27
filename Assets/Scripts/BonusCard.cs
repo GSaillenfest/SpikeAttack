@@ -23,13 +23,13 @@ public class BonusCard : MonoBehaviour
 
     private void Start()
     {
-        game = FindObjectOfType<Game>();
-        gameUI = FindObjectOfType<GameUIManager>();
+        game = FindFirstObjectByType<Game>();
+        gameUI = FindFirstObjectByType<GameUIManager>();
     }
 
     public void OnButtonClick()
     {
-        game.OnBonusSelection(this);
+        game.HandleBonusCardClickFunction(this);
     }
 
     internal void Initialize(BonusCardSO sO)
@@ -46,7 +46,7 @@ public class BonusCard : MonoBehaviour
         bool isSelectable = false;
         // TODO Rework this condition
         Debug.Log(effectCardCategory.ToString() + " " + game.currentPhase.ToString());
-        if (effectCardCategory.ToString() == game.currentPhase.ToString())
+        if (effectCardCategory.ToString() == game.currentPhase.ToString() || game.currentPhase == Phase.BonusCardSelection)
         {
             isSelectable = true;
         }

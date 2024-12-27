@@ -30,6 +30,10 @@ public class GameUIManager : MonoBehaviour
     [SerializeField]
     Button bonusButtonBlue;
     [SerializeField]
+    Button discardBtnOrange;
+    [SerializeField]
+    Button discardBtnBlue;
+    [SerializeField]
     private BonusPanelHandler bonusPanelOrange;
     [SerializeField]
     private BonusPanelHandler bonusPanelBlue;
@@ -46,7 +50,7 @@ public class GameUIManager : MonoBehaviour
 
     public void Awake()
     {
-        game = FindObjectOfType<Game>();
+        game = FindFirstObjectByType<Game>();
         ResetPowerBonusMalus();
         //calculator FindObjectOfType<GameManager>().gameObject.GetComponent<Calculator>(); 
     }
@@ -111,7 +115,6 @@ public class GameUIManager : MonoBehaviour
     // Update power text and apply color if a bonus is added
     internal void UpdatePowerText(int powerValue, bool hasBonusApplied = false)
     {
-        Debug.Log(powerValue);
         powerTextVal.text = powerValue.ToString();
         powerTextVal.colorGradient = hasBonusApplied ? greenColorGradient : whiteNonGradient;
     }

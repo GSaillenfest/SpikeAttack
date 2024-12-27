@@ -95,8 +95,8 @@ public class VolleyPlayer : MonoBehaviour
         actionArr[1] = pass;
         actionArr[2] = attack;
 
-        gameScript = FindObjectOfType<Game>();
-        gameUI = FindObjectOfType<GameUIManager>();
+        gameScript = FindFirstObjectByType<Game>();
+        gameUI = FindFirstObjectByType<GameUIManager>();
         image.texture = illustration;
 
         SetSelectable(false);

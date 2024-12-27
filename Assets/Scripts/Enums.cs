@@ -38,6 +38,7 @@ public enum Phase
     Replacement,
     Serve,
     Inactive,
+    BonusCardSelection,
 }
 
 public enum Side

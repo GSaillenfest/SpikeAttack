@@ -3,17 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class TeamClass : MonoBehaviour
 {
     [SerializeField]
     BonusCardSetHandler bonusCardSetHandler;
     [SerializeField]
-    BonusCardHandler bonusCardHandler;
+    public BonusCardHandler bonusCardHandler;
+    [SerializeField]
+    Button discardButton;
 
     public List<GameObject> playerList;
     public PlayerDeckOnField deckOnField;
     public PlayerDeckOnSidelines deckOnSide;
+    public bool hasDoneReplacements = false;
+    public bool hasSelectedBonusCard = false;
 
     public TeamClass()
     {
@@ -155,5 +160,27 @@ public class TeamClass : MonoBehaviour
     internal void OnStart()
     {
         deckOnField.OnStart();
+    }
+
+    public void SetBonusDiscardPhase(bool isActive)
+    {
+        Debug.Log(gameObject.name);
+        bonusCardHandler.ShowTempSlot(isActive);
+        SetDiscardButtonActive(isActive);
+        if (!isActive)
+        {
+            SetDiscardButton(false);
+        }
+        gameObject.GetComponent<BonusPanelHandler>().OnButtonClick();
+    }
+
+    internal void SetDiscardButton(bool isInteractable)
+    {
+        discardButton.interactable = isInteractable;
+    }
+
+    internal void SetDiscardButtonActive(bool isActive)
+    {
+        discardButton.gameObject.SetActive(isActive);
     }
 }
