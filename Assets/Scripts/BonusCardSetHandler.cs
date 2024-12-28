@@ -11,6 +11,8 @@ public class BonusCardSetHandler : MonoBehaviour
     int slotCount = 0;
     int slotIndex = 0;
     List<GameObject> bonusCards = new List<GameObject>();
+    List<GameObject> orangeBonusCards = new List<GameObject>();
+    List<GameObject> blueBonusCards = new List<GameObject>();
     List<GameObject> discardedBonusCards = new List<GameObject>();
 
     private void Start()
@@ -44,20 +46,22 @@ public class BonusCardSetHandler : MonoBehaviour
         }
     }
 
-    internal GameObject WithdrawCard()
+    internal void WithdrawCard(BonusCardHandler bCHandler)
     {
         if (bonusCards.Count > 0)
         {
             GameObject bonusCard = bonusCards[bonusCards.Count - 1];
             bonusCards.Remove(bonusCard);
-            return bonusCard;
+            bCHandler.AddCard(bonusCard);
         }
-        else return null;
+        else return;
     }
 
-    internal void DiscardCard(GameObject bonusCard)
+    internal void DiscardCard(BonusCardHandler bcHandler, GameObject bonusCard)
     {
+        bcHandler.bonusCards.Remove(bonusCard);
         discardedBonusCards.Add(bonusCard);
         bonusCard.transform.SetParent(Discard.transform, false);
+        bcHandler.ReorderCards();
     }
 }

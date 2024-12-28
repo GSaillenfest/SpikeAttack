@@ -42,15 +42,11 @@ public class TeamClass : MonoBehaviour
         playerList.Add(playerCard);
     }
 
-    internal void AddBonusCard(int numberOfCards)
+    internal void AddBonusCard(int nbOfCards)
     {
-        for (int i = 0; i < numberOfCards; i++)
+        for (int i = 0; i < nbOfCards; i++)
         {
-            GameObject card = bonusCardSetHandler.WithdrawCard();
-            if (card != null)
-            {
-                bonusCardHandler.AddCard(card);
-            }
+            bonusCardSetHandler.WithdrawCard(bonusCardHandler);
         }
     }
 
@@ -164,14 +160,13 @@ public class TeamClass : MonoBehaviour
 
     public void SetBonusDiscardPhase(bool isActive)
     {
-        Debug.Log(gameObject.name);
         bonusCardHandler.ShowTempSlot(isActive);
         SetDiscardButtonActive(isActive);
+        if (isActive) gameObject.GetComponent<BonusPanelHandler>().OnButtonClick();
         if (!isActive)
         {
             SetDiscardButton(false);
         }
-        gameObject.GetComponent<BonusPanelHandler>().OnButtonClick();
     }
 
     internal void SetDiscardButton(bool isInteractable)

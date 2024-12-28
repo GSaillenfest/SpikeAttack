@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class BonusCardHandler : MonoBehaviour
@@ -10,7 +11,7 @@ public class BonusCardHandler : MonoBehaviour
     [SerializeField]
     GameObject tempSlot;
 
-    public List<BonusCard> bonusCards = new();
+    public List<GameObject> bonusCards = new();
 /*    [SerializeField]
     BonusCardSetHandler bonusCardSetHandler;*/
 
@@ -24,7 +25,7 @@ public class BonusCardHandler : MonoBehaviour
             {
                 card.transform.SetParent(slots[i].transform);
                 ResizeCard(card);
-                bonusCards.Add(card.GetComponent<BonusCard>());
+                bonusCards.Add(card);
                 break;
             }
         }
@@ -56,5 +57,22 @@ public class BonusCardHandler : MonoBehaviour
     internal void ShowTempSlot(bool isActive)
     {
         tempSlot.SetActive(isActive);
+    }
+
+    internal void ReorderCards()
+    {
+        List<GameObject> temp = new();
+        temp.AddRange(bonusCards);
+        bonusCards.Clear();
+
+        foreach(GameObject card in temp)
+        {
+            card.transform.SetParent(null);
+        }
+        
+        foreach(GameObject card in temp)
+        {
+            AddCard(card);
+        }
     }
 }

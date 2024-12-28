@@ -141,11 +141,11 @@ public class Game : MonoBehaviour
     {
 
         // TO ANIMATE
+        oppositeTeam.RotateFieldCards();
+        oppositeTeam.AddBonusCard(2);
         currentTeam.RotateFieldCards();
         currentTeam.AddBonusCard(1);
         //currentTeam.hasDoneReplacements = false;
-        oppositeTeam.RotateFieldCards();
-        oppositeTeam.AddBonusCard(2);
         //oppositeTeam.hasDoneReplacements = false;
         SetReplacementPhase();
     }
@@ -153,6 +153,8 @@ public class Game : MonoBehaviour
     private void SetReplacementPhase()
     {
         currentPhase = Phase.Replacement;
+        SetValidateButtonInteractable(false);
+        gameUI.HideBonusPanel(currentSide);
         gameUI.UpdateDescriptionText("Replace 2 players");
         // Hide bonus card button
         SwitchTeam();
@@ -487,7 +489,7 @@ public class Game : MonoBehaviour
     {
         foreach (BonusCard bonusCard in selectedBonusCards)
         {
-            bonusCardSetHandler.DiscardCard(bonusCard.gameObject);
+            bonusCardSetHandler.DiscardCard(currentTeam.bonusCardHandler, bonusCard.gameObject);
         }
         selectedBonusCards.Clear();
     }
@@ -805,6 +807,8 @@ public class Game : MonoBehaviour
             case Phase.BonusCardSelection:
                 SelectCardForDiscard(card);
                 return;
+            case Phase.Replacement:
+                return;
             default:
                 OnBonusSelection(card);
                 break;
@@ -852,7 +856,7 @@ public class Game : MonoBehaviour
     {
         foreach (BonusCard bonusCard in selectedBonusCardsToDiscard)
         {
-            bonusCardSetHandler.DiscardCard(bonusCard.gameObject);
+            bonusCardSetHandler.DiscardCard(currentTeam.bonusCardHandler, bonusCard.gameObject);
         }
         selectedBonusCardsToDiscard.Clear();
 

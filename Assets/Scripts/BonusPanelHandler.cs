@@ -33,16 +33,17 @@ public class BonusPanelHandler : MonoBehaviour
 
     public void OnButtonClick()
     {
-        if (!isActive)
-        {
-            targetMinPosX = activeMinPosX;
-            targetMaxPosX = activeMaxPosX;
-        }
-        else
-        {
-            targetMinPosX = initMinPosX;
-            targetMaxPosX = initMaxPosX;
-        }
+        //if (!isActive)
+        //{
+        //    targetMinPosX = activeMinPosX;
+        //    targetMaxPosX = activeMaxPosX;
+        //}
+        //else
+        //{
+        //    targetMinPosX = initMinPosX;
+        //    targetMaxPosX = initMaxPosX;
+        //}
+
         isActive = !isActive;
 
         ActivatePanel();
