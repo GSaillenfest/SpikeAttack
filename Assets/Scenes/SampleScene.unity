@@ -1200,7 +1200,7 @@ GameObject:
   - component: {fileID: 226059395}
   - component: {fileID: 226059394}
   m_Layer: 5
-  m_Name: End turn Btn
+  m_Name: Secondary Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -9531,6 +9531,7 @@ GameObject:
   - component: {fileID: 751493580}
   - component: {fileID: 751493579}
   - component: {fileID: 751493581}
+  - component: {fileID: 751493582}
   m_Layer: 5
   m_Name: Buttons Panel
   m_TagString: Untagged
@@ -9624,6 +9625,21 @@ MonoBehaviour:
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
   m_ReverseArrangement: 0
+--- !u!114 &751493582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 751493577}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a632f73421d3374b89fb9e2da4c27f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startBtn: {fileID: 611188971}
+  primaryBtn: {fileID: 2080401688}
+  secondaryBtn: {fileID: 226059394}
 --- !u!1 &753718754
 GameObject:
   m_ObjectHideFlags: 0
@@ -14393,6 +14409,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1b40d6e67bfed624f87ebbde8bf36cb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  btnUI: {fileID: 751493582}
   blurControl: {fileID: 1844360151}
   cardFX: {fileID: 710421731}
   powerTextVal: {fileID: 1242319560}
@@ -14576,9 +14593,6 @@ MonoBehaviour:
   team1: {fileID: 1056522903}
   team2: {fileID: 176728477}
   gameUI: {fileID: 1699984253}
-  startBtn: {fileID: 611188971}
-  validateBtn: {fileID: 2080401688}
-  endTurnBtn: {fileID: 226059394}
   noBlockButton: {fileID: 559596127}
   cooldownDuration: 0
   allowedRemplacementNumber: 2
@@ -15611,7 +15625,7 @@ GameObject:
   - component: {fileID: 2080401689}
   - component: {fileID: 2080401688}
   m_Layer: 5
-  m_Name: Validate Btn
+  m_Name: Primary Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

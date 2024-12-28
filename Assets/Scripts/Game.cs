@@ -12,12 +12,6 @@ public class Game : MonoBehaviour
     [SerializeField]
     GameUIManager gameUI;
     [SerializeField]
-    Button startBtn;
-    [SerializeField]
-    Button validateBtn;
-    [SerializeField]
-    private Button endTurnBtn;
-    [SerializeField]
     private Button noBlockButton;
     [SerializeField]
     float cooldownDuration;
@@ -82,8 +76,8 @@ public class Game : MonoBehaviour
         replacement = allowedRemplacementNumber;
         currentPhase = Phase.Inactive;
         cooldownDuration = 0.6f;
-        SetEndTurnBtnInteractable(false);
-        SetValidateButtonInteractable(false);
+        SetPrimaryButtonInteractable(false);
+        SetSecondaryBtnInteractable(false);
         selectedBonusCards = new();
         selectedBonusCardsToDiscard = new();
     }
@@ -92,8 +86,7 @@ public class Game : MonoBehaviour
     public void ChangePhase(Phase phase)
     {
         Debug.Log($"Current phase is {phase}");
-        gameUI.HideBonusPanel(currentSide);
-        gameUI.HideBonusPanel(GetOppositeSide());
+        HideBonusPanels();
         currentPhase = phase;
         switch (currentPhase)
         {
@@ -115,8 +108,8 @@ public class Game : MonoBehaviour
                 SetServePhase();
                 break;
             case Phase.Inactive:
-                gameUI.SetBonusButton(currentSide, false);
-                gameUI.SetBonusButton(GetOppositeSide(), false);
+                gameUI.ActivateBonusBtn(currentSide, false);
+                gameUI.ActivateBonusBtn(GetOppositeSide(), false);
                 break;
             case Phase.BonusCardSelection:
                 SetBonusCardSelectionPhase();
@@ -124,6 +117,12 @@ public class Game : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    private void HideBonusPanels()
+    {
+        gameUI.HideBonusPanel(currentSide);
+        gameUI.HideBonusPanel(GetOppositeSide());
     }
 
     internal void Temporize(Phase nextPhase)
@@ -153,12 +152,12 @@ public class Game : MonoBehaviour
     private void SetReplacementPhase()
     {
         currentPhase = Phase.Replacement;
-        SetValidateButtonInteractable(false);
+        SetPrimaryButtonInteractable(false);
         gameUI.HideBonusPanel(currentSide);
-        gameUI.UpdateDescriptionText("Replace 2 players");
+        ChangeDescriptionText("Replace up to 2 players");
         // Hide bonus card button
         SwitchTeam();
-        gameUI.SetBonusButton(currentSide, false);
+        ActivateBonusBtn(currentSide, false);
 
         EmptySelectedCardSlots();
 
@@ -169,6 +168,17 @@ public class Game : MonoBehaviour
         CallBlurReplacement();
     }
 
+    private void ChangeDescriptionText(string text)
+    {
+        gameUI.UpdateDescriptionText(text);
+    }
+
+    private void ActivateBonusBtn(Side side, bool isActive)
+    {
+        gameUI.ActivateBonusBtn(side, isActive);
+    }
+
+    // TO REWORK, COPY FROM BONUS PANEL 
     private void CallBlurReplacement()
     {
         GameObject[] exceptionsBlur = new GameObject[currentTeam.deckOnSide.playersOnSidelines.Count];
@@ -179,7 +189,7 @@ public class Game : MonoBehaviour
         gameUI.CallBlurEffect(currentTeam.deckOnSide.gameObject, 0, exceptionsBlur);
     }
 
-    private void ReplacePlayerCard(VolleyPlayer selectedCard)
+    private void ReplaceVPCard(VolleyPlayer selectedCard)
     {
 
         // When a card is selected
@@ -263,12 +273,12 @@ public class Game : MonoBehaviour
             currentTeam.GetPlayerBySlotIndex(selectedCardSlots[3]).SetSelectable(false);
             // count down from number of allowed replacement
             replacement--;
-            gameUI.UpdateDescriptionText("Replace 1 player");
+            ChangeDescriptionText("Replace 1 player");
         }
 
         if (replacement == 0)
         {
-            SetValidateButtonInteractable(true);
+            SetPrimaryButtonInteractable(true);
             SetAllSelectableCardOnField(currentTeam, false);
             SetAllSelectableCardOnSide(currentTeam, false);
             replacement = allowedRemplacementNumber;
@@ -276,9 +286,9 @@ public class Game : MonoBehaviour
 
     }
 
-    private void SetAllSelectableCardOnSide(TeamClass currentTeam, bool isSelectable)
+    private void SetAllSelectableCardOnSide(TeamClass team, bool isSelectable)
     {
-        currentTeam.SetAllSelectableCardOnSide(isSelectable);
+        team.SetAllSelectableCardOnSide(isSelectable);
     }
 
     private void ValidateReplacement()
@@ -298,9 +308,9 @@ public class Game : MonoBehaviour
         oppositeTeam.hasSelectedBonusCard = false;
         currentTeam.hasDoneReplacements = false;
         oppositeTeam.hasDoneReplacements = false;
-        gameUI.UpdateDescriptionText("Select the server then click on Validate");
+        ChangeDescriptionText("Select the server then click on Validate");
         EmptySelectedCardSlots();
-        SetValidateButtonInteractable(false);
+        SetPrimaryButtonInteractable(false);
         SetAllSelectableCardOnField(currentTeam, false);
         SetAllSelectableCardOnField(oppositeTeam, false);
         currentTeam.SetServePhase();
@@ -308,13 +318,13 @@ public class Game : MonoBehaviour
     }
 
     // Select and apply the serve value of the selected playerCard, update power
-    private void SelectServeCard(VolleyPlayer selected)
+    private void SelectVPCardForServe(VolleyPlayer selected)
     {
         isServeSelected = true;
         selected.SelectServe();
         actionValueArr[0] = currentTeam.GetServeValue();
         UpdatePowerValue();
-        SetValidateButtonInteractable(true);
+        SetPrimaryButtonInteractable(true);
     }
 
     // End Serve phase and switch to next state
@@ -384,9 +394,9 @@ public class Game : MonoBehaviour
         actionIndex = 0;
         SetSelectableCardByAction();
         SetAllSelectableCardOnField(oppositeTeam, false);
-        SetValidateButtonInteractable(false);
-        SetEndTurnBtnInteractable(true);
-        gameUI.UpdateDescriptionText("Select Dig, Pass and Attack");
+        SetPrimaryButtonInteractable(false);
+        SetSecondaryBtnInteractable(true);
+        ChangeDescriptionText("Select Dig, Pass and Attack");
         SetBonusButton();
     }
 
@@ -394,18 +404,18 @@ public class Game : MonoBehaviour
     {
         if (currentTeam == team1)
         {
-            gameUI.SetBonusButton(Side.Orange, true);
-            gameUI.SetBonusButton(Side.Blue, false);
+            gameUI.ActivateBonusBtn(Side.Orange, true);
+            gameUI.ActivateBonusBtn(Side.Blue, false);
         }
         else
         {
-            gameUI.SetBonusButton(Side.Blue, true);
-            gameUI.SetBonusButton(Side.Orange, false);
+            gameUI.ActivateBonusBtn(Side.Blue, true);
+            gameUI.ActivateBonusBtn(Side.Orange, false);
         }
     }
 
     // Select actions on card and add value to power
-    public void SelectAction(VolleyPlayer selected)
+    public void SelectVPCardAction(VolleyPlayer selected)
     {
         if (actionIndex == 0)
         {
@@ -451,9 +461,8 @@ public class Game : MonoBehaviour
                 if (selected.isSelectedTwice)
                     selected.SetIsSelectedTwice(false);
                 else selected.SetIsSelected(false);
-                SetEndTurnBtnInteractable(true);
-                SetValidateButtonInteractable(false);
-                gameUI.DeactivateValidateButton();
+                SetSecondaryBtnInteractable(true);
+                SetPrimaryButtonInteractable(false);
                 actionIndex--;
                 SetSelectableCardByAction();
             }
@@ -461,8 +470,8 @@ public class Game : MonoBehaviour
 
         if (actionIndex == 3)
         {
-            SetEndTurnBtnInteractable(false);
-            SetValidateButtonInteractable(true);
+            SetSecondaryBtnInteractable(false);
+            SetPrimaryButtonInteractable(true);
         }
 
         UpdatePowerValue();
@@ -478,7 +487,7 @@ public class Game : MonoBehaviour
         }
         attackIndex = selectedCardSlots[2];
         EmptySelectedCardSlots();
-        SetValidateButtonInteractable(false);
+        SetPrimaryButtonInteractable(false);
         EmptyBonusCards();
         // Done in UpdatePowerValue
         // powerValue += bonusPowerValue;
@@ -505,8 +514,8 @@ public class Game : MonoBehaviour
             currentTeam.GetPlayerBySlotIndex(selectedCardSlots[i]).DeselectActionAnimation(i);
         }
         EmptySelectedCardSlots();
-        SetValidateButtonInteractable(false);
-        SetEndTurnBtnInteractable(false);
+        SetPrimaryButtonInteractable(false);
+        SetSecondaryBtnInteractable(false);
 
 
         foreach (BonusCard bonusCard in selectedBonusCards)
@@ -526,13 +535,13 @@ public class Game : MonoBehaviour
     {
         gameUI.UpdateDescriptionText("Select a block then click on Validate");
         currentTeam.SetBlockSelectionPhase();
-        SetValidateButtonInteractable(false);
+        SetPrimaryButtonInteractable(false);
         noBlockButton.gameObject.SetActive(true);
         SetNoBlockButton(true);
     }
 
     // Select/Unselect block playerCard
-    void SelectBlockCard(VolleyPlayer player)
+    void SelectVPCardBlock(VolleyPlayer player)
     {
         if (player == null)
         {
@@ -545,7 +554,7 @@ public class Game : MonoBehaviour
             }
 
             selectedCardSlots[0] = nonAttributed;
-            SetValidateButtonInteractable(true);
+            SetPrimaryButtonInteractable(true);
             SetNoBlockButton(false);
             return;
         }
@@ -557,7 +566,7 @@ public class Game : MonoBehaviour
             SetAllSelectableCardOnField(currentTeam, false);
             player.SetSelectable(true);
             player.SelectBlock(true);
-            SetValidateButtonInteractable(true);
+            SetPrimaryButtonInteractable(true);
         }
         else
         {
@@ -575,7 +584,7 @@ public class Game : MonoBehaviour
 
     public void SelectNoBlock()
     {
-        SelectBlockCard(null);
+        SelectVPCardBlock(null);
     }
 
     // Validate block position and memories it, end turn
@@ -592,12 +601,7 @@ public class Game : MonoBehaviour
     public void StartGame(TeamClass team)
     {
         // avoid two startgame clicks
-        startBtn.interactable = false;
-        startBtn.gameObject.SetActive(false);
-        endTurnBtn.gameObject.SetActive(true);
-        endTurnBtn.interactable = false;
-        validateBtn.gameObject.SetActive(true);
-        validateBtn.interactable = false;
+        gameUI.HandleGameStart();
 
         isGameStart = true;
         currentTeam = team;
@@ -648,7 +652,7 @@ public class Game : MonoBehaviour
         gameUI.UpdatePreviousPowerText(previousPowerValue);
         gameUI.UpdatePreviousPowerMalusText();
         gameUI.UpdatePowerBonusText();
-        gameUI.SetBonusButton(currentSide, false);
+        gameUI.ActivateBonusBtn(currentSide, false);
         gameUI.HideBonusPanel(currentSide);
         gameUI.HideBonusPanel(GetOppositeSide());
         SwitchTeam();
@@ -721,14 +725,14 @@ public class Game : MonoBehaviour
         return currentSide == Side.Orange ? Side.Blue : Side.Orange;
     }
 
-    private void SetValidateButtonInteractable(bool isInteractable)
+    private void SetPrimaryButtonInteractable(bool isInteractable)
     {
-        validateBtn.interactable = isInteractable;
+        gameUI.SetPrimaryBtnInteractable(isInteractable);
     }
 
-    private void SetEndTurnBtnInteractable(bool isInteractable)
+    private void SetSecondaryBtnInteractable(bool isInteractable)
     {
-        endTurnBtn.interactable = isInteractable;
+        gameUI.SetSecondaryBtnInteractable(isInteractable);
     }
 
     public void UpdatePowerValue()
@@ -769,25 +773,25 @@ public class Game : MonoBehaviour
     }
 
     // Select function called by playerCard selection based on current state
-    public void HandleCardButtonFunction(VolleyPlayer card)
+    public void HandleClickOnVPCardFunction(VolleyPlayer card)
     {
         switch (currentPhase)
         {
             case Phase.TeamSelection:
                 break;
             case Phase.BlockSelection:
-                SelectBlockCard(card);
+                SelectVPCardBlock(card);
                 break;
             case Phase.BlockResolution:
                 break;
             case Phase.Action:
-                SelectAction(card);
+                SelectVPCardAction(card);
                 break;
             case Phase.Replacement:
-                ReplacePlayerCard(card);
+                ReplaceVPCard(card);
                 break;
             case Phase.Serve:
-                if (!isServeSelected) SelectServeCard(card);
+                if (!isServeSelected) SelectVPCardForServe(card);
                 break;
             case Phase.Inactive:
                 return;

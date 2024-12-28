@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -5,6 +6,8 @@ using UnityEngine.UI;
 public class GameUIManager : MonoBehaviour
 {
     //Calculator calculator;
+    [SerializeField]
+    BtnUI btnUI;
     [SerializeField]
     BlurControl blurControl;
     [SerializeField]
@@ -55,7 +58,12 @@ public class GameUIManager : MonoBehaviour
         //calculator FindObjectOfType<GameManager>().gameObject.GetComponent<Calculator>(); 
     }
 
-    public void SetBonusButton(Side side, bool value)
+    public void SetSecondaryBtnInteractable(bool isInteractable)
+    {
+        btnUI.SetSecondaryBtnInteractable(isInteractable);
+    }
+
+    public void ActivateBonusBtn(Side side, bool value)
     {
         if (side == Side.Orange)
         {
@@ -146,11 +154,6 @@ public class GameUIManager : MonoBehaviour
         UpdatePreviousPowerMalusText();
     }
 
-    internal void DeactivateValidateButton()
-    {
-        ;
-    }
-
     internal void DeselectCard(VolleyPlayer volleyPlayer)
     {
         cardFX.ShowUnselected(volleyPlayer);
@@ -229,5 +232,15 @@ public class GameUIManager : MonoBehaviour
             bonusPanelOrange.DesactivatePanel();
         else if (side == Side.Blue)
             bonusPanelBlue.DesactivatePanel();
+    }
+
+    internal void SetPrimaryBtnInteractable(bool isInteractable)
+    {
+        btnUI.SetPrimaryBtnInteractable(isInteractable);
+    }
+
+    internal void HandleGameStart()
+    {
+        btnUI.HandleGameStart();
     }
 }
